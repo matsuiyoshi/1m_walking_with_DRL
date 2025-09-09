@@ -1,0 +1,67 @@
+# Bittle Robot Configuration
+robot:
+  name: "Bittle"
+  urdf_path: "assets/bittle-urdf/bittle.urdf"
+  
+  # Physical specifications
+  mass: 0.2  # kg
+  dimensions:
+    length: 0.20  # m
+    width: 0.10   # m
+    height: 0.08  # m
+  
+  # Joint specifications
+  joints:
+    num_joints: 9
+    joint_names:
+      - "FL_hip"      # Front Left hip
+      - "FL_knee"     # Front Left knee
+      - "FR_hip"      # Front Right hip
+      - "FR_knee"     # Front Right knee
+      - "BL_hip"      # Back Left hip
+      - "BL_knee"     # Back Left knee
+      - "BR_hip"      # Back Right hip
+      - "BR_knee"     # Back Right knee
+      - "neck"        # Neck joint
+    
+    # Joint limits (radians)
+    joint_limits:
+      FL_hip: [-1.57, 1.57]
+      FL_knee: [-1.57, 1.57]
+      FR_hip: [-1.57, 1.57]
+      FR_knee: [-1.57, 1.57]
+      BL_hip: [-1.57, 1.57]
+      BL_knee: [-1.57, 1.57]
+      BR_hip: [-1.57, 1.57]
+      BR_knee: [-1.57, 1.57]
+      neck: [-0.5, 0.5]
+    
+    # Joint control parameters
+    control:
+      frequency: 50  # Hz
+      max_torque: 1.0  # Nm
+      damping: 0.1
+
+# Environment specifications
+environment:
+  corridor:
+    width: 0.15  # m (15cm)
+    length: 1.0  # m
+    wall_height: 0.05  # m
+  
+  # Surface materials
+  surfaces:
+    cardboard:
+      friction: 0.8
+      restitution: 0.1
+    smooth_desk:
+      friction: 0.1
+      restitution: 0.05
+
+# Physics simulation
+physics:
+  timestep: 1/240  # 240 Hz
+  gravity: [0, 0, -9.81]  # m/s²
+  solver_iterations: 100
+  contact_erp: 0.2
+  contact_cfm: 0.0001

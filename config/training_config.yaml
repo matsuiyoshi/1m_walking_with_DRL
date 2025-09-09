@@ -1,0 +1,78 @@
+# Training Configuration for PPO
+algorithm:
+  name: "PPO"
+  
+  # Network architecture
+  network:
+    actor:
+      hidden_layers: [256, 256, 128]
+      activation: "ReLU"
+      output_activation: "Tanh"
+    
+    critic:
+      hidden_layers: [256, 256, 128]
+      activation: "ReLU"
+  
+  # Hyperparameters
+  hyperparameters:
+    learning_rate: 3e-4
+    batch_size: 64
+    n_epochs: 10
+    clip_range: 0.2
+    vf_coef: 0.5
+    ent_coef: 0.01
+    max_grad_norm: 0.5
+    gae_lambda: 0.95
+    gamma: 0.99
+
+# Training settings
+training:
+  total_timesteps: 1000000
+  eval_freq: 10000
+  save_freq: 50000
+  log_interval: 1000
+  
+  # Episode settings
+  episode:
+    max_steps: 1000  # ~4 seconds at 240Hz
+    max_time: 4.0    # seconds
+  
+  # Environment settings
+  env:
+    num_envs: 1
+    render: false
+    render_mode: "human"
+  
+  # Randomization for domain adaptation
+  domain_randomization:
+    enabled: true
+    friction_range: [0.1, 0.8]
+    mass_variation: 0.1  # ±10%
+    noise_std: 0.01
+
+# Evaluation settings
+evaluation:
+  num_episodes: 10
+  deterministic: true
+  render: true
+  
+  # Success criteria
+  success_criteria:
+    min_distance: 0.9  # m (90% of 1m)
+    max_time: 10.0     # seconds
+    max_fall_angle: 0.5  # radians
+
+# Logging and monitoring
+logging:
+  tensorboard: true
+  wandb: false  # Set to true if using Weights & Biases
+  log_dir: "data/logs"
+  
+  # Metrics to track
+  metrics:
+    - "episode_reward"
+    - "episode_length"
+    - "success_rate"
+    - "average_speed"
+    - "fall_rate"
+    - "energy_efficiency"

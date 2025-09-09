@@ -203,6 +203,11 @@ Petoi社のBittle四足歩行ロボットを深層強化学習（Deep Reinforcem
 ```
 1m_walking_with_DRL/
 ├── README.md
+├── PROJECT_SPECIFICATION.md
+├── assets/
+│   └──bittle-urdf/
+|       ├── bittle.urdf
+|       └── obj/
 ├── requirements.txt
 ├── config/
 │   ├── bittle_config.yaml
@@ -231,11 +236,6 @@ Petoi社のBittle四足歩行ロボットを深層強化学習（Deep Reinforcem
 │       ├── bittle_controller.py
 │       ├── transfer_learning.py
 │       └── inference_engine.py
-├── assets/
-│   ├── urdf/
-│   │   └── bittle.urdf
-│   └── meshes/
-│       └── obj/
 ├── data/
 │   ├── models/
 │   ├── logs/
