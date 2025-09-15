@@ -11,13 +11,13 @@
       <visual name="base_frame">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="../meshes/obj/base_frame.obj" scale="1.0 1.0 1.0"/>
+          <mesh filename="obj/base_frame.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </visual>
       <collision name="base_frame_c">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="../meshes/obj/base_frame.001.obj" scale="1.0 1.0 1.0"/>
+          <mesh filename="obj/base_frame.001.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </collision>
     </link>
@@ -31,13 +31,13 @@
       <visual name="battery">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="../meshes/obj/battery.obj" scale="1.0 1.0 1.0"/>
+          <mesh filename="obj/battery.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </visual>
       <collision name="battery_c">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="../meshes/obj/battery.001.obj" scale="1.0 1.0 1.0"/>
+          <mesh filename="obj/battery.001.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </collision>
     </link>
@@ -51,13 +51,13 @@
       <visual name="cover">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="../meshes/obj/cover.obj" scale="1.0 1.0 1.0"/>
+          <mesh filename="obj/cover.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </visual>
       <collision name="cover_c">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="../meshes/obj/cover.001.obj" scale="1.0 1.0 1.0"/>
+          <mesh filename="obj/cover.001.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </collision>
     </link>
@@ -71,7 +71,7 @@
       <visual name="imu">
         <origin xyz="0 0 0" rpy="0 0 3.14159"/>
         <geometry>
-          <mesh filename="../meshes/obj/Cube.011.obj" scale="1.0 1.0 1.0"/>
+          <mesh filename="obj/Cube.011.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </visual>
     </link>
@@ -85,13 +85,13 @@
       <visual name="left_back_knee">
         <origin xyz="-0.08998 0 -0.14638" rpy="-1.5708 1.5708 0"/>
         <geometry>
-          <mesh filename="../meshes/obj/left_knee.001.obj" scale="1.0 1.0 1.0"/>
+          <mesh filename="obj/left_knee.001.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </visual>
       <collision name="left_back_knee_c">
         <origin xyz="-0.08998 0 -0.14638" rpy="-1.5708 1.5708 0"/>
         <geometry>
-          <mesh filename="../meshes/obj/left_knee.002.obj" scale="1.0 1.0 1.0"/>
+          <mesh filename="obj/left_knee.002.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </collision>
     </link>
@@ -105,13 +105,13 @@
       <visual name="left_back_shoulder">
         <origin xyz="0 -0.24575 0.04372" rpy="-1.5708 1.5708 0"/>
         <geometry>
-          <mesh filename="../meshes/obj/shoulder.001.obj" scale="1.0 1.0 1.0"/>
+          <mesh filename="obj/shoulder.001.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </visual>
       <collision name="left_back_shoulder_c">
         <origin xyz="0 -0.24575 0.04372" rpy="-1.5708 1.5708 0"/>
         <geometry>
-          <mesh filename="../meshes/obj/shoulder.004.obj" scale="1.0 1.0 1.0"/>
+          <mesh filename="obj/shoulder.004.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </collision>
     </link>
@@ -125,13 +125,13 @@
       <visual name="left_front_knee">
         <origin xyz="-0.09232 0 -0.14614" rpy="-1.5708 1.5708 0"/>
         <geometry>
-          <mesh filename="../meshes/obj/left_knee.obj" scale="1.0 1.0 1.0"/>
+          <mesh filename="obj/left_knee.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </visual>
       <collision name="left_front_knee_c">
         <origin xyz="-0.09232 0 -0.14614" rpy="-1.5708 1.5708 0"/>
         <geometry>
-          <mesh filename="../meshes/obj/left_knee.003.obj" scale="1.0 1.0 1.0"/>
+          <mesh filename="obj/left_knee.003.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </collision>
     </link>
@@ -145,13 +145,13 @@
       <visual name="left_front_shoulder">
         <origin xyz="0 -0.24575 0.04372" rpy="-1.5708 1.5708 0"/>
         <geometry>
-          <mesh filename="../meshes/obj/shoulder.obj" scale="1.0 1.0 1.0"/>
+          <mesh filename="obj/shoulder.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </visual>
       <collision name="left_front_shoulder_c">
         <origin xyz="0 -0.24575 0.04372" rpy="-1.5708 1.5708 0"/>
         <geometry>
-          <mesh filename="../meshes/obj/shoulder.007.obj" scale="1.0 1.0 1.0"/>
+          <mesh filename="obj/shoulder.007.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </collision>
     </link>
@@ -165,7 +165,7 @@
       <visual name="mainboard">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="../meshes/obj/Plane.obj" scale="1.0 1.0 1.0"/>
+          <mesh filename="obj/Plane.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </visual>
     </link>
@@ -179,13 +179,13 @@
       <visual name="right_back_knee">
         <origin xyz="0.08426 -0.00238 -0.1382" rpy="-1.5708 -1.5708 0"/>
         <geometry>
-          <mesh filename="../meshes/obj/right_knee.001.obj" scale="1.0 1.0 1.0"/>
+          <mesh filename="obj/right_knee.001.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </visual>
       <collision name="right_back_knee_c">
         <origin xyz="0.08426 -0.00238 -0.1382" rpy="-1.5708 -1.5708 0"/>
         <geometry>
-          <mesh filename="../meshes/obj/right_knee.002.obj" scale="1.0 1.0 1.0"/>
+          <mesh filename="obj/right_knee.002.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </collision>
     </link>
@@ -199,13 +199,13 @@
       <visual name="right_back_shoulder">
         <origin xyz="0 0.24575 0.0777" rpy="1.5708 -1.5708 0"/>
         <geometry>
-          <mesh filename="../meshes/obj/shoulder.002.obj" scale="1.0 1.0 1.0"/>
+          <mesh filename="obj/shoulder.002.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </visual>
       <collision name="right_back_shoulder_c">
         <origin xyz="0 0.24575 0.0777" rpy="1.5708 -1.5708 0"/>
         <geometry>
-          <mesh filename="../meshes/obj/shoulder.005.obj" scale="1.0 1.0 1.0"/>
+          <mesh filename="obj/shoulder.005.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </collision>
     </link>
@@ -219,13 +219,13 @@
       <visual name="right_front_knee">
         <origin xyz="0.09497 -0.00238 -0.1382" rpy="-1.5708 -1.5708 0"/>
         <geometry>
-          <mesh filename="../meshes/obj/right_knee.obj" scale="1.0 1.0 1.0"/>
+          <mesh filename="obj/right_knee.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </visual>
       <collision name="right_front_knee_c">
         <origin xyz="0.09497 -0.00238 -0.1382" rpy="-1.5708 -1.5708 0"/>
         <geometry>
-          <mesh filename="../meshes/obj/right_knee.003.obj" scale="1.0 1.0 1.0"/>
+          <mesh filename="obj/right_knee.003.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </collision>
     </link>
@@ -239,13 +239,13 @@
       <visual name="right_front_shoulder">
         <origin xyz="0 0.24575 0.0777" rpy="1.5708 -1.5708 0"/>
         <geometry>
-          <mesh filename="../meshes/obj/shoulder.003.obj" scale="1.0 1.0 1.0"/>
+          <mesh filename="obj/shoulder.003.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </visual>
       <collision name="right_front_shoulder_c">
         <origin xyz="0 0.24575 0.0777" rpy="1.5708 -1.5708 0"/>
         <geometry>
-          <mesh filename="../meshes/obj/shoulder.006.obj" scale="1.0 1.0 1.0"/>
+          <mesh filename="obj/shoulder.006.obj" scale="1.0 1.0 1.0"/>
         </geometry>
       </collision>
     </link>

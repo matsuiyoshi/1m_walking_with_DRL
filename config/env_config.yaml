@@ -43,7 +43,7 @@ environment:
 # Simulation settings
 simulation:
   physics_engine: "pybullet"
-  timestep: 1/240  # 240 Hz
+  timestep: 0.00416666667  # 1/240 Hz (240 Hz)
   gravity: [0, 0, -9.81]
   
   # Contact and collision
@@ -78,6 +78,12 @@ variations:
     mass_std: 0.02  # 2% of body mass
     sensor_noise_std: 0.01
     action_noise_std: 0.01
+
+# Training settings (for environment)
+training:
+  episode:
+    max_steps: 1000  # ~4 seconds at 240Hz
+    max_time: 4.0    # seconds
 
 # Visualization and debugging
 visualization:

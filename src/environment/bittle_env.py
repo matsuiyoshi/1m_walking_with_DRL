@@ -67,7 +67,7 @@ class BittleWalkingEnv(gym.Env):
         self.target_position = None
         
         # 報酬関数
-        self.reward_function = RewardFunction(self.config['reward'])
+        self.reward_function = RewardFunction(self.config['environment']['reward'])
         
         # 物理パラメータ
         self._setup_physics()
@@ -108,9 +108,9 @@ class BittleWalkingEnv(gym.Env):
         
         # 接触パラメータの設定
         p.setPhysicsEngineParameter(
-            contactERP=self.config['simulation']['contact_erp'],
-            contactCFM=self.config['simulation']['contact_cfm'],
-            numSolverIterations=self.config['simulation']['num_solver_iterations']
+            fixedTimeStep=self.timestep,
+            numSolverIterations=self.config['simulation']['num_solver_iterations'],
+            numSubSteps=self.config['simulation']['num_substeps']
         )
     
     def reset(self) -> np.ndarray:

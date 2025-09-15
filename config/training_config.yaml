@@ -15,7 +15,7 @@ algorithm:
   
   # Hyperparameters
   hyperparameters:
-    learning_rate: 3e-4
+    learning_rate: 0.0003
     batch_size: 64
     n_epochs: 10
     clip_range: 0.2
@@ -24,6 +24,7 @@ algorithm:
     max_grad_norm: 0.5
     gae_lambda: 0.95
     gamma: 0.99
+    buffer_size: 2048
 
 # Training settings
 training:
