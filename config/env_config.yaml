@@ -2,6 +2,12 @@
 environment:
   name: "BittleWalkingEnv"
   
+  # Corridor environment
+  corridor:
+    width: 0.15      # m (15cm)
+    length: 1.0      # m  
+    wall_height: 0.05 # m
+  
   # Observation space (32 dimensions total)
   observation:
     joint_angles: 9      # Current joint angles

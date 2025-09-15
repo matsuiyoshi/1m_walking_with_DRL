@@ -3,7 +3,7 @@ Bittle Walking Environment for PyBullet Simulation
 深層強化学習用のBittle四足歩行ロボットシミュレーション環境
 """
 
-import gym
+import gymnasium as gym
 import numpy as np
 import pybullet as p
 import pybullet_data

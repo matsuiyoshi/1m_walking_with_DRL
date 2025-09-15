@@ -1,0 +1,122 @@
+# version: '3.8'  # Docker Compose v2では不要
+
+services:
+  bittle-drl:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: bittle-drl-container
+    hostname: bittle-drl-dev
+    
+    # GPUアクセスの設定
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    
+    # 環境変数
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+      - DISPLAY=:99
+      - CUDA_VISIBLE_DEVICES=0
+      - PYTHONPATH=/app/src:/app
+      - TZ=Asia/Tokyo
+    
+    # ボリュームマウント
+    volumes:
+      - .:/app
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - bittle-models:/app/models
+      - bittle-experiments:/app/experiments
+    
+    # ポートマッピング
+    ports:
+      - "8888:8888"    # Jupyter Notebook
+      - "6006:6006"    # TensorBoard
+      - "8050:8050"    # Plotly Dash (可視化用)
+      - "5000:5000"    # Flask API (推論サーバー用)
+    
+    # ネットワーク設定
+    networks:
+      - bittle-network
+    
+    # 特権モード（GPU使用のため）
+    privileged: true
+    
+    # シェルの保持
+    stdin_open: true
+    tty: true
+    
+    # 起動時のコマンド
+    command: >
+      bash -c "
+        Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+        echo 'Bittle DRL Development Environment Ready!'
+        echo 'Available commands:'
+        echo '  - jupyter notebook --ip=0.0.0.0 --port=8888 --allow-root'
+        echo '  - tensorboard --logdir=./logs --host=0.0.0.0 --port=6006'
+        echo '  - python scripts/train.py'
+        echo '  - python scripts/evaluate.py'
+        bash
+      "
+
+  # TensorBoard専用サービス（オプション）
+  tensorboard:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: bittle-tensorboard
+    depends_on:
+      - bittle-drl
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+    ports:
+      - "6007:6006"
+    networks:
+      - bittle-network
+    command: tensorboard --logdir=/app/logs --host=0.0.0.0 --port=6006
+    profiles:
+      - tensorboard
+
+  # Jupyter専用サービス（オプション）
+  jupyter:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: bittle-jupyter
+    depends_on:
+      - bittle-drl
+    volumes:
+      - .:/app
+      - ./data:/app/data
+    ports:
+      - "8889:8888"
+    networks:
+      - bittle-network
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    command: >
+      bash -c "
+        jupyter lab --ip=0.0.0.0 --port=8888 --allow-root --no-browser
+      "
+    profiles:
+      - jupyter
+
+# ネットワーク定義
+networks:
+  bittle-network:
+    driver: bridge
+
+# ボリューム定義
+volumes:
+  bittle-models:
+    driver: local
+  bittle-experiments:
+    driver: local
