@@ -152,17 +152,28 @@ class Trainer:
             if self.episode_count % log_interval == 0:
                 self._log_progress()
             
-            # 評価
-            if self.episode_count % eval_freq == 0:
+            # 評価（eval_freqが0でない場合のみ）
+            if eval_freq > 0 and self.episode_count % eval_freq == 0:
                 self._evaluate()
             
-            # モデルの保存
-            if self.episode_count % save_freq == 0:
+            # モデルの保存（save_freqが0でない場合のみ）
+            # save_freqはタイムステップ数として設定されているため、タイムステップ数で判定
+            if save_freq > 0 and self.total_timesteps % save_freq == 0:
                 self._save_model()
         
-        # 最終評価
-        self.logger.info("学習完了。最終評価を実行します")
-        final_results = self._evaluate()
+        # 最終評価（eval_freqが0でない場合のみ）
+        if eval_freq > 0:
+            self.logger.info("学習完了。最終評価を実行します")
+            final_results = self._evaluate()
+        else:
+            self.logger.info("学習完了。評価はスキップします")
+            final_results = {"message": "評価がスキップされました"}
+        
+        # 最終モデルの保存
+        self.logger.info("最終モデルを保存しています...")
+        final_model_path = self.output_dir / "final_model.pth"
+        self.agent.save(str(final_model_path))
+        self.logger.info(f"最終モデルを保存しました: {final_model_path}")
         
         # 学習結果の保存
         self._save_training_results()

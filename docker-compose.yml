@@ -31,7 +31,6 @@ services:
       - .:/app
       - ./data:/app/data
       - ./logs:/app/logs
-      - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - bittle-models:/app/models
       - bittle-experiments:/app/experiments
     

@@ -13,6 +13,8 @@ import yaml
 from pathlib import Path
 import matplotlib.pyplot as plt
 from collections import defaultdict
+import cv2
+import imageio
 
 from ..environment import BittleWalkingEnv
 from ..models import PPOAgent
@@ -47,11 +49,12 @@ class Evaluator:
         # ログの設定
         self.logger = logging.getLogger(__name__)
         
-        # 評価環境の作成
+        # 評価環境の作成（レンダリングモードは後で動的に設定）
         self.eval_env = BittleWalkingEnv(
             config_path=env_config_path,
             bittle_config_path=bittle_config_path,
-            render=False  # 評価時は可視化しない（必要に応じて変更）
+            render=False,
+            render_mode="rgb_array"  # 動画保存用にrgb_arrayモードを設定
         )
         
         # 評価統計
@@ -67,7 +70,8 @@ class Evaluator:
                  num_episodes: int = 10,
                  render: bool = False,
                  deterministic: bool = True,
-                 save_trajectories: bool = False) -> Dict[str, Any]:
+                 save_trajectories: bool = False,
+                 save_video: bool = False) -> Dict[str, Any]:
         """
         モデルの評価
         
@@ -77,6 +81,7 @@ class Evaluator:
             render: 可視化の有無
             deterministic: 決定論的行動かどうか
             save_trajectories: 軌道の保存
+            save_video: 動画の保存
             
         Returns:
             評価結果の辞書
@@ -101,7 +106,8 @@ class Evaluator:
                 episode_num=episode,
                 render=render,
                 deterministic=deterministic,
-                save_trajectory=save_trajectories
+                save_trajectory=save_trajectories,
+                save_video=save_video
             )
             
             # 統計の収集
@@ -156,7 +162,8 @@ class Evaluator:
                          episode_num: int,
                          render: bool = False,
                          deterministic: bool = True,
-                         save_trajectory: bool = False) -> Dict[str, Any]:
+                         save_trajectory: bool = False,
+                         save_video: bool = False) -> Dict[str, Any]:
         """
         単一エピソードの評価
         
@@ -166,6 +173,7 @@ class Evaluator:
             render: 可視化の有無
             deterministic: 決定論的行動かどうか
             save_trajectory: 軌道の保存
+            save_video: 動画の保存
             
         Returns:
             エピソード結果の辞書
@@ -177,6 +185,9 @@ class Evaluator:
         
         # 軌道の記録
         trajectory = [] if save_trajectory else None
+        
+        # 動画録画の初期化
+        video_frames = [] if save_video else None
         
         # 詳細統計
         detailed_stats = {
@@ -192,24 +203,55 @@ class Evaluator:
         }
         
         start_time = time.time()
+        step = 0
         
         while not done:
             # 行動の取得
             action, _, _ = agent.get_action(obs, deterministic=deterministic)
             
+            # actionがテンソーの場合、numpy配列に変換
+            if hasattr(action, 'detach'):
+                action = action.detach().cpu().numpy()
+            
             # 環境のステップ実行
             next_obs, reward, done, info = self.eval_env.step(action)
+            
+            # 動画フレームのキャプチャ（4ステップごとに1フレーム）
+            if save_video and step % 4 == 0:
+                try:
+                    # 環境のrenderメソッドを直接呼び出し
+                    frame = self.eval_env.render(mode='rgb_array')
+                    if frame is not None and len(frame.shape) == 3:
+                        video_frames.append(frame)
+                    else:
+                        # 無効なフレームの場合はダミーフレームを作成
+                        if video_frames:  # 前のフレームがある場合は複製
+                            video_frames.append(video_frames[-1].copy())
+                        else:  # 最初のフレームの場合はグレーのフレームを作成
+                            dummy_frame = np.full((480, 640, 3), 128, dtype=np.uint8)
+                            video_frames.append(dummy_frame)
+                except Exception as e:
+                    self.logger.warning(f"フレームキャプチャエラー: {e}")
+                    # フォールバック: ダミーフレームを作成
+                    if video_frames:  # 前のフレームがある場合は複製
+                        video_frames.append(video_frames[-1].copy())
+                    else:  # 最初のフレームの場合はグレーのフレームを作成
+                        dummy_frame = np.full((480, 640, 3), 128, dtype=np.uint8)
+                        video_frames.append(dummy_frame)
             
             # 統計の更新
             episode_reward += reward
             episode_length += 1
+            step += 1
             
             # 軌道の記録
             if save_trajectory:
+                # actionがテンソーの場合、numpy配列に変換
+                action_np = action.detach().cpu().numpy() if hasattr(action, 'detach') else action
                 trajectory.append({
                     'step': episode_length,
                     'observation': obs.copy(),
-                    'action': action.copy(),
+                    'action': action_np.copy(),
                     'reward': reward,
                     'next_observation': next_obs.copy(),
                     'done': done,
@@ -227,11 +269,22 @@ class Evaluator:
             # 状態情報の記録
             detailed_stats['positions'].append(info.get('position', [0, 0, 0]))
             detailed_stats['orientations'].append(info.get('orientation', [0, 0, 0]))
-            detailed_stats['actions'].append(action.copy())
+            # actionがテンソーの場合、numpy配列に変換
+            action_np = action.detach().cpu().numpy() if hasattr(action, 'detach') else action
+            detailed_stats['actions'].append(action_np.copy())
             
             obs = next_obs
         
         episode_time = time.time() - start_time
+        
+        # 動画の保存
+        if save_video and video_frames and self.output_dir:
+            try:
+                video_path = self.output_dir / f"episode_{episode_num}_video.mp4"
+                self._save_video(video_frames, str(video_path))
+                self.logger.info(f"動画を保存しました: {video_path}")
+            except Exception as e:
+                self.logger.warning(f"動画保存エラー: {e}")
         
         # エピソード結果
         result = {
@@ -461,6 +514,55 @@ class Evaluator:
         plt.close()
         
         self.logger.info("モデル比較結果を保存しました")
+    
+    def _save_video(self, frames: List[np.ndarray], output_path: str):
+        """
+        フレームリストから動画ファイルを保存
+        
+        Args:
+            frames: フレームのリスト
+            output_path: 出力ファイルパス
+        """
+        if not frames:
+            self.logger.warning("保存するフレームがありません")
+            return
+        
+        try:
+            # フレームの前処理
+            processed_frames = []
+            for frame in frames:
+                if len(frame.shape) == 3 and frame.shape[2] == 3:
+                    processed_frames.append(frame)
+                else:
+                    self.logger.warning(f"無効なフレーム形状: {frame.shape}")
+            
+            if not processed_frames:
+                self.logger.error("有効なフレームがありません")
+                return
+            
+            # imageioを使用してMP4動画を保存
+            with imageio.get_writer(output_path, fps=60, codec='libx264') as writer:
+                for frame in processed_frames:
+                    writer.append_data(frame)
+            
+            self.logger.info(f"動画を保存しました: {output_path} ({len(processed_frames)}フレーム)")
+            
+        except Exception as e:
+            self.logger.error(f"動画保存エラー: {e}")
+            # フォールバック: フレームを個別の画像として保存
+            try:
+                output_dir = Path(output_path).parent
+                frame_dir = output_dir / f"frames_{Path(output_path).stem}"
+                frame_dir.mkdir(exist_ok=True)
+                
+                for i, frame in enumerate(processed_frames):
+                    frame_path = frame_dir / f"frame_{i:04d}.png"
+                    cv2.imwrite(str(frame_path), cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
+                
+                self.logger.info(f"フレームを個別画像として保存しました: {frame_dir}")
+                
+            except Exception as e2:
+                self.logger.error(f"フレーム保存も失敗: {e2}")
     
     def close(self):
         """リソースの解放"""

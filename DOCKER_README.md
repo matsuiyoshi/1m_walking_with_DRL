@@ -52,10 +52,10 @@ cd /path/to/1m_walking_with_DRL
 
 ```bash
 # 開発環境の起動
-docker-compose up -d
+docker compose up -d
 
 # コンテナに接続
-docker exec -it bittle-drl-container bash
+docker compose exec bittle-drl bash
 ```
 
 ### サービス別起動
@@ -79,44 +79,64 @@ docker-compose --profile tensorboard --profile jupyter up -d
 ### 1. 学習の実行
 
 ```bash
-# コンテナ内で学習を開始
-docker exec -it bittle-drl-container bash
-cd /app
-python scripts/train.py
+# 基本学習
+docker compose exec bittle-drl python scripts/train.py
+
+# 並列学習（GPU最適化）
+docker compose exec bittle-drl python scripts/parallel_train.py --total-timesteps 10000 --num-envs 4 --batch-size 128
+
+# モデル評価
+docker compose exec bittle-drl python scripts/evaluate.py --model-path data/models/final_model.pth --render
 ```
 
-### 2. Jupyter Notebook/Lab
+### 2. TensorBoard監視
+
+```bash
+# TensorBoardを起動（別ターミナル）
+docker compose exec bittle-drl tensorboard --logdir=data/experiments --port=6006 --host=0.0.0.0
+
+# ブラウザでアクセス
+# http://localhost:6006
+```
+
+**監視できる指標:**
+- **Training**: 平均報酬、エピソード数、学習速度
+- **Loss**: ポリシー損失、価値関数損失、エントロピー損失
+- **Performance**: ステップ/秒、バッファ使用率
+
+### 3. Jupyter Notebook/Lab
 
 ```bash
 # メインコンテナでJupyterを起動
-docker exec -it bittle-drl-container jupyter lab --ip=0.0.0.0 --port=8888 --allow-root
+docker compose exec bittle-drl jupyter lab --ip=0.0.0.0 --port=8888 --allow-root
 
 # または専用サービスを使用
-docker-compose --profile jupyter up -d
+docker compose --profile jupyter up -d
 ```
 
 アクセス: http://localhost:8888 または http://localhost:8889
-
-### 3. TensorBoard
-
-```bash
-# メインコンテナでTensorBoardを起動
-docker exec -it bittle-drl-container tensorboard --logdir=./logs --host=0.0.0.0 --port=6006
-
-# または専用サービスを使用
-docker-compose --profile tensorboard up -d
-```
-
-アクセス: http://localhost:6006 または http://localhost:6007
 
 ### 4. 評価とテスト
 
 ```bash
 # モデル評価
-docker exec -it bittle-drl-container python scripts/evaluate.py
+docker compose exec bittle-drl python scripts/evaluate.py
 
 # テスト実行
-docker exec -it bittle-drl-container pytest tests/
+docker compose exec bittle-drl pytest tests/
+```
+
+### 5. GPU使用状況の確認
+
+```bash
+# GPU認識確認
+docker compose exec bittle-drl nvidia-smi
+
+# PyTorch CUDA確認
+docker compose exec bittle-drl python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"
+
+# GPU使用率の監視
+docker compose exec bittle-drl nvidia-smi -l 1
 ```
 
 ## 📁 ボリュームマウント
@@ -150,6 +170,24 @@ sudo systemctl status nvidia-container-toolkit
 
 # GPUの認識確認
 docker run --rm --gpus all nvidia/cuda:12.8-base-ubuntu22.04 nvidia-smi
+
+# Docker daemon.jsonの確認
+cat /etc/docker/daemon.json
+
+# 必要に応じて設定を追加
+sudo tee /etc/docker/daemon.json <<EOF
+{
+    "runtimes": {
+        "nvidia": {
+            "args": [],
+            "path": "nvidia-container-runtime"
+        }
+    }
+}
+EOF
+
+# Dockerの再起動
+sudo systemctl restart docker
 ```
 
 ### メモリ不足エラー
@@ -160,6 +198,23 @@ docker system info | grep "Total Memory"
 
 # 不要なコンテナ・イメージの削除
 docker system prune -a
+
+# コンテナのリソース使用量確認
+docker stats bittle-drl
+
+# PyTorchのメモリキャッシュクリア
+docker compose exec bittle-drl python -c "import torch; torch.cuda.empty_cache()"
+```
+
+### 並列学習でのエラー
+
+```bash
+# CUDA tensorのnumpy変換エラー
+# 解決策: 環境設定でCUDA tensorをCPUに移動してからnumpyに変換
+
+# テンソル形状エラー
+# 解決策: バッチサイズと並列環境数の調整
+docker compose exec bittle-drl python scripts/parallel_train.py --num-envs 2 --batch-size 64
 ```
 
 ### PyBullet GUIの表示問題
@@ -169,7 +224,10 @@ docker system prune -a
 echo $DISPLAY
 
 # Xvfbプロセスの確認
-docker exec -it bittle-drl-container pgrep Xvfb
+docker compose exec bittle-drl pgrep Xvfb
+
+# ヘッドレスモードでの実行
+docker compose exec bittle-drl python scripts/train.py --headless
 ```
 
 ## 🔄 開発ワークフロー
@@ -181,8 +239,8 @@ docker exec -it bittle-drl-container pgrep Xvfb
 git checkout -b feature/new-algorithm
 
 # Docker環境で開発・テスト
-docker-compose up -d
-docker exec -it bittle-drl-container bash
+docker compose up -d
+docker compose exec bittle-drl bash
 
 # 開発完了後
 git add .
@@ -194,20 +252,26 @@ git push origin feature/new-algorithm
 
 ```bash
 # 実験の実行
-docker exec -it bittle-drl-container python scripts/train.py --config=experiments/exp1.yaml
+docker compose exec bittle-drl python scripts/train.py --config=experiments/exp1.yaml
+
+# 並列学習実験
+docker compose exec bittle-drl python scripts/parallel_train.py --total-timesteps 50000 --num-envs 4
 
 # 結果の確認
-docker exec -it bittle-drl-container tensorboard --logdir=./logs
+docker compose exec bittle-drl tensorboard --logdir=data/experiments
 ```
 
 ### 3. モデルの保存・読み込み
 
 ```bash
 # モデルの保存（永続化ボリュームに保存）
-# /app/models/ に保存されたファイルは永続化されます
+# /app/data/models/ に保存されたファイルは永続化されます
 
 # モデルの共有
-docker cp bittle-drl-container:/app/models/best_model.pth ./models/
+docker cp bittle-drl:/app/data/models/best_model.pth ./data/models/
+
+# 評価用モデルの読み込み
+docker compose exec bittle-drl python scripts/evaluate.py --model-path data/models/final_model.pth
 ```
 
 ## 📊 パフォーマンス最適化
@@ -216,17 +280,25 @@ docker cp bittle-drl-container:/app/models/best_model.pth ./models/
 
 ```bash
 # コンテナのリソース使用量
-docker stats bittle-drl-container
+docker stats bittle-drl
 
 # GPUの使用量
-docker exec -it bittle-drl-container nvidia-smi -l 1
+docker compose exec bittle-drl nvidia-smi -l 1
+
+# リアルタイム監視
+watch -n 1 'docker stats bittle-drl --no-stream'
 ```
 
 ### メモリ最適化
 
 ```bash
 # PyTorchのメモリキャッシュクリア
-docker exec -it bittle-drl-container python -c "import torch; torch.cuda.empty_cache()"
+docker compose exec bittle-drl python -c "import torch; torch.cuda.empty_cache()"
+
+# 並列学習の最適化設定
+# 環境数: 2-8環境（GPU メモリに応じて調整）
+# バッチサイズ: 64-256（並列環境数に応じて調整）
+# 学習率: 0.001（並列学習用に最適化）
 ```
 
 ## 🔧 カスタマイズ
@@ -246,11 +318,23 @@ environment:
 
 ```bash
 # 一時的なインストール
-docker exec -it bittle-drl-container pip install package_name
+docker compose exec bittle-drl pip install package_name
 
 # 永続的なインストール（requirements.txtに追加）
 echo "package_name>=version" >> requirements.txt
-docker-compose build --no-cache
+docker compose build --no-cache
+```
+
+### 並列学習の設定調整
+
+```bash
+# 設定ファイルの編集
+docker compose exec bittle-drl vim config/training_config.yaml
+
+# 並列学習パラメータの調整例
+# num_envs: 4  # 並列環境数
+# batch_size: 128  # バッチサイズ
+# learning_rate: 0.001  # 学習率
 ```
 
 ## 📚 参考資料
@@ -272,5 +356,5 @@ docker-compose build --no-cache
 ---
 
 **作成日**: 2025年1月  
-**更新日**: 2025年1月  
-**バージョン**: 1.0
+**更新日**: 2025年9月  
+**バージョン**: 2.0

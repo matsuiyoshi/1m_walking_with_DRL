@@ -1,0 +1,97 @@
+final_avg_reward: !!python/object/apply:numpy._core.multiarray.scalar
+- &id001 !!python/object/apply:numpy.dtype
+  args:
+  - f8
+  - false
+  - true
+  state: !!python/tuple
+  - 3
+  - <
+  - null
+  - null
+  - null
+  - -1
+  - -1
+  - 0
+- !!binary |
+  +eYScORysUA=
+final_success_rate: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  AAAAAAAAAAA=
+total_episodes: 47
+total_timesteps: 20304
+training_stats:
+- actor_loss: 35.158725381653866
+  clip_fraction: 0.9108428030303031
+  critic_loss: 29960.559333570076
+  entropy_loss: -7.718671839164965
+  episode: 5
+  kl_divergence: 0.017721262754815996
+  timestep: 2160
+  total_loss: 15015.361209753788
+- actor_loss: 20.02342590238109
+  clip_fraction: 0.9122159090909091
+  critic_loss: 29942.399272017046
+  entropy_loss: -7.69020562171936
+  episode: 10
+  kl_divergence: 0.04425699967100765
+  timestep: 4320
+  total_loss: 14991.146179569128
+- actor_loss: 18.68536371405829
+  clip_fraction: 0.9119791666666667
+  critic_loss: 29930.11993963068
+  entropy_loss: -7.69301435730674
+  episode: 15
+  kl_divergence: 0.05832088122313673
+  timestep: 6480
+  total_loss: 14983.66836529356
+- actor_loss: 12.178171178026858
+  clip_fraction: 0.9140625
+  critic_loss: 29915.695525568182
+  entropy_loss: -7.73437992587234
+  episode: 20
+  kl_divergence: -0.09237495661910736
+  timestep: 8640
+  total_loss: 14969.948606178978
+- actor_loss: 59.211029645332104
+  clip_fraction: 0.9123579545454545
+  critic_loss: 29902.614334753787
+  entropy_loss: -7.710970453782515
+  episode: 25
+  kl_divergence: 0.05253038679560026
+  timestep: 10800
+  total_loss: 15010.44112215909
+- actor_loss: 152.32810490043892
+  clip_fraction: 0.9128787878787878
+  critic_loss: 29892.982759232953
+  entropy_loss: -7.700920130989768
+  episode: 30
+  kl_divergence: 0.032108700331864935
+  timestep: 12960
+  total_loss: 15098.74248046875
+- actor_loss: 23.26726480180567
+  clip_fraction: 0.9131155303030303
+  critic_loss: 29881.893400804925
+  entropy_loss: -7.74010733980121
+  episode: 35
+  kl_divergence: -0.06525262195729849
+  timestep: 15120
+  total_loss: 14964.136547111742
+- actor_loss: 13.455545982117341
+  clip_fraction: 0.9142045454545454
+  critic_loss: 29870.05585345644
+  entropy_loss: -7.715314678712325
+  episode: 40
+  kl_divergence: 0.03646709858016534
+  timestep: 17280
+  total_loss: 14948.406315104166
+- actor_loss: 92.67711322421603
+  clip_fraction: 0.9131628787878788
+  critic_loss: 29859.786085464017
+  entropy_loss: -7.698882003263994
+  episode: 45
+  kl_divergence: 0.0005969224779894857
+  timestep: 19440
+  total_loss: 15022.493131510417
+training_time: 23.356529235839844

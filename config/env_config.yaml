@@ -4,22 +4,22 @@ environment:
   
   # Corridor environment
   corridor:
-    width: 0.15      # m (15cm)
+    width: 0.3       # m (30cm) - より広い通路
     length: 1.0      # m  
     wall_height: 0.05 # m
   
-  # Observation space (32 dimensions total)
+  # Observation space (30 dimensions total)
   observation:
-    joint_angles: 9      # Current joint angles
-    joint_velocities: 9  # Joint angular velocities
+    joint_angles: 8      # Current joint angles
+    joint_velocities: 8  # Joint angular velocities
     imu_data: 6         # 3D acceleration + 3D angular velocity
     position_orientation: 6  # 3D position + 3D orientation
     target_position: 2   # Target X, Y coordinates
-    total_dimensions: 32
+    total_dimensions: 30
   
-  # Action space (9 dimensions)
+  # Action space (8 dimensions)
   action:
-    joint_targets: 9     # Target joint angles
+    joint_targets: 8     # Target joint angles
     action_range: [-1.0, 1.0]  # Normalized action range
     control_frequency: 50  # Hz
   

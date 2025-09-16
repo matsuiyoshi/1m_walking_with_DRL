@@ -1,6 +1,6 @@
 # Bittle四足歩行ロボット深層強化学習プロジェクト用Dockerfile
 # NVIDIA CUDA 12.8.1対応のベースイメージを使用
-FROM nvcr.io/nvidia/cuda:12.8.1-devel-ubuntu24.04
+FROM ubuntu:24.04
 
 # 環境変数の設定
 ENV DEBIAN_FRONTEND=noninteractive
@@ -8,6 +8,7 @@ ENV PYTHONUNBUFFERED=1
 ENV CUDA_HOME=/usr/local/cuda
 ENV PATH=${CUDA_HOME}/bin:${PATH}
 ENV LD_LIBRARY_PATH=${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}
+ENV CUDA_VISIBLE_DEVICES=0
 
 # システムパッケージの更新とインストール
 RUN apt-get update && apt-get install -y \
@@ -35,12 +36,17 @@ RUN apt-get update && apt-get install -y \
     ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
+# CUDA Toolkit 12.1のインストール
+RUN wget https://developer.download.nvidia.com/compute/cuda/12.1.1/local_installers/cuda_12.1.1_530.30.02_linux.run && \
+    sh cuda_12.1.1_530.30.02_linux.run --silent --toolkit && \
+    rm cuda_12.1.1_530.30.02_linux.run
+
 # Pythonエイリアスの設定
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 RUN update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
 
-# PyTorch（CUDA 12.8対応）のインストール
-RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128 --break-system-packages
+# PyTorch（CUDA対応）のインストール
+RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121 --break-system-packages
 
 # プロジェクトの作業ディレクトリを設定
 WORKDIR /app

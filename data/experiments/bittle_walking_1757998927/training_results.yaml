@@ -1,0 +1,41 @@
+final_avg_reward: !!python/object/apply:numpy._core.multiarray.scalar
+- &id001 !!python/object/apply:numpy.dtype
+  args:
+  - f8
+  - false
+  - true
+  state: !!python/tuple
+  - 3
+  - <
+  - null
+  - null
+  - null
+  - -1
+  - -1
+  - 0
+- !!binary |
+  MTsPwKl0sUA=
+final_success_rate: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  AAAAAAAAAAA=
+total_episodes: 12
+total_timesteps: 5184
+training_stats:
+- actor_loss: 10.999185022014673
+  clip_fraction: 0.9163825757575758
+  critic_loss: 29950.14513494318
+  entropy_loss: -7.747468626137936
+  episode: 5
+  kl_divergence: -0.03395405450102055
+  timestep: 2160
+  total_loss: 14985.994324100378
+- actor_loss: 28.430607859050912
+  clip_fraction: 0.9135416666666667
+  critic_loss: 29934.14191524621
+  entropy_loss: -7.713315105438232
+  episode: 10
+  kl_divergence: -0.05810933153737675
+  timestep: 4320
+  total_loss: 14995.42440518466
+training_time: 6.637577295303345

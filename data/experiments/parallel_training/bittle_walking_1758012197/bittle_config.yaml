@@ -1,0 +1,69 @@
+environment:
+  corridor:
+    length: 1.0
+    wall_height: 0.05
+    width: 0.15
+  surfaces:
+    cardboard:
+      friction: 0.8
+      restitution: 0.1
+    smooth_desk:
+      friction: 0.1
+      restitution: 0.05
+physics:
+  contact_cfm: 0.0001
+  contact_erp: 0.2
+  gravity:
+  - 0
+  - 0
+  - -9.81
+  solver_iterations: 100
+  timestep: 1/240
+robot:
+  dimensions:
+    height: 0.08
+    length: 0.2
+    width: 0.1
+  joints:
+    control:
+      damping: 0.1
+      frequency: 50
+      max_torque: 1.0
+    joint_limits:
+      left-back-knee-joint:
+      - -1.57
+      - 1.57
+      left-back-shoulder-joint:
+      - -1.57
+      - 1.57
+      left-front-knee-joint:
+      - -1.57
+      - 1.57
+      left-front-shoulder-joint:
+      - -1.57
+      - 1.57
+      right-back-knee-joint:
+      - -1.57
+      - 1.57
+      right-back-shoulder-joint:
+      - -1.57
+      - 1.57
+      right-front-knee-joint:
+      - -1.57
+      - 1.57
+      right-front-shoulder-joint:
+      - -1.57
+      - 1.57
+    joint_names:
+    - left-front-shoulder-joint
+    - left-front-knee-joint
+    - right-front-shoulder-joint
+    - right-front-knee-joint
+    - left-back-shoulder-joint
+    - left-back-knee-joint
+    - right-back-shoulder-joint
+    - right-back-knee-joint
+    num_joints: 8
+  mass: 0.2
+  name: Bittle
+  urdf_path: assets/bittle-urdf/bittle.urdf

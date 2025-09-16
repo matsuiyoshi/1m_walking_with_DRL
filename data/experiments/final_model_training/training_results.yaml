@@ -1,0 +1,57 @@
+final_avg_reward: !!python/object/apply:numpy._core.multiarray.scalar
+- &id001 !!python/object/apply:numpy.dtype
+  args:
+  - f8
+  - false
+  - true
+  state: !!python/tuple
+  - 3
+  - <
+  - null
+  - null
+  - null
+  - -1
+  - -1
+  - 0
+- !!binary |
+  G1MgYnlzsUA=
+final_success_rate: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  AAAAAAAAAAA=
+total_episodes: 24
+total_timesteps: 10368
+training_stats:
+- actor_loss: 63.34813844663176
+  clip_fraction: 0.9114583333333334
+  critic_loss: 30054.08309067235
+  entropy_loss: -7.712027604652174
+  episode: 5
+  kl_divergence: -0.004001733197858839
+  timestep: 2160
+  total_loss: 15090.31258877841
+- actor_loss: 86.90065665010815
+  clip_fraction: 0.9145359848484849
+  critic_loss: 30045.610079308713
+  entropy_loss: -7.696461749799324
+  episode: 10
+  kl_divergence: 0.046763787034786106
+  timestep: 4320
+  total_loss: 15109.6287109375
+- actor_loss: 34.72239274607237
+  clip_fraction: 0.9105113636363636
+  critic_loss: 30026.628870738637
+  entropy_loss: -7.732598226720636
+  episode: 15
+  kl_divergence: -0.0294985062696717
+  timestep: 6480
+  total_loss: 15047.959514086175
+- actor_loss: 37.577556852025516
+  clip_fraction: 0.9117897727272727
+  critic_loss: 30014.801065340907
+  entropy_loss: -7.70220902038343
+  episode: 20
+  kl_divergence: 0.03233314307801651
+  timestep: 8640
+  total_loss: 15044.901041666666
+training_time: 12.770670175552368

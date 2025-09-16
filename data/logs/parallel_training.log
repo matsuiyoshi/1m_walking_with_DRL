@@ -1,0 +1,77 @@
+2025-09-16 17:29:14,007 - __main__ - INFO - 並列学習を開始します...
+2025-09-16 17:29:14,007 - __main__ - INFO - 設定ファイル: config/training_config.yaml
+2025-09-16 17:29:14,007 - __main__ - INFO - 出力ディレクトリ: data/experiments/parallel_training
+2025-09-16 17:29:15,216 - __main__ - ERROR - 並列学習中にエラーが発生しました: 'ParallelTrainer' object has no attribute 'device'
+2025-09-16 17:29:45,487 - __main__ - INFO - 並列学習を開始します...
+2025-09-16 17:29:45,487 - __main__ - INFO - 設定ファイル: config/training_config.yaml
+2025-09-16 17:29:45,487 - __main__ - INFO - 出力ディレクトリ: data/experiments/parallel_training
+2025-09-16 17:29:46,702 - __main__ - ERROR - 並列学習中にエラーが発生しました: BittleWalkingEnv.__init__() got an unexpected keyword argument 'env_config_path'
+2025-09-16 17:30:08,231 - __main__ - INFO - 並列学習を開始します...
+2025-09-16 17:30:08,231 - __main__ - INFO - 設定ファイル: config/training_config.yaml
+2025-09-16 17:30:08,231 - __main__ - INFO - 出力ディレクトリ: data/experiments/parallel_training
+2025-09-16 17:30:11,119 - __main__ - ERROR - 並列学習中にエラーが発生しました: too many values to unpack (expected 2)
+2025-09-16 17:33:33,866 - __main__ - INFO - 並列学習を開始します...
+2025-09-16 17:33:33,866 - __main__ - INFO - 設定ファイル: config/training_config.yaml
+2025-09-16 17:33:33,866 - __main__ - INFO - 出力ディレクトリ: data/experiments/parallel_training
+2025-09-16 17:33:37,988 - __main__ - ERROR - 並列学習中にエラーが発生しました: 'GPUParallelBittleEnv' object has no attribute 'device'
+2025-09-16 17:36:13,408 - __main__ - INFO - 並列学習を開始します...
+2025-09-16 17:36:13,408 - __main__ - INFO - 設定ファイル: config/training_config.yaml
+2025-09-16 17:36:13,408 - __main__ - INFO - 出力ディレクトリ: data/experiments/parallel_training
+2025-09-16 17:36:17,481 - __main__ - ERROR - 並列学習中にエラーが発生しました: 'hyperparameters'
+2025-09-16 17:39:50,757 - __main__ - INFO - 並列学習を開始します...
+2025-09-16 17:39:50,757 - __main__ - INFO - 設定ファイル: config/training_config.yaml
+2025-09-16 17:39:50,757 - __main__ - INFO - 出力ディレクトリ: data/experiments/parallel_training
+2025-09-16 17:39:54,908 - __main__ - ERROR - 並列学習中にエラーが発生しました: 'ParallelTrainer' object has no attribute 'obs_dim'
+2025-09-16 17:40:30,842 - __main__ - INFO - 並列学習を開始します...
+2025-09-16 17:40:30,842 - __main__ - INFO - 設定ファイル: config/training_config.yaml
+2025-09-16 17:40:30,842 - __main__ - INFO - 出力ディレクトリ: data/experiments/parallel_training
+2025-09-16 17:40:34,910 - __main__ - ERROR - 並列学習中にエラーが発生しました: 'hyperparameters'
+2025-09-16 17:42:43,902 - __main__ - INFO - 並列学習を開始します...
+2025-09-16 17:42:43,902 - __main__ - INFO - 設定ファイル: config/training_config.yaml
+2025-09-16 17:42:43,902 - __main__ - INFO - 出力ディレクトリ: data/experiments/parallel_training
+2025-09-16 17:42:48,045 - src.training.trainer - INFO - 並列トレーナーを初期化しました（環境数: 8）
+2025-09-16 17:42:48,045 - __main__ - ERROR - 並列学習中にエラーが発生しました: 'hyperparameters'
+2025-09-16 17:43:17,292 - __main__ - INFO - 並列学習を開始します...
+2025-09-16 17:43:17,293 - __main__ - INFO - 設定ファイル: config/training_config.yaml
+2025-09-16 17:43:17,293 - __main__ - INFO - 出力ディレクトリ: data/experiments/parallel_training
+2025-09-16 17:43:21,416 - src.training.trainer - INFO - 並列トレーナーを初期化しました（環境数: 8）
+2025-09-16 17:43:21,416 - __main__ - INFO - 並列環境数: 1
+2025-09-16 17:43:21,416 - __main__ - INFO - バッチサイズ: 8
+2025-09-16 17:43:21,416 - __main__ - INFO - 総タイムステップ数: 50
+2025-09-16 17:43:21,416 - src.training.trainer - INFO - 並列学習を開始します...
+2025-09-16 17:43:22,895 - __main__ - ERROR - 並列学習中にエラーが発生しました: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+2025-09-16 17:44:03,786 - __main__ - INFO - 並列学習を開始します...
+2025-09-16 17:44:03,786 - __main__ - INFO - 設定ファイル: config/training_config.yaml
+2025-09-16 17:44:03,786 - __main__ - INFO - 出力ディレクトリ: data/experiments/parallel_training
+2025-09-16 17:44:07,965 - src.training.trainer - INFO - 並列トレーナーを初期化しました（環境数: 8）
+2025-09-16 17:44:07,966 - __main__ - INFO - 並列環境数: 1
+2025-09-16 17:44:07,966 - __main__ - INFO - バッチサイズ: 8
+2025-09-16 17:44:07,966 - __main__ - INFO - 総タイムステップ数: 50
+2025-09-16 17:44:07,966 - src.training.trainer - INFO - 並列学習を開始します...
+2025-09-16 17:44:09,442 - __main__ - ERROR - 並列学習中にエラーが発生しました: expand(torch.cuda.FloatTensor{[8, 1]}, size=[8]): the number of sizes provided (1) must be greater or equal to the number of dimensions in the tensor (2)
+2025-09-16 17:44:49,576 - __main__ - INFO - 並列学習を開始します...
+2025-09-16 17:44:49,576 - __main__ - INFO - 設定ファイル: config/training_config.yaml
+2025-09-16 17:44:49,576 - __main__ - INFO - 出力ディレクトリ: data/experiments/parallel_training
+2025-09-16 17:44:53,715 - src.training.trainer - INFO - 並列トレーナーを初期化しました（環境数: 8）
+2025-09-16 17:44:53,715 - __main__ - INFO - 並列環境数: 1
+2025-09-16 17:44:53,715 - __main__ - INFO - バッチサイズ: 8
+2025-09-16 17:44:53,715 - __main__ - INFO - 総タイムステップ数: 50
+2025-09-16 17:44:53,715 - src.training.trainer - INFO - 並列学習を開始します...
+2025-09-16 17:50:00,437 - __main__ - INFO - 並列学習を開始します...
+2025-09-16 17:50:00,437 - __main__ - INFO - 設定ファイル: config/training_config.yaml
+2025-09-16 17:50:00,437 - __main__ - INFO - 出力ディレクトリ: data/experiments/parallel_training
+2025-09-16 17:50:04,531 - src.training.trainer - INFO - 並列トレーナーを初期化しました（環境数: 8）
+2025-09-16 17:50:04,531 - src.training.trainer - INFO - TensorBoardログディレクトリ: data/experiments/parallel_training/bittle_walking_1758012600/tensorboard
+2025-09-16 17:50:04,531 - __main__ - INFO - 並列環境数: 1
+2025-09-16 17:50:04,531 - __main__ - INFO - バッチサイズ: 8
+2025-09-16 17:50:04,531 - __main__ - INFO - 総タイムステップ数: 100
+2025-09-16 17:50:04,531 - src.training.trainer - INFO - 並列学習を開始します...
+2025-09-16 17:56:53,316 - __main__ - INFO - 並列学習を開始します...
+2025-09-16 17:56:53,316 - __main__ - INFO - 設定ファイル: config/training_config.yaml
+2025-09-16 17:56:53,316 - __main__ - INFO - 出力ディレクトリ: data/experiments/parallel_training
+2025-09-16 17:56:57,514 - src.training.trainer - INFO - 並列トレーナーを初期化しました（環境数: 8）
+2025-09-16 17:56:57,514 - src.training.trainer - INFO - TensorBoardログディレクトリ: data/experiments/parallel_training/bittle_walking_1758013013/tensorboard
+2025-09-16 17:56:57,514 - __main__ - INFO - 並列環境数: 2
+2025-09-16 17:56:57,514 - __main__ - INFO - バッチサイズ: 16
+2025-09-16 17:56:57,514 - __main__ - INFO - 総タイムステップ数: 1000
+2025-09-16 17:56:57,514 - src.training.trainer - INFO - 並列学習を開始します...

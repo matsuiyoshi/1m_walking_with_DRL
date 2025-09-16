@@ -104,7 +104,7 @@ class PPOAgent:
             
             return (
                 action.cpu().numpy().flatten(),
-                log_prob.cpu().item(),
+                log_prob.cpu().mean().item(),  # 各行動の対数確率の平均
                 value.cpu().item()
             )
     

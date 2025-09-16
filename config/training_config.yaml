@@ -13,10 +13,10 @@ algorithm:
       hidden_layers: [256, 256, 128]
       activation: "ReLU"
   
-  # Hyperparameters
+  # Hyperparameters (GPU並列処理最適化)
   hyperparameters:
-    learning_rate: 0.0003
-    batch_size: 64
+    learning_rate: 0.001  # より高い学習率で効率的に学習
+    batch_size: 256  # GPU並列処理用にバッチサイズを増加
     n_epochs: 10
     clip_range: 0.2
     vf_coef: 0.5
@@ -26,21 +26,21 @@ algorithm:
     gamma: 0.99
     buffer_size: 2048
 
-# Training settings
+# Training settings (1時間学習用)
 training:
-  total_timesteps: 1000000
-  eval_freq: 10000
-  save_freq: 50000
-  log_interval: 1000
+  total_timesteps: 300000  # 1時間で実行可能なタイムステップ数
+  eval_freq: 30000        # より頻繁に評価
+  save_freq: 60000        # より頻繁に保存
+  log_interval: 3000      # より頻繁にログ出力
   
   # Episode settings
   episode:
-    max_steps: 1000  # ~4 seconds at 240Hz
-    max_time: 4.0    # seconds
+    max_steps: 6000  # ~25 seconds at 240Hz
+    max_time: 25.0   # seconds
   
   # Environment settings
   env:
-    num_envs: 1
+    num_envs: 8  # 並列環境数を増加（GPU並列処理用）
     render: false
     render_mode: "human"
   

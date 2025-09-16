@@ -1,0 +1,73 @@
+environment:
+  corridor:
+    length: 1.0
+    wall_height: 0.05
+    width: 0.15
+  surfaces:
+    cardboard:
+      friction: 0.8
+      restitution: 0.1
+    smooth_desk:
+      friction: 0.1
+      restitution: 0.05
+physics:
+  contact_cfm: 0.0001
+  contact_erp: 0.2
+  gravity:
+  - 0
+  - 0
+  - -9.81
+  solver_iterations: 100
+  timestep: 1/240
+robot:
+  dimensions:
+    height: 0.08
+    length: 0.2
+    width: 0.1
+  joints:
+    control:
+      damping: 0.1
+      frequency: 50
+      max_torque: 1.0
+    joint_limits:
+      BL_hip:
+      - -1.57
+      - 1.57
+      BL_knee:
+      - -1.57
+      - 1.57
+      BR_hip:
+      - -1.57
+      - 1.57
+      BR_knee:
+      - -1.57
+      - 1.57
+      FL_hip:
+      - -1.57
+      - 1.57
+      FL_knee:
+      - -1.57
+      - 1.57
+      FR_hip:
+      - -1.57
+      - 1.57
+      FR_knee:
+      - -1.57
+      - 1.57
+      neck:
+      - -0.5
+      - 0.5
+    joint_names:
+    - FL_hip
+    - FL_knee
+    - FR_hip
+    - FR_knee
+    - BL_hip
+    - BL_knee
+    - BR_hip
+    - BR_knee
+    - neck
+    num_joints: 9
+  mass: 0.2
+  name: Bittle
+  urdf_path: assets/bittle-urdf/bittle.urdf

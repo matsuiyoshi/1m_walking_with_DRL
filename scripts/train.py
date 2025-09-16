@@ -48,6 +48,8 @@ def main():
                        help='Enable debug mode')
     parser.add_argument('--render', action='store_true',
                        help='Enable rendering during training')
+    parser.add_argument('--no-eval', action='store_true',
+                       help='Disable evaluation during training')
     
     args = parser.parse_args()
     
@@ -89,6 +91,8 @@ def main():
             trainer.config['training']['eval_freq'] = args.eval_freq
         if args.save_freq is not None:
             trainer.config['training']['save_freq'] = args.save_freq
+        if args.no_eval:
+            trainer.config['training']['eval_freq'] = 0  # 評価を無効化
         
         # 学習の実行
         logger.info("学習を開始します...")

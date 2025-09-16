@@ -24,7 +24,8 @@ class BittleWalkingEnv(gym.Env):
     
     def __init__(self, config_path: str = "config/env_config.yaml", 
                  bittle_config_path: str = "config/bittle_config.yaml",
-                 render: bool = False):
+                 render: bool = False,
+                 render_mode: Optional[str] = None):
         """
         環境の初期化
         
@@ -32,6 +33,7 @@ class BittleWalkingEnv(gym.Env):
             config_path: 環境設定ファイルのパス
             bittle_config_path: Bittleロボット設定ファイルのパス
             render: 可視化の有無
+            render_mode: Gymnasiumのレンダリングモード ("human", "rgb_array", None)
         """
         super().__init__()
         
@@ -39,12 +41,20 @@ class BittleWalkingEnv(gym.Env):
         self.config = self._load_config(config_path)
         self.bittle_config = self._load_config(bittle_config_path)
         
+        # レンダリングモードの設定
+        self.render_mode = render_mode
+        self._render_enabled = render or (render_mode == "human")
+        
         # PyBulletの初期化
-        self.render = render
-        if render:
+        if self._render_enabled:
             self.physics_client = p.connect(p.GUI)
         else:
             self.physics_client = p.connect(p.DIRECT)
+        
+        # レンダリング設定の改善
+        p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
+        p.configureDebugVisualizer(p.COV_ENABLE_TINY_RENDERER, 1)
+        p.configureDebugVisualizer(p.COV_ENABLE_RGB_BUFFER_PREVIEW, 1)
         
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
         
@@ -205,12 +215,68 @@ class BittleWalkingEnv(gym.Env):
     
     def _set_initial_pose(self):
         """初期姿勢の設定"""
-        # ロボットを通路の開始位置に配置
-        initial_pos = [0, 0, 0.1]  # 通路の開始位置
+        # ロボットを通路の開始位置に配置（適切な初期姿勢で）
+        initial_pos = [0, 0, 0.15]  # 通路の開始位置（15cm高）- 適切な姿勢なら低くてもOK
         initial_orn = p.getQuaternionFromEuler([0, 0, 0])
         
         p.resetBasePositionAndOrientation(self.robot_id, initial_pos, initial_orn)
         self.initial_position = np.array(initial_pos)
+        
+        # 適切な初期姿勢を設定
+        self._set_proper_initial_joint_angles()
+        
+        # デバッグ: ロボットの境界ボックスを取得
+        aabb_min, aabb_max = p.getAABB(self.robot_id)
+        print(f"Robot AABB: min={aabb_min}, max={aabb_max}")
+        print(f"Robot height: {aabb_max[2] - aabb_min[2]:.3f}m")
+        print(f"Robot bottom: {aabb_min[2]:.3f}m (should be > 0)")
+        
+        # デバッグ: 各足の位置を確認
+        joint_names = self.bittle_config['robot']['joints']['joint_names']
+        for i, joint_name in enumerate(joint_names):
+            joint_id = self._get_joint_id(joint_name)
+            if joint_id is not None:
+                joint_info = p.getJointInfo(self.robot_id, joint_id)
+                joint_pos = p.getLinkState(self.robot_id, joint_id)[0]
+                print(f"Joint {joint_name}: position={joint_pos}")
+        
+        # デバッグ: 全リンクの位置を確認
+        num_joints = p.getNumJoints(self.robot_id)
+        print(f"Total joints: {num_joints}")
+        min_z = float('inf')
+        for i in range(num_joints):
+            joint_info = p.getJointInfo(self.robot_id, i)
+            if joint_info[2] != p.JOINT_FIXED:  # 固定関節以外
+                link_pos = p.getLinkState(self.robot_id, i)[0]
+                print(f"Joint {i} ({joint_info[1].decode()}): position={link_pos}")
+                min_z = min(min_z, link_pos[2])
+        
+        print(f"Lowest joint position: {min_z:.3f}m")
+        print(f"Required initial height: {abs(min_z) + 0.05:.3f}m (lowest + 5cm margin)")
+    
+    def _set_proper_initial_joint_angles(self):
+        """適切な初期関節角度の設定"""
+        # 四足歩行ロボットの適切な初期姿勢
+        # shoulderからkneeまで: 地面に垂直（90度）
+        # kneeから足先まで: 地面と平行（0度）
+        
+        joint_names = self.bittle_config['robot']['joints']['joint_names']
+        
+        for joint_name in joint_names:
+            joint_id = self._get_joint_id(joint_name)
+            if joint_id is not None:
+                # shoulder関節: 90度（地面に垂直）
+                if 'shoulder' in joint_name:
+                    initial_angle = 1.57  # 90度（π/2ラジアン）
+                # knee関節: 0度（地面と平行）
+                elif 'knee' in joint_name:
+                    initial_angle = 0.0   # 0度
+                else:
+                    initial_angle = 0.0   # その他は0度
+                
+                # 関節角度を設定
+                p.resetJointState(self.robot_id, joint_id, initial_angle)
+                print(f"Set {joint_name} to {initial_angle:.2f} rad ({initial_angle * 180 / 3.14159:.1f}°)")
     
     def _set_target_position(self):
         """目標位置の設定"""
@@ -248,6 +314,10 @@ class BittleWalkingEnv(gym.Env):
         # 行動を関節角度に変換
         joint_targets = self._action_to_joint_angles(action)
         
+        # デバッグ用: 最初の数ステップで行動と関節角度を出力
+        if self.current_step < 5:
+            print(f"Step {self.current_step}: Action={action[:3]}, Joint targets={joint_targets[:3]}")
+        
         # 各関節に目標角度を設定
         joint_names = self.bittle_config['robot']['joints']['joint_names']
         
@@ -264,9 +334,16 @@ class BittleWalkingEnv(gym.Env):
                         targetPosition=joint_targets[i],
                         force=self.bittle_config['robot']['joints']['control']['max_torque']
                     )
+                else:
+                    if self.current_step < 5:
+                        print(f"Warning: Joint {joint_name} not found")
     
     def _action_to_joint_angles(self, action: np.ndarray) -> np.ndarray:
         """行動を関節角度に変換"""
+        # CUDA tensorの場合はCPUに移動してnumpyに変換
+        if hasattr(action, 'cpu'):
+            action = action.cpu().numpy()
+        
         joint_names = self.bittle_config['robot']['joints']['joint_names']
         joint_angles = np.zeros(len(joint_names))
         
@@ -382,7 +459,7 @@ class BittleWalkingEnv(gym.Env):
         euler = p.getEulerFromQuaternion(orn)
         
         # ピッチまたはロールが一定角度を超えた場合
-        max_angle = 0.5  # 約30度
+        max_angle = 1.0  # 約60度（より寛容な設定）
         return abs(euler[0]) > max_angle or abs(euler[1]) > max_angle
     
     def _is_target_reached(self) -> bool:
@@ -415,14 +492,83 @@ class BittleWalkingEnv(gym.Env):
             'step': self.current_step
         }
     
-    def render(self, mode='human'):
-        """環境の可視化"""
-        if mode == 'human':
-            # PyBulletのGUIモードでは自動的に可視化される
-            pass
-        elif mode == 'rgb_array':
-            # RGB配列の取得（実装が必要）
-            pass
+    def render(self, mode: str = "human"):
+        """
+        Gymnasiumの標準的なレンダリング機能
+        
+        Args:
+            mode: レンダリングモード ("human", "rgb_array")
+            
+        Returns:
+            mode="rgb_array"の場合: RGB画像配列
+            mode="human"の場合: None
+        """
+        if mode == "human":
+            # PyBulletのGUIモードで表示
+            if not self._render_enabled:
+                # 現在DIRECTモードの場合は、GUIモードに切り替え
+                p.disconnect(self.physics_client)
+                self.physics_client = p.connect(p.GUI)
+                self._render_enabled = True
+                # 環境を再構築（resetメソッドを使用）
+                self.reset()
+            return None
+            
+        elif mode == "rgb_array":
+            # RGB画像配列を返す
+            try:
+                # カメラパラメータの設定（ロボットの位置に追従）
+                camera_params = self.config.get('visualization', {}).get('camera', {})
+                distance = camera_params.get('distance', 2.0)
+                yaw = camera_params.get('yaw', 0.0)
+                pitch = camera_params.get('pitch', -30.0)
+                
+                # ロボットの現在位置を取得してカメラのターゲットに設定
+                robot_pos, _ = p.getBasePositionAndOrientation(self.robot_id)
+                target_pos = [robot_pos[0], robot_pos[1], robot_pos[2] + 0.1]  # ロボットの少し上をターゲット
+                
+                # カメラ画像の取得
+                width, height = 640, 480
+                view_matrix = p.computeViewMatrixFromYawPitchRoll(
+                    cameraTargetPosition=target_pos,
+                    distance=distance,
+                    yaw=yaw,
+                    pitch=pitch,
+                    roll=0,
+                    upAxisIndex=2
+                )
+                projection_matrix = p.computeProjectionMatrixFOV(
+                    fov=60,
+                    aspect=width/height,
+                    nearVal=0.1,
+                    farVal=100.0
+                )
+                
+                # 画像の取得（DIRECTモードでも動作するように修正）
+                _, _, rgb_array, _, _ = p.getCameraImage(
+                    width=width,
+                    height=height,
+                    viewMatrix=view_matrix,
+                    projectionMatrix=projection_matrix,
+                    renderer=p.ER_TINY_RENDERER  # DIRECTモードでも動作するレンダラー
+                )
+                
+                # RGB配列の整形
+                rgb_array = np.array(rgb_array, dtype=np.uint8)
+                rgb_array = rgb_array[:, :, :3]  # Alphaチャンネルを除去
+                
+                return rgb_array
+                
+            except Exception as e:
+                # エラーが発生した場合はダミー画像を返す
+                print(f"レンダリングエラー: {e}")
+                dummy_frame = np.zeros((480, 640, 3), dtype=np.uint8)
+                # テスト用にグレーの背景を設定
+                dummy_frame.fill(128)
+                return dummy_frame
+            
+        else:
+            raise ValueError(f"サポートされていないレンダリングモード: {mode}")
     
     def close(self):
         """環境の終了"""

@@ -41,6 +41,8 @@ def main():
                        help='Use deterministic actions')
     parser.add_argument('--save-trajectories', action='store_true',
                        help='Save trajectory data')
+    parser.add_argument('--save-video', action='store_true',
+                       help='Save video of the simulation')
     
     # 出力設定
     parser.add_argument('--output-dir', type=str, default=None,
@@ -81,11 +83,19 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
     
     try:
+        # 設定ファイルから次元数を取得
+        import yaml
+        with open(args.env_config, 'r', encoding='utf-8') as f:
+            env_config = yaml.safe_load(f)
+        
+        obs_dim = env_config['environment']['observation']['total_dimensions']
+        action_dim = len(env_config['environment']['action']['joint_targets']) if isinstance(env_config['environment']['action']['joint_targets'], list) else env_config['environment']['action']['joint_targets']
+        
         # エージェントの作成
         logger.info("エージェントを初期化しています...")
         agent = PPOAgent(
-            obs_dim=32,  # 観測次元（設定から取得する方が良い）
-            action_dim=9,  # 行動次元（設定から取得する方が良い）
+            obs_dim=obs_dim,
+            action_dim=action_dim,
             config_path="config/training_config.yaml"
         )
         
@@ -108,7 +118,8 @@ def main():
             num_episodes=args.num_episodes,
             render=args.render,
             deterministic=args.deterministic,
-            save_trajectories=args.save_trajectories
+            save_trajectories=args.save_trajectories,
+            save_video=args.save_video
         )
         
         # 結果の表示

@@ -12,29 +12,27 @@ robot:
   
   # Joint specifications
   joints:
-    num_joints: 9
+    num_joints: 8
     joint_names:
-      - "FL_hip"      # Front Left hip
-      - "FL_knee"     # Front Left knee
-      - "FR_hip"      # Front Right hip
-      - "FR_knee"     # Front Right knee
-      - "BL_hip"      # Back Left hip
-      - "BL_knee"     # Back Left knee
-      - "BR_hip"      # Back Right hip
-      - "BR_knee"     # Back Right knee
-      - "neck"        # Neck joint
+      - "left-front-shoulder-joint"   # Front Left hip
+      - "left-front-knee-joint"       # Front Left knee
+      - "right-front-shoulder-joint"  # Front Right hip
+      - "right-front-knee-joint"      # Front Right knee
+      - "left-back-shoulder-joint"    # Back Left hip
+      - "left-back-knee-joint"        # Back Left knee
+      - "right-back-shoulder-joint"   # Back Right hip
+      - "right-back-knee-joint"       # Back Right knee
     
     # Joint limits (radians)
     joint_limits:
-      FL_hip: [-1.57, 1.57]
-      FL_knee: [-1.57, 1.57]
-      FR_hip: [-1.57, 1.57]
-      FR_knee: [-1.57, 1.57]
-      BL_hip: [-1.57, 1.57]
-      BL_knee: [-1.57, 1.57]
-      BR_hip: [-1.57, 1.57]
-      BR_knee: [-1.57, 1.57]
-      neck: [-0.5, 0.5]
+      left-front-shoulder-joint: [-1.57, 1.57]
+      left-front-knee-joint: [-1.57, 1.57]
+      right-front-shoulder-joint: [-1.57, 1.57]
+      right-front-knee-joint: [-1.57, 1.57]
+      left-back-shoulder-joint: [-1.57, 1.57]
+      left-back-knee-joint: [-1.57, 1.57]
+      right-back-shoulder-joint: [-1.57, 1.57]
+      right-back-knee-joint: [-1.57, 1.57]
     
     # Joint control parameters
     control:
