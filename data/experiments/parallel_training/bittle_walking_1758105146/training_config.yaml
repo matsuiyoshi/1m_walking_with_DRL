@@ -1,0 +1,102 @@
+algorithm:
+  hyperparameters:
+    batch_size: 256
+    buffer_size: 1536
+    clip_range: 0.2
+    ent_coef: 0.01
+    gae_lambda: 0.95
+    gamma: 0.99
+    learning_rate: 0.0003
+    lr_schedule:
+      T_max: 18000000
+      eta_min: 1.0e-05
+      type: cosine_annealing
+    max_grad_norm: 0.5
+    n_epochs: 4
+    optimizer:
+      betas:
+      - 0.9
+      - 0.999
+      eps: 1.0e-08
+      type: AdamW
+      weight_decay: 0.01
+    vf_coef: 0.5
+  name: PPO
+  network:
+    actor:
+      activation: Swish
+      dropout_rate: 0.1
+      hidden_layers:
+      - 256
+      - 128
+      - 64
+      output_activation: Tanh
+      use_attention: false
+      use_layer_norm: true
+      use_residual: true
+    critic:
+      activation: Swish
+      dropout_rate: 0.1
+      hidden_layers:
+      - 256
+      - 128
+      - 64
+      use_layer_norm: true
+      use_residual: true
+    use_optimized: true
+checkpoints:
+  best_model_only: false
+  enabled: true
+  frequency: 900000
+  max_checkpoints: 20
+early_stopping:
+  enabled: true
+  min_delta: 0.005
+  monitor_metric: avg_reward
+  overfitting_detection:
+    enabled: true
+    policy_loss_threshold: 200.0
+    reward_std_threshold: 1.0
+    value_loss_threshold: 5.0
+  patience: 7200000
+  restore_best_weights: true
+evaluation:
+  deterministic: true
+  num_episodes: 5
+  render: false
+  success_criteria:
+    max_fall_angle: 0.8
+    max_time: 10.0
+    min_distance: 0.5
+logging:
+  log_dir: data/logs
+  metrics:
+  - episode_reward
+  - episode_length
+  - success_rate
+  - policy_loss
+  - value_loss
+  - gradient_norm
+  - learning_rate
+  - exploration_rate
+  tensorboard: true
+  wandb: false
+training:
+  domain_randomization:
+    enabled: true
+    friction_range:
+    - 0.6
+    - 0.8
+    mass_variation: 0.02
+    noise_std: 0.001
+  env:
+    num_envs: 12
+    render: false
+    render_mode: human
+  episode:
+    max_steps: 300
+    max_time: 10.0
+  eval_freq: 1800000
+  log_interval: 100
+  save_freq: 1800000
+  total_timesteps: 36000000

@@ -1,0 +1,149 @@
+# Bittle Robot Configuration - 最適化版
+robot:
+  # Basic robot settings
+  name: "bittle"
+  type: "quadruped"
+  
+  # URDF and model settings
+  model:
+    urdf_path: "assets/bittle-urdf/bittle.urdf"
+    scale: 0.2                      # 手のひらサイズ（20cmスケール）
+    mass_scale: 1.0                 # 質量スケール（適切）
+    
+  # Physical properties
+  physics:
+    # Materials
+    friction_coefficient: 0.8       # 滑りにくさ向上
+    restitution: 0.1               # 跳ね返り軽減
+    contact_damping: 0.05          # 接触ダンピング
+    contact_stiffness: 15000       # 接触剛性
+    
+    # Joint properties
+    joint_damping: 0.05            # 関節ダンピング軽減
+    joint_friction: 0.02           # 関節摩擦軽減
+    
+  # Joint configuration（最適化）
+  joints:
+    # Joint names
+    joint_names:
+      - "left-front-shoulder-joint"
+      - "left-front-knee-joint"
+      - "right-front-shoulder-joint"
+      - "right-front-knee-joint"
+      - "left-back-shoulder-joint"
+      - "left-back-knee-joint"
+      - "right-back-shoulder-joint"
+      - "right-back-knee-joint"
+    
+    # Joint limits（安全範囲で学習しやすく）
+    joint_limits:
+      "left-front-shoulder-joint": [-1.57, 1.57]     # ±90度
+      "left-front-knee-joint": [-1.57, 1.57]         # ±90度
+      "right-front-shoulder-joint": [-1.57, 1.57]    # ±90度
+      "right-front-knee-joint": [-1.57, 1.57]        # ±90度
+      "left-back-shoulder-joint": [-1.57, 1.57]      # ±90度
+      "left-back-knee-joint": [-1.57, 1.57]          # ±90度
+      "right-back-shoulder-joint": [-1.57, 1.57]     # ±90度
+      "right-back-knee-joint": [-1.57, 1.57]         # ±90度
+    
+    # 最適化された初期姿勢設定
+    initial_pose:
+      diversity_mode: "medium"      # 適度な多様性
+      
+      # 段階適応学習（段階的に難しくする）
+      stage_adaptation:
+        enabled: true
+        current_stage: 0            # 0: 基本, 1: 中級, 2: 上級
+        
+        # Stage 0: 基本姿勢（安定重視）
+        stage_0:
+          shoulder_variation: 0.2   # ±0.2ラジアン（±11度）
+          knee_variation: 0.1       # ±0.1ラジアン（±6度）
+          base_height: 0.12         # 高めの初期位置
+          
+        # Stage 1: 中級姿勢（バリエーション増加）
+        stage_1:
+          shoulder_variation: 0.4   # ±0.4ラジアン（±23度）
+          knee_variation: 0.3       # ±0.3ラジアン（±17度）
+          base_height: 0.10         # 標準の初期位置
+          
+        # Stage 2: 上級姿勢（最大多様性）
+        stage_2:
+          shoulder_variation: 0.6   # ±0.6ラジアン（±34度）
+          knee_variation: 0.5       # ±0.5ラジアン（±29度）
+          base_height: 0.08         # 低めの初期位置
+      
+      # 基本角度設定
+      base_angles:
+        shoulder: 1.2               # より自然な角度（69度）
+        knee: 0.3                   # 軽く曲げた状態（17度）
+      
+      # 多様性設定
+      diversity:
+        fixed:
+          variation: 0.0            # 固定姿勢
+        low:
+          variation: 0.1            # 低多様性
+        medium:
+          variation: 0.3            # 中多様性
+        high:
+          variation: 0.5            # 高多様性
+  
+  # Sensors configuration
+  sensors:
+    # IMU settings
+    imu:
+      enabled: true
+      noise_std: 0.001             # IMUノイズ軽減
+      bias_std: 0.0001             # バイアス軽減
+    
+    # Joint sensors
+    joint_sensors:
+      position_noise: 0.001        # 位置ノイズ軽減
+      velocity_noise: 0.01         # 速度ノイズ軽減
+      torque_noise: 0.1            # トルクノイズ軽減
+  
+  # Control settings（最適化）
+  control:
+    # PD controller parameters
+    pd_controller:
+      # Shoulder joints（肩関節：安定性重視）
+      shoulder:
+        kp: 80.0                   # 比例ゲイン（やや高め）
+        kd: 5.0                    # 微分ゲイン（安定性）
+        max_torque: 12.0           # 最大トルク
+      
+      # Knee joints（膝関節：応答性重視）
+      knee:
+        kp: 60.0                   # 比例ゲイン（適度）
+        kd: 3.0                    # 微分ゲイン（応答性）
+        max_torque: 8.0            # 最大トルク
+    
+    # Action smoothing（行動の平滑化）
+    action_smoothing:
+      enabled: true
+      factor: 0.8                  # 平滑化係数（0.8で適度）
+      
+    # Safety limits
+    safety:
+      max_joint_velocity: 10.0     # 最大関節速度
+      max_joint_acceleration: 50.0 # 最大関節加速度
+      torque_limit_factor: 0.9     # トルク制限係数
+
+# Performance settings
+performance:
+  # Physics optimization
+  physics_optimization:
+    solver_iterations: 50          # 物理演算反復回数
+    contact_points_threshold: 4    # 接触点閾値
+    collision_margin: 0.001        # 衝突マージン
+    
+  # Memory optimization
+  memory_optimization:
+    buffer_size_limit: 10000       # バッファサイズ制限
+    history_length: 100            # 履歴長制限
+    
+  # Logging optimization
+  logging:
+    detailed_logs: false           # 詳細ログ無効（高速化）
+    debug_visualization: false     # デバッグ可視化無効

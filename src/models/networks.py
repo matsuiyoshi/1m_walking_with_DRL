@@ -399,13 +399,20 @@ class NetworkFactory:
     @staticmethod
     def create_ppo_network(obs_dim: int, action_dim: int, config: dict) -> PPONetwork:
         """PPO Networkの作成"""
-        return PPONetwork(
-            obs_dim=obs_dim,
-            action_dim=action_dim,
-            actor_hidden_dims=config.get('actor', {}).get('hidden_layers', [256, 256, 128]),
-            critic_hidden_dims=config.get('critic', {}).get('hidden_layers', [256, 256, 128]),
-            shared_layers=config.get('shared_layers', False),
-            activation=config.get('actor', {}).get('activation', 'ReLU'),
-            output_activation=config.get('actor', {}).get('output_activation', 'Tanh'),
-            dropout_rate=config.get('dropout_rate', 0.0)
-        )
+        # 最適化版を使用するかチェック
+        if config.get('use_optimized', False):
+            # 最適化されたネットワークを使用
+            from .optimized_networks import OptimizedPPONetwork
+            return OptimizedPPONetwork(obs_dim, action_dim, config)
+        else:
+            # 従来のネットワークを使用
+            return PPONetwork(
+                obs_dim=obs_dim,
+                action_dim=action_dim,
+                actor_hidden_dims=config.get('actor', {}).get('hidden_layers', [256, 256, 128]),
+                critic_hidden_dims=config.get('critic', {}).get('hidden_layers', [256, 256, 128]),
+                shared_layers=config.get('shared_layers', False),
+                activation=config.get('actor', {}).get('activation', 'ReLU'),
+                output_activation=config.get('actor', {}).get('output_activation', 'Tanh'),
+                dropout_rate=config.get('dropout_rate', 0.0)
+            )

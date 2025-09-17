@@ -1,0 +1,180 @@
+avg_actions: !!python/object/apply:numpy._core.multiarray.scalar
+- &id002 !!python/object/apply:numpy.dtype
+  args:
+  - f4
+  - false
+  - true
+  state: !!python/tuple
+  - 3
+  - <
+  - null
+  - null
+  - null
+  - -1
+  - -1
+  - 0
+- !!binary |
+  xrstvg==
+avg_distance: !!python/object/apply:numpy._core.multiarray.scalar
+- &id001 !!python/object/apply:numpy.dtype
+  args:
+  - f8
+  - false
+  - true
+  state: !!python/tuple
+  - 3
+  - <
+  - null
+  - null
+  - null
+  - -1
+  - -1
+  - 0
+- !!binary |
+  L9FCwrFM5j8=
+avg_efficiency_rewards: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  /mtoxxqYOkA=
+avg_forward_rewards: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  /mtoxxqYSkA=
+avg_joint_angles: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  AAAAAAAA+P8=
+avg_joint_velocities: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  AAAAAAAA+P8=
+avg_length: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  mpmZmZmZSEA=
+avg_orientations: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  EXWEEy5c0D8=
+avg_penalties: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  /mtoxxqYKkA=
+avg_positions: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  jrk8MzgqyT8=
+avg_reward: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  0EbM5P+HuUA=
+avg_stability_rewards: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  /lCOFRTyQ0A=
+avg_time: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  mpmZmbE5oj8=
+efficiency: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  AAAAAAAAAAA=
+energy_efficiency: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  gdxCbxXzGz8=
+failure_count: !!python/object/apply:numpy._core.multiarray.scalar
+- &id003 !!python/object/apply:numpy.dtype
+  args:
+  - i8
+  - false
+  - true
+  state: !!python/tuple
+  - 3
+  - <
+  - null
+  - null
+  - null
+  - -1
+  - -1
+  - 0
+- !!binary |
+  BQAAAAAAAAA=
+max_distance: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  zX+HbRuP5j8=
+max_reward: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  1FpAgWftwUA=
+min_distance: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  MAeRAkz25T8=
+min_reward: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  SGEbswCtrkA=
+num_episodes: 5
+std_actions: !!python/object/apply:numpy._core.multiarray.scalar
+- *id002
+- !!binary |
+  exglOw==
+std_distance: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  GpFK8WgFej8=
+std_efficiency_rewards: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  SWJ7cPUq3z8=
+std_forward_rewards: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  SWJ7cPUq7z8=
+std_joint_angles: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  AAAAAAAA+P8=
+std_joint_velocities: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  AAAAAAAA+P8=
+std_length: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  zVhuVzmeMEA=
+std_orientations: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  El4NiH8Ycz8=
+std_penalties: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  SWJ7cPUqzz8=
+std_positions: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  KrAKOTWIoD8=
+std_reward: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  wsYbaF8xoUA=
+std_stability_rewards: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  o4lcFDhg5z8=
+std_time: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  sDSZNDkehz8=
+success_count: !!python/object/apply:numpy._core.multiarray.scalar
+- *id003
+- !!binary |
+  AAAAAAAAAAA=
+success_rate: !!python/object/apply:numpy._core.multiarray.scalar
+- *id001
+- !!binary |
+  AAAAAAAAAAA=

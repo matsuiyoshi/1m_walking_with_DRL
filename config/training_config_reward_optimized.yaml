@@ -1,0 +1,95 @@
+# Training Configuration for PPO - 報酬最適化版
+algorithm:
+  name: "PPO"
+  
+  # Network architecture
+  network:
+    actor:
+      hidden_layers: [256, 256, 128]
+      activation: "ReLU"
+      output_activation: "Tanh"
+    
+    critic:
+      hidden_layers: [256, 256, 128]
+      activation: "ReLU"
+  
+  # Hyperparameters (報酬最適化に適応)
+  hyperparameters:
+    learning_rate: 0.0003           # 報酬改善に適した学習率
+    batch_size: 512
+    n_epochs: 6                     # 過学習防止
+    clip_range: 0.2
+    vf_coef: 0.5
+    ent_coef: 0.02                  # 探索促進
+    max_grad_norm: 0.5
+    gae_lambda: 0.95
+    gamma: 0.99
+    buffer_size: 1536
+
+# Training settings (テスト用)
+training:
+  total_timesteps: 500000           # 30分程度のテスト
+  eval_freq: 50000                  # 5万ステップごとに評価
+  save_freq: 50000                  # 5万ステップごとに保存
+  log_interval: 50                  # 頻繁なログ
+  
+  # Episode settings
+  episode:
+    max_steps: 1000
+    max_time: 20.0                  # 時間延長
+  
+  # Environment settings
+  env:
+    num_envs: 12
+    render: false
+    render_mode: "human"
+  
+  # Domain randomization（緩和）
+  domain_randomization:
+    enabled: true
+    friction_range: [0.5, 0.9]       # より狭い範囲
+    mass_variation: 0.05             # より小さな変動
+    noise_std: 0.001                # より小さなノイズ
+
+# Early Stopping設定（報酬最適化用）
+early_stopping:
+  enabled: true
+  patience: 20000                   # 短めのpatience
+  min_delta: 0.05                   # 改善閾値
+  monitor_metric: "avg_reward"
+  restore_best_weights: true
+  
+  # 過学習検出（緩和）
+  overfitting_detection:
+    enabled: true
+    policy_loss_threshold: 100.0    # より寛容な閾値
+    value_loss_threshold: 2.0
+    reward_std_threshold: 0.5
+
+# Evaluation settings
+evaluation:
+  num_episodes: 5
+  deterministic: true
+  render: false
+  
+  # Success criteria（緩和）
+  success_criteria:
+    min_distance: 0.8               # 80cm以上で成功
+    max_time: 20.0
+    max_fall_angle: 1.2             # より寛容
+
+# Logging and monitoring
+logging:
+  tensorboard: true
+  wandb: false
+  log_dir: "data/logs"
+  
+  # Metrics to track
+  metrics:
+    - "episode_reward"
+    - "episode_length"
+    - "success_rate"
+    - "average_speed"
+    - "fall_rate"
+    - "energy_efficiency"
+    - "learning_stage"              # 学習段階の監視

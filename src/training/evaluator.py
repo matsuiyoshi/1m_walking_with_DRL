@@ -351,8 +351,20 @@ class Evaluator:
         # 詳細統計の計算
         for key, values in detailed_stats.items():
             if values:
-                results[f'avg_{key}'] = np.mean(values)
-                results[f'std_{key}'] = np.std(values)
+                try:
+                    # リストの場合は数値に変換
+                    if isinstance(values[0], (list, np.ndarray)):
+                        # 各要素が配列の場合は平均を取る
+                        numeric_values = [np.mean(v) if hasattr(v, '__len__') else v for v in values]
+                    else:
+                        numeric_values = values
+                    
+                    results[f'avg_{key}'] = np.mean(numeric_values)
+                    results[f'std_{key}'] = np.std(numeric_values)
+                except (ValueError, TypeError) as e:
+                    self.logger.warning(f"統計計算エラー for {key}: {e}")
+                    results[f'avg_{key}'] = 0.0
+                    results[f'std_{key}'] = 0.0
         
         # 性能指標の計算
         results['efficiency'] = results['success_rate'] / results['avg_time'] if results['avg_time'] > 0 else 0

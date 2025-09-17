@@ -89,9 +89,142 @@ class ParallelTrainer(Trainer):
         self.episode_rewards_history = []
         self.episode_lengths_history = []
         
+        # Early Stopping用の統計情報
+        self.early_stopping_config = self.config.get('early_stopping', {})
+        self.early_stopping_enabled = self.early_stopping_config.get('enabled', False)
+        self.patience = self.early_stopping_config.get('patience', 100000)  # デフォルト: 100kステップ
+        self.min_delta = self.early_stopping_config.get('min_delta', 0.01)  # デフォルト: 0.01
+        self.monitor_metric = self.early_stopping_config.get('monitor_metric', 'avg_reward')  # 監視する指標
+        self.restore_best_weights = self.early_stopping_config.get('restore_best_weights', True)
+        
+        # Early Stopping用の状態変数
+        self.best_metric_value = float('-inf')
+        self.wait_count = 0
+        self.best_weights = None
+        self.early_stop_triggered = False
+        
+        # 過学習検出用の設定
+        self.overfitting_config = self.early_stopping_config.get('overfitting_detection', {})
+        self.overfitting_enabled = self.overfitting_config.get('enabled', False)
+        self.policy_loss_threshold = self.overfitting_config.get('policy_loss_threshold', 200.0)
+        self.value_loss_threshold = self.overfitting_config.get('value_loss_threshold', 2.0)
+        self.reward_std_threshold = self.overfitting_config.get('reward_std_threshold', 0.5)
+        
+        # 過学習検出用の履歴
+        self.recent_rewards = []
+        self.recent_policy_losses = []
+        self.recent_value_losses = []
+        self.history_size = 100  # 直近100回の履歴を保持
+        
         self.logger.info(f"並列トレーナーを初期化しました（環境数: {self.num_envs}）")
         self.logger.info(f"TensorBoardログディレクトリ: {self.tensorboard_dir}")
         self.logger.info(f"TensorBoard起動コマンド: tensorboard --logdir={self.tensorboard_dir}")
+        
+        if self.early_stopping_enabled:
+            self.logger.info(f"Early Stopping有効: patience={self.patience}, min_delta={self.min_delta}, monitor={self.monitor_metric}")
+        
+        if self.overfitting_enabled:
+            self.logger.info(f"過学習検出有効: policy_loss_threshold={self.policy_loss_threshold}, value_loss_threshold={self.value_loss_threshold}, reward_std_threshold={self.reward_std_threshold}")
+    
+    def _detect_overfitting(self, metrics: Dict[str, float]) -> bool:
+        """
+        過学習の検出
+        
+        Args:
+            metrics: 現在の学習指標
+            
+        Returns:
+            bool: 過学習が検出されたかどうか
+        """
+        if not self.overfitting_enabled:
+            return False
+        
+        # 履歴を更新
+        self.recent_rewards.append(metrics.get('avg_reward', 0.0))
+        self.recent_policy_losses.append(metrics.get('policy_loss', 0.0))
+        self.recent_value_losses.append(metrics.get('value_loss', 0.0))
+        
+        # 履歴サイズを制限
+        if len(self.recent_rewards) > self.history_size:
+            self.recent_rewards.pop(0)
+            self.recent_policy_losses.pop(0)
+            self.recent_value_losses.pop(0)
+        
+        # 十分な履歴がない場合は判定しない
+        if len(self.recent_rewards) < 20:
+            return False
+        
+        # 過学習の判定
+        overfitting_detected = False
+        
+        # Policy Lossの異常な上昇
+        if len(self.recent_policy_losses) >= 10:
+            recent_policy_loss = np.mean(self.recent_policy_losses[-10:])
+            if recent_policy_loss > self.policy_loss_threshold:
+                self.logger.warning(f"過学習検出: Policy Lossが異常に高い ({recent_policy_loss:.2f} > {self.policy_loss_threshold})")
+                overfitting_detected = True
+        
+        # Value Lossの異常な上昇
+        if len(self.recent_value_losses) >= 10:
+            recent_value_loss = np.mean(self.recent_value_losses[-10:])
+            if recent_value_loss > self.value_loss_threshold:
+                self.logger.warning(f"過学習検出: Value Lossが異常に高い ({recent_value_loss:.2f} > {self.value_loss_threshold})")
+                overfitting_detected = True
+        
+        # 報酬の分散の異常な増加
+        if len(self.recent_rewards) >= 20:
+            reward_std = np.std(self.recent_rewards[-20:])
+            if reward_std > self.reward_std_threshold:
+                self.logger.warning(f"過学習検出: 報酬の分散が異常に大きい ({reward_std:.3f} > {self.reward_std_threshold})")
+                overfitting_detected = True
+        
+        return overfitting_detected
+    
+    def _check_early_stopping(self, metrics: Dict[str, float]) -> bool:
+        """
+        Early Stoppingの判定
+        
+        Args:
+            metrics: 現在の学習指標
+            
+        Returns:
+            bool: Early Stoppingがトリガーされたかどうか
+        """
+        if not self.early_stopping_enabled:
+            return False
+        
+        current_metric = metrics.get(self.monitor_metric, 0.0)
+        
+        # 改善の判定
+        if current_metric > self.best_metric_value + self.min_delta:
+            self.best_metric_value = current_metric
+            self.wait_count = 0
+            
+            # 最良の重みを保存
+            if self.restore_best_weights:
+                self.best_weights = {
+                    'actor': self.agent.network.actor.state_dict().copy(),
+                    'critic': self.agent.network.critic.state_dict().copy()
+                }
+            
+            self.logger.info(f"Early Stopping: 新しい最良値 {self.monitor_metric}={current_metric:.4f}")
+        else:
+            self.wait_count += 1
+            
+            if self.wait_count >= self.patience:
+                self.early_stop_triggered = True
+                self.logger.warning(f"Early Stopping: {self.patience}ステップ改善なし。学習を停止します。")
+                self.logger.warning(f"最良値: {self.monitor_metric}={self.best_metric_value:.4f}")
+                
+                # 最良の重みを復元
+                if self.restore_best_weights and self.best_weights is not None:
+                    self.agent.network.actor.load_state_dict(self.best_weights['actor'])
+                    self.agent.network.critic.load_state_dict(self.best_weights['critic'])
+                    self.logger.info("最良の重みを復元しました")
+                
+                return True
+        
+        return False
     
     def _get_action_batch(self, obs: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         """並列環境用のバッチ行動取得"""
@@ -387,6 +520,25 @@ class ParallelTrainer(Trainer):
                     f"Policy Loss: {update_stats['policy_loss']:.4f}, "
                     f"Value Loss: {update_stats['value_loss']:.4f}"
                 )
+                
+                # Early Stoppingと過学習検出のチェック
+                if self.early_stopping_enabled or self.overfitting_enabled:
+                    metrics = {
+                        'avg_reward': avg_reward,
+                        'avg_length': avg_length,
+                        'policy_loss': update_stats['policy_loss'],
+                        'value_loss': update_stats['value_loss']
+                    }
+                    
+                    # 過学習検出
+                    if self._detect_overfitting(metrics):
+                        self.logger.warning("過学習が検出されました。学習を停止します。")
+                        break
+                    
+                    # Early Stoppingのチェック
+                    if self.early_stopping_enabled and self._check_early_stopping(metrics):
+                        self.logger.warning("Early Stoppingがトリガーされました。学習を停止します。")
+                        break
             
             # 評価
             if eval_freq > 0 and self.total_timesteps % eval_freq == 0:

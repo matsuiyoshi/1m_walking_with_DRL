@@ -1,0 +1,109 @@
+# Training Configuration for PPO - 最適化版
+algorithm:
+  name: "PPO"
+  
+  # Network architecture
+  network:
+    actor:
+      hidden_layers: [256, 256, 128]
+      activation: "ReLU"
+      output_activation: "Tanh"
+    
+    critic:
+      hidden_layers: [256, 256, 128]
+      activation: "ReLU"
+  
+  # Hyperparameters (最適化版)
+  hyperparameters:
+    learning_rate: 0.0005           # 安定した学習率
+    batch_size: 512                 # GPU最適化
+    n_epochs: 6                     # 過学習防止
+    clip_range: 0.2
+    vf_coef: 0.5
+    ent_coef: 0.02                  # 探索促進
+    max_grad_norm: 0.5
+    gae_lambda: 0.95
+    gamma: 0.99
+    buffer_size: 1536               # num_envs * 128
+    
+    # オプティマイザー設定（AdamW + 重み減衰）
+    optimizer:
+      type: "AdamW"                 # 重み減衰付きAdam
+      weight_decay: 0.01            # L2正則化効果
+      betas: [0.9, 0.999]           # モーメント係数
+      eps: 1e-8                     # 数値安定性
+    
+    # 学習率スケジューリング
+    lr_schedule:
+      type: "cosine_annealing"      # コサイン減衰
+      T_max: 1000000                # 半周期のステップ数
+      eta_min: 0.00005              # 最小学習率
+
+# Training settings (最適化版)
+training:
+  total_timesteps: 1000000          # テスト用（1時間程度）
+  eval_freq: 100000                 # 10万ステップごとに評価
+  save_freq: 100000                 # 10万ステップごとに保存
+  log_interval: 100                 # 詳細なログ
+  
+  # Episode settings
+  episode:
+    max_steps: 1000
+    max_time: 10.0
+  
+  # Environment settings
+  env:
+    num_envs: 12                    # CPU コア数に合わせて
+    render: false
+    render_mode: "human"
+  
+  # Domain randomization（緩和）
+  domain_randomization:
+    enabled: true
+    friction_range: [0.3, 0.7]      # より狭い範囲
+    mass_variation: 0.05            # より小さな変動
+    noise_std: 0.005               # より小さなノイズ
+
+# Early Stopping設定（最適化）
+early_stopping:
+  enabled: true
+  patience: 30000                   # より短いpatience
+  min_delta: 0.01                   # 改善閾値
+  monitor_metric: "avg_reward"      # 監視指標
+  restore_best_weights: true        # 最良重みの復元
+  
+  # 過学習検出設定（強化）
+  overfitting_detection:
+    enabled: true
+    policy_loss_threshold: 150.0    # Policy Lossの閾値
+    value_loss_threshold: 1.5       # Value Lossの閾値
+    reward_std_threshold: 0.3       # 報酬標準偏差の閾値
+
+# Evaluation settings
+evaluation:
+  num_episodes: 5
+  deterministic: true
+  render: false
+  
+  # Success criteria
+  success_criteria:
+    min_distance: 0.9
+    max_time: 10.0
+    max_fall_angle: 0.5
+
+# Logging and monitoring
+logging:
+  tensorboard: true
+  wandb: false
+  log_dir: "data/logs"
+  
+  # Metrics to track
+  metrics:
+    - "episode_reward"
+    - "episode_length"
+    - "success_rate"
+    - "average_speed"
+    - "fall_rate"
+    - "energy_efficiency"
+    - "learning_rate"           # 学習率の監視
+    - "policy_gradient_norm"    # 勾配ノルムの監視

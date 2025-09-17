@@ -1,0 +1,6 @@
+final_avg_reward: 0
+final_success_rate: 0
+total_episodes: 58802
+total_timesteps: 61440
+training_stats: []
+training_time: 69.66122388839722

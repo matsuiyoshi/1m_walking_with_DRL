@@ -1,0 +1,87 @@
+# Training Configuration for PPO - Early Stoppingテスト用
+algorithm:
+  name: "PPO"
+  
+  # Network architecture
+  network:
+    actor:
+      hidden_layers: [256, 256, 128]
+      activation: "ReLU"
+      output_activation: "Tanh"
+    
+    critic:
+      hidden_layers: [256, 256, 128]
+      activation: "ReLU"
+  
+  # Hyperparameters
+  hyperparameters:
+    learning_rate: 0.0004
+    batch_size: 512
+    n_epochs: 10
+    clip_range: 0.2
+    vf_coef: 0.5
+    ent_coef: 0.01
+    max_grad_norm: 0.5
+    gae_lambda: 0.95
+    gamma: 0.99
+    buffer_size: 1536
+
+# Training settings (Early Stoppingテスト用)
+training:
+  total_timesteps: 1000000  # テスト用に短縮
+  eval_freq: 50000         # 5万ステップごとに評価
+  save_freq: 50000         # 5万ステップごとに保存
+  log_interval: 25         # 頻繁なログ出力
+  
+  # Episode settings
+  episode:
+    max_steps: 1000
+    max_time: 10.0
+  
+  # Environment settings
+  env:
+    num_envs: 12
+    render: false
+    render_mode: "human"
+  
+  # Randomization for domain adaptation
+  domain_randomization:
+    enabled: true
+    friction_range: [0.1, 0.8]
+    mass_variation: 0.1
+    noise_std: 0.01
+
+# Early Stopping設定（テスト用 - 短いpatience）
+early_stopping:
+  enabled: true                    # Early Stoppingを有効にする
+  patience: 20000                  # テスト用に短いpatience（20kステップ ≈ 30秒）
+  min_delta: 0.01                  # 改善とみなす最小変化量
+  monitor_metric: "avg_reward"     # 監視する指標
+  restore_best_weights: true       # 最良の重みを復元するかどうか
+
+# Evaluation settings
+evaluation:
+  num_episodes: 3
+  deterministic: true
+  render: false
+  
+  # Success criteria
+  success_criteria:
+    min_distance: 0.9
+    max_time: 10.0
+    max_fall_angle: 0.5
+
+# Logging and monitoring
+logging:
+  tensorboard: true
+  wandb: false
+  log_dir: "data/logs"
+  
+  # Metrics to track
+  metrics:
+    - "episode_reward"
+    - "episode_length"
+    - "success_rate"
+    - "average_speed"
+    - "fall_rate"
+    - "energy_efficiency"

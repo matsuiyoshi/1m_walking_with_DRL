@@ -51,6 +51,14 @@ training:
     mass_variation: 0.1
     noise_std: 0.01
 
+# Early Stopping設定
+early_stopping:
+  enabled: true                    # Early Stoppingを有効にする
+  patience: 50000                  # 改善がない場合の待機ステップ数（50kステップ ≈ 1.5分）
+  min_delta: 0.01                  # 改善とみなす最小変化量
+  monitor_metric: "avg_reward"     # 監視する指標（avg_reward, avg_length, policy_loss, value_loss）
+  restore_best_weights: true       # 最良の重みを復元するかどうか
+
 # Evaluation settings
 evaluation:
   num_episodes: 5

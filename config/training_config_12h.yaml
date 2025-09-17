@@ -1,0 +1,125 @@
+# Training Configuration for PPO - 12時間学習用
+algorithm:
+  name: "PPO"
+  
+  # 最適化されたネットワーク構造
+  network:
+    use_optimized: true           # 最適化ネットワーク使用（実証済み）
+    
+    actor:
+      hidden_layers: [256, 128, 64]    # 軽量化ネットワーク（高速化）
+      activation: "Swish"               # 最適活性化関数
+      output_activation: "Tanh"
+      dropout_rate: 0.1                 # 適度な正則化
+      use_residual: true                # 残差接続（勾配流改善）
+      use_attention: false              # 軽量化のため無効
+      use_layer_norm: true              # レイヤー正規化（安定性）
+    
+    critic:
+      hidden_layers: [256, 128, 64]    # 軽量化ネットワーク
+      activation: "Swish"               # 最適活性化関数
+      dropout_rate: 0.1                 # 適度な正則化
+      use_residual: true                # 残差接続
+      use_layer_norm: true              # レイヤー正規化
+  
+  # 12時間学習最適化ハイパーパラメータ
+  hyperparameters:
+    learning_rate: 0.0002           # 1m歩行用学習率（より安定した学習）
+    batch_size: 256                 # バランス型バッチサイズ
+    n_epochs: 6                     # 1m歩行用（より多くの学習エポック）
+    clip_range: 0.2                 # 標準クリッピング範囲
+    vf_coef: 0.5                    # 価値関数係数
+    ent_coef: 0.01                  # エントロピー係数（探索維持）
+    max_grad_norm: 0.5              # 勾配クリッピング
+    gae_lambda: 0.95                # GAE
+    gamma: 0.99                     # 割引率
+    buffer_size: 2304               # 12環境 × 192 = 2304（1m歩行用・長エピソード対応）
+    
+    # オプティマイザー設定（最適化済み）
+    optimizer:
+      type: "AdamW"
+      weight_decay: 0.01            # 重み減衰（長期学習用）
+      betas: [0.9, 0.999]
+      eps: 0.00000001
+    
+    # 学習率スケジューリング（12時間用）
+    lr_schedule:
+      type: "cosine_annealing"
+      T_max: 18000000               # 12時間の半周期（36Mステップの半分）
+      eta_min: 0.00001              # 最小学習率（より低く設定）
+
+# 12時間学習設定
+training:
+  total_timesteps: 36000000       # 真の12時間学習（約1200steps/sec × 12h × 3600s / 8envs）
+  eval_freq: 1800000              # 約30分ごとに評価（12時間用）
+  save_freq: 1800000              # 約30分ごとに保存（12時間用）
+  log_interval: 100               # 詳細ログ（リアルタイム監視）
+  
+  # Episode settings（1m歩行用に最適化）
+  episode:
+    max_steps: 7200               # 30秒 × 240Hz = 7200ステップ（1m歩行用）
+    max_time: 30.0                # 1m歩行に十分な時間制限
+  
+  # Environment settings（12時間学習用）
+  env:
+    num_envs: 12                  # 12環境並列（最適化済み・効率的）
+    render: false
+    render_mode: "human"
+  
+  # Domain randomization（最小限）
+  domain_randomization:
+    enabled: true
+    friction_range: [0.6, 0.8]     # 狭い範囲（安定性重視）
+    mass_variation: 0.02          # 最小変動
+    noise_std: 0.001              # 微小ノイズ
+
+# 12時間学習用Early Stopping
+early_stopping:
+  enabled: true
+  patience: 7200000               # 12時間学習用の超長patience（約2時間待機）
+  min_delta: 0.005                # より小さな改善閾値
+  monitor_metric: "avg_reward"
+  restore_best_weights: true
+  
+  # 過学習検出（長期学習用）
+  overfitting_detection:
+    enabled: true
+    policy_loss_threshold: 200.0  # より高い閾値（長期学習用）
+    value_loss_threshold: 5.0     # より高い閾値
+    reward_std_threshold: 1.0     # より高い閾値
+
+# 評価設定（12時間学習用）
+evaluation:
+  num_episodes: 5                 # 十分な評価エピソード数
+  deterministic: true
+  render: false
+  
+  # 成功基準（1m歩行目標）
+  success_criteria:
+    min_distance: 0.9             # 90cm以上で成功（1m歩行目標）
+    max_time: 30.0                # 30秒以内
+    max_fall_angle: 0.8           # 転倒判定
+
+# ログ設定（12時間学習用）
+logging:
+  tensorboard: true
+  wandb: false
+  log_dir: "data/logs"
+  
+  # 重要指標
+  metrics:
+    - "episode_reward"
+    - "episode_length"
+    - "success_rate"
+    - "policy_loss"
+    - "value_loss"
+    - "gradient_norm"
+    - "learning_rate"
+    - "exploration_rate"
+
+# 12時間学習用チェックポイント設定
+checkpoints:
+  enabled: true
+  frequency: 900000               # 約15分ごとにチェックポイント（12時間用）
+  max_checkpoints: 20             # 最大20個保持（長期学習用）
+  best_model_only: false          # 全チェックポイント保存

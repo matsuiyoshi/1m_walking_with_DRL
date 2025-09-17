@@ -1,0 +1,132 @@
+# Environment Configuration - パフォーマンス最適化版
+environment:
+  # Robot configuration（最適化）
+  robot:
+    urdf_path: "assets/bittle-urdf/bittle.urdf"
+    scale: 0.2                      # 手のひらサイズ
+    initial_position: [0.1, 0.0, 0.086]
+    initial_orientation: [0.0, 0.0, 0.0]
+    
+    # Joint configuration（軽量化）
+    joint_damping: 0.05             # 軽減（高速化）
+    joint_friction: 0.02            # 軽減（高速化）
+    
+    # Physical properties（最適化）
+    mass_scale: 1.0
+    friction_coefficient: 0.7       # 適度な摩擦
+    restitution: 0.0                # 跳ね返りなし（安定性）
+    
+  # Task configuration（現実的な目標）
+  task:
+    target_position: [0.8, 0.0, 0.0]    # 80cm前進（現実的）
+    success_threshold: 0.1              # 10cm以内で成功
+    
+    # Corridor settings（安全マージン）
+    corridor_bounds:
+      x_min: -0.05                      # 最小後退許容
+      x_max: 1.2                        # 前進許容範囲
+      y_min: -0.15                      # 左壁（余裕をもって）
+      y_max: 0.15                       # 右壁（余裕をもって）
+      z_min: 0.0                        # 地面
+      z_max: 0.5                        # 天井（低く）
+  
+  # Episode configuration（効率化）
+  episode:
+    max_steps: 300                      # ステップ数軽減（高速化）
+    max_time: 10.0                      # 時間短縮（効率化）
+    
+    # Termination conditions（緩和）
+    termination:
+      fall_angle_threshold: 1.0         # 転倒判定緩和（約57度）
+      height_threshold: 0.02            # 高さ閾値
+      out_of_bounds_tolerance: 0.02     # 境界越え許容範囲（狭く）
+  
+  # Observation configuration（軽量化）
+  observation:
+    # Robot state（必要最小限）
+    include_position: true
+    include_orientation: true
+    include_linear_velocity: true
+    include_angular_velocity: false     # 角速度除外（軽量化）
+    include_joint_angles: true
+    include_joint_velocities: false     # 関節速度除外（軽量化）
+    
+    # Task state
+    include_target_distance: true
+    include_corridor_bounds: false      # 境界情報除外（軽量化）
+    
+    # Total dimensions: 3+3+3+8+1 = 18 (軽量化)
+    total_dimensions: 18
+  
+  # Action configuration（効率化）
+  action:
+    # Joint targets (8 joints)
+    joint_targets: 8
+    action_space: "continuous"
+    action_range: [-1.2, 1.2]          # 範囲縮小（安全性）
+    
+    # Action smoothing（強化）
+    smoothing_factor: 0.2               # より強い平滑化
+    
+  # Physics configuration（高速化）
+  physics:
+    timestep: 0.02                      # 20ms刻み（高速化）
+    gravity: [0, 0, -9.81]
+    solver_iterations: 30               # 反復数軽減（高速化）
+    
+    # Contact parameters（軽量化）
+    contact_damping: 0.05               # 軽減
+    contact_stiffness: 8000             # 軽減（高速化）
+    
+  # Rendering configuration（無効化）
+  rendering:
+    width: 320                          # 解像度軽減
+    height: 240                         # 解像度軽減
+    camera_distance: 1.0
+    camera_yaw: 45
+    camera_pitch: -30
+    
+    # Debug visualization（無効化）
+    show_target: false                  # 高速化
+    show_corridor: false                # 高速化
+    show_trajectory: false              # 高速化
+
+# 高速化された報酬設定
+reward:
+  # 基本設定（シンプル化）
+  base_reward: 0.1
+  survival_reward: 0.01
+  
+  # 前進報酬（主要）
+  forward_reward: 15.0                  # 強化（主要目標）
+  height_reward: 2.0                    # 強化（重要）
+  
+  # 距離ベース報酬（シンプル）
+  goal_distance_reward: 5.0             # ゴール距離報酬
+  goal_bonus: 100.0                     # ゴール到達ボーナス（大きく）
+  
+  # 軽微なペナルティ
+  boundary_penalty: -0.2                # 軽微
+  pose_penalty: -0.1                    # 軽微
+  height_penalty: -0.1                  # 軽微
+
+# Domain randomization（最小限）
+domain_randomization:
+  enabled: true
+  
+  # Physics randomization（最小限）
+  gravity_variation: 0.02               # 最小限
+  timestep_variation: 0.01              # 最小限
+  
+  # Robot randomization（最小限）
+  mass_variation: 0.02                  # 最小限
+  friction_range: [0.6, 0.8]           # 狭い範囲
+  joint_damping_range: [0.04, 0.06]    # 狭い範囲
+  
+  # Environment randomization（最小限）
+  ground_friction_range: [0.6, 0.8]    # 狭い範囲
+  ground_height_variation: 0.0         # 変動なし
+  
+  # Noise（最小限）
+  observation_noise_std: 0.0           # ノイズなし（高速化）
+  action_noise_std: 0.0                # ノイズなし（高速化）

@@ -1,0 +1,142 @@
+# Environment Configuration - 最適化版
+environment:
+  # Robot configuration
+  robot:
+    urdf_path: "assets/bittle-urdf/bittle.urdf"
+    scale: 0.2                      # 手のひらサイズ（20cm）
+    initial_position: [0.1, 0.0, 0.086]  # 安全マージン付き初期位置
+    initial_orientation: [0.0, 0.0, 0.0]
+    
+    # Joint configuration
+    joint_damping: 0.1
+    joint_friction: 0.1
+    
+    # Physical properties
+    mass_scale: 1.0
+    friction_coefficient: 0.7
+    restitution: 0.0
+    
+  # Task configuration
+  task:
+    target_position: [1.0, 0.0, 0.0]    # 1m前進目標
+    success_threshold: 0.1              # 10cm以内で成功
+    
+    # Corridor settings（安全マージン拡大）
+    corridor_bounds:
+      x_min: -0.1                       # 後退許容範囲
+      x_max: 1.5                        # 前進許容範囲
+      y_min: -0.20                      # 左壁（安全マージン: 20cm - 10cm = 10cm）
+      y_max: 0.20                       # 右壁（安全マージン: 20cm - 10cm = 10cm）
+      z_min: 0.0                        # 地面
+      z_max: 1.0                        # 天井
+  
+  # Episode configuration
+  episode:
+    max_steps: 1000                     # 最大ステップ数
+    max_time: 20.0                      # 最大時間（秒）
+    
+    # Termination conditions（緩和）
+    termination:
+      fall_angle_threshold: 1.2         # 転倒判定（60度→約70度に緩和）
+      height_threshold: 0.02            # 高さ閾値（緩和）
+      out_of_bounds_tolerance: 0.05     # 境界越え許容範囲
+  
+  # Observation configuration
+  observation:
+    # Robot state
+    include_position: true
+    include_orientation: true
+    include_linear_velocity: true
+    include_angular_velocity: true
+    include_joint_angles: true
+    include_joint_velocities: true
+    
+    # Task state
+    include_target_distance: true
+    include_corridor_bounds: true
+    
+    # Total dimensions: 3+3+3+3+8+8+2+4 = 32
+    total_dimensions: 32
+  
+  # Action configuration
+  action:
+    # Joint targets (8 joints)
+    joint_targets: 8
+    action_space: "continuous"
+    action_range: [-1.57, 1.57]        # ±90度の関節角度
+    
+    # Action smoothing
+    smoothing_factor: 0.1
+    
+  # Physics configuration
+  physics:
+    timestep: 0.01                      # 10ms刻み
+    gravity: [0, 0, -9.81]
+    solver_iterations: 50
+    
+    # Contact parameters
+    contact_damping: 0.1
+    contact_stiffness: 10000
+    
+  # Rendering configuration
+  rendering:
+    width: 640
+    height: 480
+    camera_distance: 1.0
+    camera_yaw: 45
+    camera_pitch: -30
+    
+    # Debug visualization
+    show_target: true
+    show_corridor: true
+    show_trajectory: false
+
+# 最適化された報酬設定
+reward:
+  # 基本設定
+  base_reward: 0.1                      # ベース報酬（常に正の値）
+  survival_reward: 0.01                 # 生存報酬
+  
+  # Stage 0: 基本歩行
+  basic_forward_reward: 10.0            # 前進報酬
+  height_reward: 1.0                    # 高さ維持報酬
+  
+  # Stage 1: 安定性重視
+  stability_forward_reward: 8.0         # 安定性期の前進報酬
+  orientation_reward: 2.0               # 姿勢安定性報酬
+  corridor_center_reward: 1.5          # 通路中央維持報酬
+  
+  # Stage 2: 効率性重視
+  speed_reward: 5.0                     # 速度効率報酬
+  energy_reward: 1.0                    # エネルギー効率報酬
+  target_speed: 0.3                     # 目標速度（30cm/s）
+  
+  # 共通報酬
+  goal_distance_reward: 3.0             # ゴール距離報酬
+  goal_bonus: 50.0                      # ゴール到達ボーナス
+  
+  # 軽減されたペナルティ
+  boundary_penalty: -0.5                # 境界越えペナルティ（軽減）
+  pose_penalty: -0.3                    # 極端姿勢ペナルティ（軽減）
+  height_penalty: -0.2                  # 高さペナルティ（軽減）
+
+# Domain randomization（緩和）
+domain_randomization:
+  enabled: true
+  
+  # Physics randomization
+  gravity_variation: 0.05               # 重力変動（5%）
+  timestep_variation: 0.02              # タイムステップ変動
+  
+  # Robot randomization
+  mass_variation: 0.05                  # 質量変動（5%）
+  friction_range: [0.5, 0.9]           # 摩擦係数範囲（狭く）
+  joint_damping_range: [0.05, 0.15]    # 関節ダンピング範囲
+  
+  # Environment randomization
+  ground_friction_range: [0.6, 1.0]    # 地面摩擦範囲
+  ground_height_variation: 0.001       # 地面高さ変動（1mm）
+  
+  # Noise
+  observation_noise_std: 0.001         # 観測ノイズ（軽減）
+  action_noise_std: 0.005              # 行動ノイズ（軽減）

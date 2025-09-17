@@ -49,11 +49,53 @@ class PPOAgent:
             obs_dim, action_dim, self.algorithm_config['network']
         ).to(self.device)
         
-        # オプティマイザーの設定
-        self.optimizer = optim.Adam(
-            self.network.parameters(),
-            lr=self.hyperparams['learning_rate']
-        )
+        # オプティマイザーの設定（AdamW + 重み減衰）
+        optimizer_config = self.hyperparams.get('optimizer', {})
+        optimizer_type = optimizer_config.get('type', 'Adam')
+        
+        if optimizer_type == 'AdamW':
+            self.optimizer = optim.AdamW(
+                self.network.parameters(),
+                lr=self.hyperparams['learning_rate'],
+                weight_decay=optimizer_config.get('weight_decay', 0.01),
+                betas=optimizer_config.get('betas', [0.9, 0.999]),
+                eps=optimizer_config.get('eps', 1e-8)
+            )
+        else:
+            self.optimizer = optim.Adam(
+                self.network.parameters(),
+                lr=self.hyperparams['learning_rate']
+            )
+        
+        # 学習率スケジューラーの設定
+        lr_schedule = self.hyperparams.get('lr_schedule', {})
+        schedule_type = lr_schedule.get('type', 'constant')
+        
+        if schedule_type == 'linear_decay':
+            total_steps = int(lr_schedule.get('total_steps', 1000000))
+            final_lr = float(lr_schedule.get('final_lr', self.hyperparams['learning_rate'] * 0.1))
+            self.scheduler = optim.lr_scheduler.LinearLR(
+                self.optimizer,
+                start_factor=1.0,
+                end_factor=final_lr / self.hyperparams['learning_rate'],
+                total_iters=total_steps
+            )
+        elif schedule_type == 'cosine_annealing':
+            T_max = int(lr_schedule.get('T_max', 1000000))
+            eta_min = float(lr_schedule.get('eta_min', self.hyperparams['learning_rate'] * 0.01))
+            self.scheduler = optim.lr_scheduler.CosineAnnealingLR(
+                self.optimizer,
+                T_max=T_max,
+                eta_min=eta_min
+            )
+        elif schedule_type == 'exponential':
+            gamma = float(lr_schedule.get('gamma', 0.99))
+            self.scheduler = optim.lr_scheduler.ExponentialLR(
+                self.optimizer,
+                gamma=gamma
+            )
+        else:
+            self.scheduler = None
         
         # 学習状態
         self.learning_steps = 0
@@ -279,6 +321,10 @@ class PPOAgent:
         torch.nn.utils.clip_grad_norm_(self.network.parameters(), self.hyperparams['max_grad_norm'])
         self.optimizer.step()
         
+        # 学習率スケジューラーのステップ
+        if self.scheduler is not None:
+            self.scheduler.step()
+        
         # 統計の計算
         with torch.no_grad():
             kl_divergence = (batch['log_probs'] - current_log_probs).mean()
@@ -295,19 +341,30 @@ class PPOAgent:
     
     def save(self, filepath: str):
         """モデルの保存"""
-        torch.save({
+        save_dict = {
             'network_state_dict': self.network.state_dict(),
             'optimizer_state_dict': self.optimizer.state_dict(),
             'learning_steps': self.learning_steps,
             'episode_count': self.episode_count,
             'config': self.config
-        }, filepath)
+        }
+        
+        # スケジューラーが存在する場合は保存
+        if self.scheduler is not None:
+            save_dict['scheduler_state_dict'] = self.scheduler.state_dict()
+            
+        torch.save(save_dict, filepath)
     
     def load(self, filepath: str):
         """モデルの読み込み"""
         checkpoint = torch.load(filepath, map_location=self.device)
         self.network.load_state_dict(checkpoint['network_state_dict'])
         self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+        
+        # スケジューラーが存在する場合は読み込み
+        if self.scheduler is not None and 'scheduler_state_dict' in checkpoint:
+            self.scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
+            
         self.learning_steps = checkpoint['learning_steps']
         self.episode_count = checkpoint['episode_count']
 

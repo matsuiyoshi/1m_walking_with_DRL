@@ -1,0 +1,85 @@
+environment:
+  action:
+    action_range:
+    - -1.0
+    - 1.0
+    control_frequency: 50
+    joint_targets: 8
+  corridor:
+    length: 1.0
+    wall_height: 0.05
+    width: 0.3
+  name: BittleWalkingEnv
+  observation:
+    imu_data: 6
+    joint_angles: 8
+    joint_velocities: 8
+    position_orientation: 6
+    target_position: 2
+    total_dimensions: 30
+  reward:
+    corridor_penalty: -20.0
+    corridor_reward: 50.0
+    direction_reward: 50.0
+    energy_penalty: -0.05
+    fall_penalty: -50.0
+    forward_reward: 200.0
+    goal_distance_params:
+      distance_decay: 0.5
+      max_distance: 1.0
+      min_distance: 0.1
+    goal_distance_reward: 100.0
+    goal_progress_reward: 80.0
+    joint_limit_penalty: -5.0
+    speed_reward: 10.0
+    stability_reward: 30.0
+    success_bonus: 500.0
+    time_bonus: 100.0
+    torque_change_penalty: -0.5
+simulation:
+  contact_cfm: 0.0001
+  contact_erp: 0.2
+  gravity:
+  - 0
+  - 0
+  - -9.81
+  lateral_friction: 0.8
+  num_solver_iterations: 100
+  num_substeps: 1
+  physics_engine: pybullet
+  restitution: 0.1
+  rolling_friction: 0.1
+  spinning_friction: 0.1
+  timestep: 0.00416666667
+training:
+  episode:
+    max_steps: 1000
+    max_time: 4.0
+variations:
+  randomization:
+    action_noise_std: 0.01
+    friction_std: 0.1
+    mass_std: 0.02
+    sensor_noise_std: 0.01
+  surfaces:
+    cardboard:
+      friction: 0.8
+      name: cardboard
+      restitution: 0.1
+    smooth_desk:
+      friction: 0.1
+      name: smooth_desk
+      restitution: 0.05
+visualization:
+  camera:
+    distance: 2.0
+    pitch: -30.0
+    target_position:
+    - 0
+    - 0
+    - 0.1
+    yaw: 0.0
+  debug_lines: false
+  gui: false
+  show_center_of_mass: false
+  show_joint_frames: false

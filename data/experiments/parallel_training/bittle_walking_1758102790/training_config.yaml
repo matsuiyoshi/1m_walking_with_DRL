@@ -1,0 +1,84 @@
+algorithm:
+  hyperparameters:
+    batch_size: 256
+    buffer_size: 1536
+    clip_range: 0.2
+    ent_coef: 0.01
+    gae_lambda: 0.95
+    gamma: 0.99
+    learning_rate: 0.0003
+    max_grad_norm: 0.5
+    n_epochs: 4
+    vf_coef: 0.5
+  name: PPO
+  network:
+    actor:
+      activation: Swish
+      dropout_rate: 0.1
+      hidden_layers:
+      - 256
+      - 256
+      - 128
+      output_activation: Tanh
+      use_attention: false
+      use_layer_norm: true
+      use_residual: true
+    critic:
+      activation: Swish
+      dropout_rate: 0.1
+      hidden_layers:
+      - 256
+      - 256
+      - 128
+      use_layer_norm: true
+      use_residual: true
+    use_optimized: true
+early_stopping:
+  enabled: true
+  min_delta: 0.02
+  monitor_metric: avg_reward
+  overfitting_detection:
+    enabled: true
+    policy_loss_threshold: 30.0
+    reward_std_threshold: 0.3
+    value_loss_threshold: 1.0
+  patience: 5000
+  restore_best_weights: true
+evaluation:
+  deterministic: true
+  num_episodes: 3
+  render: false
+  success_criteria:
+    max_fall_angle: 1.0
+    max_time: 15.0
+    min_distance: 0.5
+logging:
+  log_dir: data/logs
+  metrics:
+  - episode_reward
+  - episode_length
+  - success_rate
+  - policy_loss
+  - value_loss
+  - gradient_norm
+  tensorboard: true
+  wandb: false
+training:
+  domain_randomization:
+    enabled: true
+    friction_range:
+    - 0.6
+    - 0.8
+    mass_variation: 0.02
+    noise_std: 0.0005
+  env:
+    num_envs: 8
+    render: false
+    render_mode: human
+  episode:
+    max_steps: 500
+    max_time: 15.0
+  eval_freq: 10000
+  log_interval: 25
+  save_freq: 10000
+  total_timesteps: 100000
