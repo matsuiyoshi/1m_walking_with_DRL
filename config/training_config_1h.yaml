@@ -1,0 +1,79 @@
+# Training Configuration for PPO - 1時間学習用
+algorithm:
+  name: "PPO"
+  
+  # Network architecture
+  network:
+    actor:
+      hidden_layers: [256, 256, 128]
+      activation: "ReLU"
+      output_activation: "Tanh"
+    
+    critic:
+      hidden_layers: [256, 256, 128]
+      activation: "ReLU"
+  
+  # Hyperparameters (1時間学習最適化)
+  hyperparameters:
+    learning_rate: 0.0004
+    batch_size: 512   # 1時間学習用にバッチサイズを調整（バッファサイズの1/3、2の倍数でGPU最適化）
+    n_epochs: 10
+    clip_range: 0.2
+    vf_coef: 0.5
+    ent_coef: 0.01
+    max_grad_norm: 0.5
+    gae_lambda: 0.95
+    gamma: 0.99
+    buffer_size: 1536  # num_envs × 128 に合わせて調整
+
+# Training settings (1時間学習用)
+training:
+  total_timesteps: 1800000  # 1時間学習用（472ステップ/秒 × 3600秒）
+  eval_freq: 450000        # 15分ごとに評価（1時間の1/4）
+  save_freq: 450000        # 15分ごとに保存（1時間の1/4）
+  log_interval: 100        # リアルタイム監視用に高頻度でログ出力
+  
+  # Episode settings
+  episode:
+    max_steps: 1000
+    max_time: 10.0
+  
+  # Environment settings
+  env:
+    num_envs: 12      # CPU コア数に合わせて調整（12コア）
+    render: false
+    render_mode: "human"
+  
+  # Randomization for domain adaptation
+  domain_randomization:
+    enabled: true
+    friction_range: [0.1, 0.8]
+    mass_variation: 0.1
+    noise_std: 0.01
+
+# Evaluation settings
+evaluation:
+  num_episodes: 5
+  deterministic: true
+  render: false
+  
+  # Success criteria
+  success_criteria:
+    min_distance: 0.9
+    max_time: 10.0
+    max_fall_angle: 0.5
+
+# Logging and monitoring
+logging:
+  tensorboard: true
+  wandb: false
+  log_dir: "data/logs"
+  
+  # Metrics to track
+  metrics:
+    - "episode_reward"
+    - "episode_length"
+    - "success_rate"
+    - "average_speed"
+    - "fall_rate"
+    - "energy_efficiency"

@@ -1,0 +1,79 @@
+# Training Configuration for PPO - デバッグ用（最小設定）
+algorithm:
+  name: "PPO"
+  
+  # Network architecture
+  network:
+    actor:
+      hidden_layers: [64, 64]  # 小さなネットワーク
+      activation: "ReLU"
+      output_activation: "Tanh"
+    
+    critic:
+      hidden_layers: [64, 64]  # 小さなネットワーク
+      activation: "ReLU"
+  
+  # Hyperparameters (デバッグ用)
+  hyperparameters:
+    learning_rate: 0.001
+    batch_size: 32   # 小さなバッチサイズ
+    n_epochs: 2      # 少ないエポック数
+    clip_range: 0.2
+    vf_coef: 0.5
+    ent_coef: 0.01
+    max_grad_norm: 0.5
+    gae_lambda: 0.95
+    gamma: 0.99
+    buffer_size: 256  # 小さなバッファ
+
+# Training settings (デバッグ用 - 1分学習)
+training:
+  total_timesteps: 1000   # 極めて小規模
+  eval_freq: 0           # 評価なし
+  save_freq: 0           # 保存なし
+  log_interval: 100      # 頻繁にログ出力
+  
+  # Episode settings
+  episode:
+    max_steps: 100  # 短いエピソード
+    max_time: 2.0   # 2秒
+  
+  # Environment settings
+  env:
+    num_envs: 1      # 単一環境でテスト
+    render: false
+    render_mode: "human"
+  
+  # Randomization for domain adaptation
+  domain_randomization:
+    enabled: false   # 無効化
+    friction_range: [0.1, 0.8]
+    mass_variation: 0.1
+    noise_std: 0.01
+
+# Evaluation settings
+evaluation:
+  num_episodes: 1    # 最小評価
+  deterministic: true
+  render: false
+  
+  # Success criteria
+  success_criteria:
+    min_distance: 0.9
+    max_time: 10.0
+    max_fall_angle: 0.5
+
+# Logging and monitoring
+logging:
+  tensorboard: true
+  wandb: false
+  log_dir: "data/logs"
+  
+  # Metrics to track
+  metrics:
+    - "episode_reward"
+    - "episode_length"
+    - "success_rate"
+    - "average_speed"
+    - "fall_rate"
+    - "energy_efficiency"

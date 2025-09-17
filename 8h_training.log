@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/matsui/ドキュメント/1m_walk/1m_walking_with_DRL/scripts/parallel_train.py", line 16, in <module>
+    from src.training.parallel_trainer import ParallelTrainer
+  File "/home/matsui/ドキュメント/1m_walk/1m_walking_with_DRL/src/training/__init__.py", line 5, in <module>
+    from .trainer import Trainer
+  File "/home/matsui/ドキュメント/1m_walk/1m_walking_with_DRL/src/training/trainer.py", line 10, in <module>
+    import torch
+ModuleNotFoundError: No module named 'torch'

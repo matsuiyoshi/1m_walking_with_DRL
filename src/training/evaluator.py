@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 from collections import defaultdict
 import cv2
 import imageio
+from datetime import datetime
 
 from ..environment import BittleWalkingEnv
 from ..models import PPOAgent
@@ -280,9 +281,11 @@ class Evaluator:
         # 動画の保存
         if save_video and video_frames and self.output_dir:
             try:
-                video_path = self.output_dir / f"episode_{episode_num}_video.mp4"
+                # 現在の日時を取得してファイル名に含める
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                video_path = self.output_dir / f"episode_{episode_num}_video_{timestamp}.mp4"
                 self._save_video(video_frames, str(video_path))
-                self.logger.info(f"動画を保存しました: {video_path}")
+                self.logger.info(f"動画を保存しました: {video_path} ({len(video_frames)}フレーム)")
             except Exception as e:
                 self.logger.warning(f"動画保存エラー: {e}")
         

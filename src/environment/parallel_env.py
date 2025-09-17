@@ -29,7 +29,9 @@ class ParallelBittleEnv:
         self.envs = []
         
         # 各環境を初期化
+        print(f"並列環境を初期化中... (環境数: {num_envs})")
         for i in range(num_envs):
+            print(f"環境 {i+1}/{num_envs} を初期化中...")
             env = BittleWalkingEnv(
                 config_path=env_config_path,
                 bittle_config_path=bittle_config_path,
@@ -37,6 +39,7 @@ class ParallelBittleEnv:
                 render_mode=None
             )
             self.envs.append(env)
+            print(f"環境 {i+1} の初期化完了")
         
         # 環境の状態を取得
         self.observation_space = self.envs[0].observation_space

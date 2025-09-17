@@ -46,16 +46,16 @@ class ParallelTrainer(Trainer):
         )
         
         # 並列処理用のバッファ
-        buffer_size = self.config.get('hyperparameters', {}).get('buffer_size', 2048)
-        obs_dim = self.parallel_env.observation_space.shape[0]
-        action_dim = self.parallel_env.action_space.shape[0]
+        buffer_size = self.config.get('algorithm', {}).get('hyperparameters', {}).get('buffer_size', 2048)
+        self.obs_dim = self.parallel_env.observation_space.shape[0]
+        self.action_dim = self.parallel_env.action_space.shape[0]
         
         self.obs_buffer = torch.zeros(
-            (buffer_size, self.num_envs, obs_dim),
+            (buffer_size, self.num_envs, self.obs_dim),
             device=self.agent.device
         )
         self.action_buffer = torch.zeros(
-            (buffer_size, self.num_envs, action_dim),
+            (buffer_size, self.num_envs, self.action_dim),
             device=self.agent.device
         )
         self.reward_buffer = torch.zeros(
@@ -84,13 +84,24 @@ class ParallelTrainer(Trainer):
         self.tensorboard_dir.mkdir(exist_ok=True)
         self.writer = SummaryWriter(log_dir=str(self.tensorboard_dir))
         
+        # TensorBoard用の統計情報
+        self.tensorboard_step = 0
+        self.episode_rewards_history = []
+        self.episode_lengths_history = []
+        
         self.logger.info(f"並列トレーナーを初期化しました（環境数: {self.num_envs}）")
         self.logger.info(f"TensorBoardログディレクトリ: {self.tensorboard_dir}")
+        self.logger.info(f"TensorBoard起動コマンド: tensorboard --logdir={self.tensorboard_dir}")
     
     def _get_action_batch(self, obs: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         """並列環境用のバッチ行動取得"""
         with torch.no_grad():
             actions, log_probs, values = self.agent.network.get_action_and_value(obs, deterministic=False)
+            # 形状を確実に調整
+            if log_probs.dim() > 1:
+                log_probs = log_probs.squeeze(-1)
+            if values.dim() > 1:
+                values = values.squeeze(-1)
             return actions, log_probs, values
     
     def _collect_experience(self) -> Dict[str, Any]:
@@ -112,25 +123,25 @@ class ParallelTrainer(Trainer):
             # 環境でステップ実行
             next_obs, rewards, dones, infos = self.parallel_env.step(actions)
             
-        # バッファに保存（テンソル形状を調整）
-        self.obs_buffer[self.buffer_idx] = obs
-        self.action_buffer[self.buffer_idx] = actions
-        self.reward_buffer[self.buffer_idx] = rewards
-        # valuesの形状を調整（[batch_size, 1] -> [batch_size]）
-        if values.dim() > 1:
-            values = values.squeeze(-1)
-        self.value_buffer[self.buffer_idx] = values
-        # log_probsの形状を調整（[batch_size, 1] -> [batch_size]）
-        if log_probs.dim() > 1:
-            log_probs = log_probs.squeeze(-1)
-        self.log_prob_buffer[self.buffer_idx] = log_probs
-        self.done_buffer[self.buffer_idx] = dones
-        
-        # エピソード統計を更新
-        for i, (reward, done, info) in enumerate(zip(rewards, dones, infos)):
-            if done:
-                episode_rewards.append(reward.item())
-                episode_lengths.append(info.get('episode_length', 0))
+            # バッファに保存（テンソル形状を調整）
+            self.obs_buffer[self.buffer_idx] = obs
+            self.action_buffer[self.buffer_idx] = actions
+            self.reward_buffer[self.buffer_idx] = rewards
+            # valuesの形状を調整（[batch_size, 1] -> [batch_size]）
+            if values.dim() > 1:
+                values = values.squeeze(-1)
+            self.value_buffer[self.buffer_idx] = values
+            # log_probsの形状を調整（[batch_size, 1] -> [batch_size]）
+            if log_probs.dim() > 1:
+                log_probs = log_probs.squeeze(-1)
+            self.log_prob_buffer[self.buffer_idx] = log_probs
+            self.done_buffer[self.buffer_idx] = dones
+            
+            # エピソード統計を更新
+            for i, (reward, done, info) in enumerate(zip(rewards, dones, infos)):
+                if done:
+                    episode_rewards.append(reward.item())
+                    episode_lengths.append(info.get('episode_length', 0))
             
             obs = next_obs
             self.buffer_idx = (self.buffer_idx + 1) % self.buffer_size
@@ -143,15 +154,40 @@ class ParallelTrainer(Trainer):
         
         # TensorBoardにログ
         if episode_rewards:
-            self.writer.add_scalar('Training/Average_Reward', np.mean(episode_rewards), total_steps)
-            self.writer.add_scalar('Training/Episode_Count', len(episode_rewards), total_steps)
+            avg_reward = np.mean(episode_rewards)
+            max_reward = np.max(episode_rewards)
+            min_reward = np.min(episode_rewards)
+            std_reward = np.std(episode_rewards)
+            
+            self.writer.add_scalar('Training/Average_Reward', avg_reward, self.tensorboard_step)
+            self.writer.add_scalar('Training/Max_Reward', max_reward, self.tensorboard_step)
+            self.writer.add_scalar('Training/Min_Reward', min_reward, self.tensorboard_step)
+            self.writer.add_scalar('Training/Reward_Std', std_reward, self.tensorboard_step)
+            self.writer.add_scalar('Training/Episode_Count', len(episode_rewards), self.tensorboard_step)
+            
+            # 報酬のヒストグラム
+            self.writer.add_histogram('Training/Reward_Distribution', np.array(episode_rewards), self.tensorboard_step)
+            
+            # 履歴に追加
+            self.episode_rewards_history.extend(episode_rewards)
+            
         if episode_lengths:
-            self.writer.add_scalar('Training/Average_Length', np.mean(episode_lengths), total_steps)
+            avg_length = np.mean(episode_lengths)
+            max_length = np.max(episode_lengths)
+            min_length = np.min(episode_lengths)
+            
+            self.writer.add_scalar('Training/Average_Length', avg_length, self.tensorboard_step)
+            self.writer.add_scalar('Training/Max_Length', max_length, self.tensorboard_step)
+            self.writer.add_scalar('Training/Min_Length', min_length, self.tensorboard_step)
+            
+            # 履歴に追加
+            self.episode_lengths_history.extend(episode_lengths)
         
-        self.writer.add_scalar('Training/Total_Steps', total_steps, total_steps)
-        self.writer.add_scalar('Training/Collection_Time', collection_time, total_steps)
-        self.writer.add_scalar('Training/Steps_Per_Second', total_steps / collection_time, total_steps)
-        self.writer.add_scalar('Training/Buffer_Index', self.buffer_idx, total_steps)
+        self.writer.add_scalar('Training/Total_Steps', total_steps, self.tensorboard_step)
+        self.writer.add_scalar('Training/Collection_Time', collection_time, self.tensorboard_step)
+        self.writer.add_scalar('Training/Steps_Per_Second', total_steps / collection_time, self.tensorboard_step)
+        self.writer.add_scalar('Training/Buffer_Index', self.buffer_idx, self.tensorboard_step)
+        self.writer.add_scalar('Training/Parallel_Envs', self.num_envs, self.tensorboard_step)
         
         return {
             'episode_rewards': episode_rewards,
@@ -167,24 +203,45 @@ class ParallelTrainer(Trainer):
         
         # 最後の値の推定
         with torch.no_grad():
-            last_obs = self.obs_buffer[-1]
-            _, _, last_values = self._get_action_batch(last_obs)
+            last_obs = self.obs_buffer[-1]  # 形状: (num_envs, obs_dim)
+            # ネットワークに適切な形状で渡す
+            _, _, last_values = self.agent.network.get_action_and_value(last_obs, deterministic=False)
+            # 値の形状を確実に(num_envs,)にする
+            if last_values.dim() > 1:
+                last_values = last_values.squeeze(-1)  # 最後の次元を削除
+            elif last_values.dim() == 0:
+                last_values = last_values.unsqueeze(0).repeat(self.num_envs)  # スカラーの場合
         
         # 逆順でアドバンテージを計算
         next_value = last_values
-        next_advantage = 0
+        next_advantage = torch.zeros(self.num_envs, device=self.agent.device)
         
         for t in reversed(range(self.buffer_size)):
             if self.buffer_full or t < self.buffer_idx:
                 # 終了フラグの処理
                 mask = 1.0 - self.done_buffer[t].float()
                 
-                # 報酬と値の計算
-                delta = self.reward_buffer[t] + self.config['hyperparameters']['gamma'] * next_value * mask - self.value_buffer[t]
-                next_advantage = delta + self.config['hyperparameters']['gamma'] * self.config['hyperparameters']['gae_lambda'] * next_advantage * mask
+                # 報酬と値の計算（形状を明示的に調整）
+                gamma = self.config['algorithm']['hyperparameters']['gamma']
+                gae_lambda = self.config['algorithm']['hyperparameters']['gae_lambda']
+                
+                delta = self.reward_buffer[t] + gamma * next_value * mask - self.value_buffer[t]
+                next_advantage = delta + gamma * gae_lambda * next_advantage * mask
+                
+                # 形状を確実に(num_envs,)にする
+                if next_advantage.dim() > 1:
+                    next_advantage = next_advantage.squeeze(-1)
+                elif next_advantage.dim() == 0:
+                    next_advantage = next_advantage.unsqueeze(0).repeat(self.num_envs)
                 
                 advantages[t] = next_advantage
                 next_value = self.value_buffer[t]
+                
+                # next_valueの形状も調整
+                if next_value.dim() > 1:
+                    next_value = next_value.squeeze(-1)
+                elif next_value.dim() == 0:
+                    next_value = next_value.unsqueeze(0).repeat(self.num_envs)
         
         return advantages
     
@@ -205,9 +262,9 @@ class ParallelTrainer(Trainer):
         total_value_loss = 0
         total_entropy_loss = 0
         
-        for epoch in range(self.config['hyperparameters']['n_epochs']):
+        for epoch in range(self.config['algorithm']['hyperparameters']['n_epochs']):
             # バッチサイズで分割
-            batch_size = self.config['hyperparameters']['batch_size']
+            batch_size = self.config['algorithm']['hyperparameters']['batch_size']
             num_batches = len(obs_flat) // batch_size
             
             for batch_idx in range(num_batches):
@@ -220,15 +277,20 @@ class ParallelTrainer(Trainer):
                 batch_value = value_flat[start_idx:end_idx]
                 batch_advantage = advantage_flat[start_idx:end_idx]
                 
-                # ポリシー更新
-                new_log_prob, new_value, entropy = self._get_action_batch(batch_obs)
+                # ポリシー更新（勾配計算用）
+                actions, log_probs, values = self.agent.network.get_action_and_value(batch_obs, deterministic=False)
+                # 形状を調整（[batch_size, 1] -> [batch_size]）
+                new_log_prob = log_probs.squeeze(-1) if log_probs.dim() > 1 else log_probs
+                new_value = values.squeeze(-1) if values.dim() > 1 else values
+                # エントロピーは対数確率の負の値として近似
+                entropy = -new_log_prob
                 
                 # 比率の計算
                 ratio = torch.exp(new_log_prob - batch_old_log_prob)
                 
                 # クリッピング
-                clipped_ratio = torch.clamp(ratio, 1 - self.config['hyperparameters']['clip_range'], 
-                                          1 + self.config['hyperparameters']['clip_range'])
+                clipped_ratio = torch.clamp(ratio, 1 - self.config['algorithm']['hyperparameters']['clip_range'], 
+                                          1 + self.config['algorithm']['hyperparameters']['clip_range'])
                 
                 # ポリシー損失
                 policy_loss = -torch.min(ratio * batch_advantage, clipped_ratio * batch_advantage).mean()
@@ -241,28 +303,41 @@ class ParallelTrainer(Trainer):
                 
                 # 総損失
                 total_loss = (policy_loss + 
-                            self.config['hyperparameters']['vf_coef'] * value_loss + 
-                            self.config['hyperparameters']['ent_coef'] * entropy_loss)
+                            self.config['algorithm']['hyperparameters']['vf_coef'] * value_loss + 
+                            self.config['algorithm']['hyperparameters']['ent_coef'] * entropy_loss)
                 
                 # 勾配更新
                 self.agent.optimizer.zero_grad()
                 total_loss.backward()
                 torch.nn.utils.clip_grad_norm_(self.agent.network.parameters(), 
-                                             self.config['hyperparameters']['max_grad_norm'])
+                                             self.config['algorithm']['hyperparameters']['max_grad_norm'])
                 self.agent.optimizer.step()
                 
                 total_policy_loss += policy_loss.item()
                 total_value_loss += value_loss.item()
                 total_entropy_loss += entropy_loss.item()
         
-        avg_policy_loss = total_policy_loss / (self.config['hyperparameters']['n_epochs'] * num_batches)
-        avg_value_loss = total_value_loss / (self.config['hyperparameters']['n_epochs'] * num_batches)
-        avg_entropy_loss = total_entropy_loss / (self.config['hyperparameters']['n_epochs'] * num_batches)
+        avg_policy_loss = total_policy_loss / (self.config['algorithm']['hyperparameters']['n_epochs'] * num_batches)
+        avg_value_loss = total_value_loss / (self.config['algorithm']['hyperparameters']['n_epochs'] * num_batches)
+        avg_entropy_loss = total_entropy_loss / (self.config['algorithm']['hyperparameters']['n_epochs'] * num_batches)
         
         # TensorBoardにログ
-        self.writer.add_scalar('Training/Policy_Loss', avg_policy_loss, self.total_timesteps)
-        self.writer.add_scalar('Training/Value_Loss', avg_value_loss, self.total_timesteps)
-        self.writer.add_scalar('Training/Entropy_Loss', avg_entropy_loss, self.total_timesteps)
+        self.writer.add_scalar('Training/Policy_Loss', avg_policy_loss, self.tensorboard_step)
+        self.writer.add_scalar('Training/Value_Loss', avg_value_loss, self.tensorboard_step)
+        self.writer.add_scalar('Training/Entropy_Loss', avg_entropy_loss, self.tensorboard_step)
+        self.writer.add_scalar('Training/Total_Loss', avg_policy_loss + avg_value_loss + avg_entropy_loss, self.tensorboard_step)
+        
+        # 学習率のログ
+        current_lr = self.agent.optimizer.param_groups[0]['lr']
+        self.writer.add_scalar('Training/Learning_Rate', current_lr, self.tensorboard_step)
+        
+        # 勾配ノルムのログ
+        total_grad_norm = 0
+        for param in self.agent.network.parameters():
+            if param.grad is not None:
+                total_grad_norm += param.grad.data.norm(2).item() ** 2
+        total_grad_norm = total_grad_norm ** 0.5
+        self.writer.add_scalar('Training/Gradient_Norm', total_grad_norm, self.tensorboard_step)
         
         return {
             'policy_loss': avg_policy_loss,
@@ -296,9 +371,10 @@ class ParallelTrainer(Trainer):
             # 統計更新
             self.total_timesteps += collection_stats['total_steps']
             self.episode_count += len(collection_stats['episode_rewards'])
+            self.tensorboard_step += 1
             
-            # ログ出力
-            if self.total_timesteps % log_interval == 0:
+            # ログ出力（並列環境対応）
+            if self.total_timesteps // log_interval > (self.total_timesteps - collection_stats['total_steps']) // log_interval:
                 avg_reward = np.mean(collection_stats['episode_rewards']) if collection_stats['episode_rewards'] else 0
                 avg_length = np.mean(collection_stats['episode_lengths']) if collection_stats['episode_lengths'] else 0
                 

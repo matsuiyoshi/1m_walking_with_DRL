@@ -1,0 +1,79 @@
+# Training Configuration for PPO - 8時間学習用
+algorithm:
+  name: "PPO"
+  
+  # Network architecture
+  network:
+    actor:
+      hidden_layers: [256, 256, 128]
+      activation: "ReLU"
+      output_activation: "Tanh"
+    
+    critic:
+      hidden_layers: [256, 256, 128]
+      activation: "ReLU"
+  
+  # Hyperparameters (8時間学習最適化)
+  hyperparameters:
+    learning_rate: 0.0003  # より安定した学習率
+    batch_size: 512  # より大きなバッチサイズ
+    n_epochs: 10
+    clip_range: 0.2
+    vf_coef: 0.5
+    ent_coef: 0.01
+    max_grad_norm: 0.5
+    gae_lambda: 0.95
+    gamma: 0.99
+    buffer_size: 4096  # より大きなバッファ
+
+# Training settings (8時間学習用)
+training:
+  total_timesteps: 2400000  # 8時間で実行可能なタイムステップ数
+  eval_freq: 120000        # 2時間ごとに評価
+  save_freq: 240000        # 2時間ごとに保存
+  log_interval: 12000      # より頻繁にログ出力
+  
+  # Episode settings
+  episode:
+    max_steps: 6000  # ~25 seconds at 240Hz
+    max_time: 25.0   # seconds
+  
+  # Environment settings
+  env:
+    num_envs: 16  # より多くの並列環境で高速化
+    render: false
+    render_mode: "human"
+  
+  # Randomization for domain adaptation
+  domain_randomization:
+    enabled: true
+    friction_range: [0.1, 0.8]
+    mass_variation: 0.1  # ±10%
+    noise_std: 0.01
+
+# Evaluation settings
+evaluation:
+  num_episodes: 10
+  deterministic: true
+  render: true
+  
+  # Success criteria
+  success_criteria:
+    min_distance: 0.9  # m (90% of 1m)
+    max_time: 10.0     # seconds
+    max_fall_angle: 0.5  # radians
+
+# Logging and monitoring
+logging:
+  tensorboard: true
+  wandb: false  # Set to true if using Weights & Biases
+  log_dir: "data/logs"
+  
+  # Metrics to track
+  metrics:
+    - "episode_reward"
+    - "episode_length"
+    - "success_rate"
+    - "average_speed"
+    - "fall_rate"
+    - "energy_efficiency"

@@ -327,14 +327,99 @@ docker compose build --no-cache
 
 ### 並列学習の設定調整
 
+#### 設定ファイルでの並列学習
 ```bash
 # 設定ファイルの編集
 docker compose exec bittle-drl vim config/training_config.yaml
 
 # 並列学習パラメータの調整例
-# num_envs: 4  # 並列環境数
-# batch_size: 128  # バッチサイズ
-# learning_rate: 0.001  # 学習率
+# num_envs: 12  # 並列環境数（CPU コア数に合わせて調整）
+# batch_size: 256  # バッチサイズ（num_envs × 32程度）
+# buffer_size: 1536  # バッファサイズ（num_envs × 128程度）
+# learning_rate: 0.0004  # 学習率（並列学習用に最適化）
+```
+
+#### 並列学習の実行と監視
+```bash
+# 1時間学習の実行
+docker compose exec bittle-drl python scripts/parallel_train.py --config config/training_config_1h.yaml
+
+# 並列学習の監視（別ターミナル）
+docker compose exec bittle-drl python scripts/start_tensorboard.py --log-dir data/experiments/current_experiment/tensorboard
+
+# 学習プロセスの確認
+docker compose exec bittle-drl ps aux | grep parallel_train
+
+# GPU使用状況の確認
+docker compose exec bittle-drl nvidia-smi
+```
+
+#### 詳細な並列学習監視方法
+
+##### 1. リアルタイム進捗監視
+```bash
+# 学習ログのリアルタイム確認
+docker compose exec bittle-drl tail -f /app/data/logs/parallel_training.log
+
+# 5分ごとの進捗確認
+watch -n 300 "docker compose exec bittle-drl tail -1 /app/data/logs/parallel_training.log"
+
+# 学習プロセス数の確認
+docker compose exec bittle-drl ps aux | grep -c parallel_train
+```
+
+##### 2. TensorBoardでの残り時間確認
+```bash
+# TensorBoardを起動（親ディレクトリ指定で全実験監視）
+docker compose exec bittle-drl tensorboard --logdir data/experiments/ --port 6006 --host 0.0.0.0
+
+# ブラウザで http://localhost:6006 にアクセス
+# SCALARSタブで以下を確認：
+# - global_step: 現在のステップ数
+# - steps_per_second: 学習速度
+# 残り時間 = (総ステップ数 - 現在ステップ数) ÷ 学習速度
+```
+
+##### 3. リソース使用量監視
+```bash
+# コンテナのリソース使用量
+docker stats bittle-drl --no-stream
+
+# GPU使用率の監視
+docker compose exec bittle-drl nvidia-smi -l 1
+
+# メモリ使用量の確認
+docker compose exec bittle-drl free -h
+```
+
+##### 4. 学習の完了確認
+```bash
+# 学習プロセスの確認
+docker compose exec bittle-drl ps aux | grep parallel_train
+
+# 最終ログの確認
+docker compose exec bittle-drl tail -5 /app/data/logs/parallel_training.log
+
+# 保存されたモデルの確認
+docker compose exec bittle-drl ls -la /app/data/experiments/*/final_model.pth
+```
+
+#### 並列学習の最適化ガイドライン
+- **CPU コア数との関係**: 並列環境数はCPU コア数以下に設定
+- **メモリ使用量**: 環境数が多いほどメモリ使用量が増加
+- **学習効率**: 適切な並列数で学習速度が向上
+- **安定性**: 過度な並列化は学習の不安定化を招く可能性
+
+#### 並列学習のトラブルシューティング
+```bash
+# メモリ不足の場合
+docker compose exec bittle-drl python scripts/parallel_train.py --num-envs 4 --batch-size 64
+
+# テンソル形状エラーの場合
+# バッファサイズとバッチサイズの整合性を確認
+
+# 学習が進まない場合
+# ログ間隔を小さくしてリアルタイム監視
 ```
 
 ## 📚 参考資料

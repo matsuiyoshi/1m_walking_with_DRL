@@ -110,10 +110,68 @@ docker compose build --no-cache
 - **Performance**: ステップ/秒、バッファ使用率
 
 ### 並列学習の最適化
-- **環境数**: 2-8環境（GPU メモリに応じて調整）
-- **バッチサイズ**: 64-256（並列環境数に応じて調整）
-- **学習率**: 0.001（並列学習用に最適化）
+
+#### 基本的な並列学習実行
+```bash
+# 設定ファイルを使用（推奨）
+python scripts/parallel_train.py --config config/training_config_1h.yaml
+
+# コマンドライン引数で指定
+python scripts/parallel_train.py \
+  --total-timesteps 300000 \
+  --num-envs 12 \
+  --batch-size 256 \
+  --learning-rate 0.0004
+```
+
+#### 並列学習のパラメータ調整
+- **環境数**: 2-16環境（CPU コア数に応じて調整）
+  - 12コアCPU: 推奨12環境
+  - 8コアCPU: 推奨8環境
+  - 4コアCPU: 推奨4環境
+- **バッチサイズ**: 64-512（並列環境数に応じて調整）
+  - 推奨: `num_envs × 32`
+- **バッファサイズ**: 1024-2048（並列環境数に応じて調整）
+  - 推奨: `num_envs × 128`
+- **学習率**: 0.0004-0.001（並列学習用に最適化）
+
+#### 並列学習の監視
+```bash
+# TensorBoardでリアルタイム監視
+python scripts/start_tensorboard.py --log-dir data/experiments/current_experiment/tensorboard
+
+# 学習プロセスの確認
+docker exec bittle-drl-container ps aux | grep parallel_train
+
+# GPU使用状況の確認
+nvidia-smi
+```
+
+#### TensorBoardでの残り時間確認
+TensorBoardのGUI上で学習の残り時間を確認する方法：
+
+1. **SCALARSタブ**で以下の指標を確認：
+   - `global_step`: 現在のステップ数
+   - `steps_per_second`: 1秒あたりのステップ数
+
+2. **残り時間の計算**：
+   ```
+   残り時間（秒） = (総ステップ数 - 現在のステップ数) ÷ 1秒あたりのステップ数
+   ```
+
+3. **例**：
+   - 総ステップ数: 1,800,000
+   - 現在のステップ数: 595,968
+   - 1秒あたりのステップ数: 736.2
+   - 残り時間: (1,800,000 - 595,968) ÷ 736.2 ≈ 1,635秒 ≈ 27分
+
+#### 並列学習のトラブルシューティング
+- **メモリ不足**: 環境数やバッチサイズを削減
+- **テンソル形状エラー**: バッファサイズとバッチサイズの整合性確認
+- **学習が進まない**: ログ間隔を小さくしてリアルタイム監視
 
 ## 📖 ドキュメント
 - [プロジェクト仕様書](./PROJECT_SPECIFICATION.md)
 - [Docker環境セットアップ](./DOCKER_README.md)
+- [TensorBoard監視ガイド](./TENSORBOARD_GUIDE.md)
+- [トラブルシューティングガイド](./TROUBLESHOOTING.md)
