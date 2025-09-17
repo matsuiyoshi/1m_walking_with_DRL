@@ -111,14 +111,39 @@ class RewardFunction:
     
     def _calculate_forward_reward(self, state: Dict[str, Any], 
                                  target_position: np.ndarray) -> float:
-        """前進報酬の計算"""
+        """前進報酬の計算（ゴール距離ベースに改善）"""
         reward = 0.0
         
-        # 前進距離報酬
+        # ゴール距離ベースの報酬
+        current_distance = np.linalg.norm(state['position'][:2] - target_position[:2])
+        
+        # ゴール距離報酬（距離が近いほど高い報酬）
+        goal_distance_params = self.config.get('goal_distance_params', {})
+        max_distance = goal_distance_params.get('max_distance', 1.0)
+        min_distance = goal_distance_params.get('min_distance', 0.1)
+        distance_decay = goal_distance_params.get('distance_decay', 0.5)
+        
+        # 距離を0-1の範囲に正規化
+        normalized_distance = max(0, min(1, (current_distance - min_distance) / (max_distance - min_distance)))
+        
+        # ゴールに近いほど高い報酬（指数減衰）
+        goal_distance_reward = self.config.get('goal_distance_reward', 20.0)
+        reward += goal_distance_reward * (1.0 - normalized_distance) ** distance_decay
+        
+        # ゴールへの進捗報酬
+        if self.prev_position is not None:
+            prev_distance = np.linalg.norm(self.prev_position[:2] - target_position[:2])
+            progress = prev_distance - current_distance  # 正の値 = ゴールに近づいた
+            
+            if progress > 0:
+                goal_progress_reward = self.config.get('goal_progress_reward', 15.0)
+                reward += goal_progress_reward * progress
+        
+        # 従来の前進距離報酬（補助的）
         if self.prev_position is not None:
             # X軸方向の前進距離
             forward_distance = state['position'][0] - self.prev_position[0]
-            reward += self.config['forward_reward'] * forward_distance
+            reward += self.config.get('forward_reward', 5.0) * forward_distance
             
             # 目標方向への移動報酬
             if forward_distance > 0:
@@ -128,7 +153,7 @@ class RewardFunction:
                 forward_direction = np.array([1, 0, 0])  # 前進方向
                 
                 direction_alignment = np.dot(target_direction, forward_direction)
-                reward += self.config['direction_reward'] * direction_alignment * forward_distance
+                reward += self.config.get('direction_reward', 3.0) * direction_alignment * forward_distance
         
         return reward
     

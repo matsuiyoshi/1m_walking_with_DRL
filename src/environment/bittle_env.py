@@ -19,7 +19,7 @@ class BittleWalkingEnv(gym.Env):
     """
     Bittle四足歩行ロボットのPyBulletシミュレーション環境
     
-    目標: 幅15cmの通路を1m直進する歩行制御を学習
+    目標: 幅30cmの通路を1m直進する歩行制御を学習（手のひらサイズロボット用、安全マージン拡大）
     """
     
     def __init__(self, config_path: str = "config/env_config.yaml", 
@@ -78,6 +78,10 @@ class BittleWalkingEnv(gym.Env):
         
         # 報酬関数
         self.reward_function = RewardFunction(self.config['environment']['reward'])
+        
+        # 学習段階の管理
+        self.learning_stage = 1
+        self.stage_adaptation_enabled = self.bittle_config['robot']['joints']['initial_pose'].get('stage_adaptation', {}).get('enabled', False)
         
         # 物理パラメータ
         self._setup_physics()
@@ -170,13 +174,16 @@ class BittleWalkingEnv(gym.Env):
         length = corridor_config['length']
         wall_height = corridor_config['wall_height']
         
+        # 安全マージンを追加（ロボットサイズを考慮）
+        safety_margin = 0.10  # 10cmの安全マージン（手のひらサイズロボット用、2倍に拡大）
+        
         # 通路の壁を作成（簡易的な実装）
         # 実際の実装では、より詳細な通路モデルを作成する
         self.corridor_bounds = {
-            'left': -width/2,
-            'right': width/2,
-            'front': length,
-            'back': 0
+            'left': -width/2 + safety_margin,    # 左端に安全マージン
+            'right': width/2 - safety_margin,    # 右端に安全マージン
+            'front': length - safety_margin,     # 前端に安全マージン
+            'back': safety_margin                # 後端に安全マージン（0から0.1mに変更）
         }
     
     def _load_robot(self):
@@ -215,8 +222,8 @@ class BittleWalkingEnv(gym.Env):
     
     def _set_initial_pose(self):
         """初期姿勢の設定"""
-        # ロボットを通路の開始位置に配置（適切な初期姿勢で）
-        initial_pos = [0, 0, 0.15]  # 通路の開始位置（15cm高）- 適切な姿勢なら低くてもOK
+        # ロボットを通路内の安全な位置に配置（通路幅1.2m、安全マージン0.1m）
+        initial_pos = [0.2, 0, 0.15]  # X=0.2m（通路内20cm）、Y=0m（中央）、Z=0.15m（高さ）
         initial_orn = p.getQuaternionFromEuler([0, 0, 0])
         
         p.resetBasePositionAndOrientation(self.robot_id, initial_pos, initial_orn)
@@ -255,34 +262,114 @@ class BittleWalkingEnv(gym.Env):
         print(f"Required initial height: {abs(min_z) + 0.05:.3f}m (lowest + 5cm margin)")
     
     def _set_proper_initial_joint_angles(self):
-        """適切な初期関節角度の設定"""
-        # 四足歩行ロボットの適切な初期姿勢
-        # shoulderからkneeまで: 地面に垂直（90度）
-        # kneeから足先まで: 地面と平行（0度）
-        
+        """適切な初期関節角度の設定（多様化対応）"""
         joint_names = self.bittle_config['robot']['joints']['joint_names']
+        pose_config = self.bittle_config['robot']['joints']['initial_pose']
+        
+        # 多様化モードの取得
+        diversity_mode = pose_config.get('diversity_mode', 'fixed')
         
         for joint_name in joint_names:
             joint_id = self._get_joint_id(joint_name)
             if joint_id is not None:
-                # shoulder関節: 90度（地面に垂直）
+                # 基本角度の設定
                 if 'shoulder' in joint_name:
-                    initial_angle = 1.57  # 90度（π/2ラジアン）
-                # knee関節: 0度（地面と平行）
+                    base_angle = 1.57  # 90度（π/2ラジアン）
+                    joint_type = 'shoulder'
                 elif 'knee' in joint_name:
-                    initial_angle = 0.0   # 0度
+                    base_angle = 0.0   # 0度
+                    joint_type = 'knee'
                 else:
-                    initial_angle = 0.0   # その他は0度
+                    base_angle = 0.0   # その他は0度
+                    joint_type = 'other'
+                
+                # 多様化の適用
+                initial_angle = self._apply_pose_diversity(
+                    base_angle, joint_type, diversity_mode, pose_config
+                )
                 
                 # 関節角度を設定
                 p.resetJointState(self.robot_id, joint_id, initial_angle)
-                print(f"Set {joint_name} to {initial_angle:.2f} rad ({initial_angle * 180 / 3.14159:.1f}°)")
+                print(f"Set {joint_name} to {initial_angle:.2f} rad ({initial_angle * 180 / 3.14159:.1f}°) [mode: {diversity_mode}]")
+    
+    def _apply_pose_diversity(self, base_angle: float, joint_type: str, 
+                             diversity_mode: str, pose_config: dict) -> float:
+        """初期姿勢の多様化を適用"""
+        # 学習段階適応の適用（段階適応が有効な場合のみ）
+        if self.stage_adaptation_enabled:
+            diversity_mode = self._get_stage_adapted_mode(diversity_mode, pose_config)
+        
+        if diversity_mode == 'fixed':
+            return base_angle
+        
+        # 変動範囲の取得
+        variation_ranges = pose_config.get('variation_ranges', {})
+        constraints = pose_config.get('constraints', {})
+        
+        if joint_type not in variation_ranges:
+            return base_angle
+        
+        # 変動範囲の設定
+        if diversity_mode == 'light':
+            variation = variation_ranges[joint_type].get('light', 0.0)
+        elif diversity_mode == 'medium':
+            variation = variation_ranges[joint_type].get('medium', 0.0)
+        elif diversity_mode == 'heavy':
+            variation = variation_ranges[joint_type].get('heavy', 0.0)
+        elif diversity_mode == 'random':
+            # 物理制約内で完全ランダム
+            min_angle = constraints.get(f'{joint_type}_min', base_angle - 0.5)
+            max_angle = constraints.get(f'{joint_type}_max', base_angle + 0.5)
+            return np.random.uniform(min_angle, max_angle)
+        else:
+            return base_angle
+        
+        # ランダム変動の適用
+        random_variation = np.random.uniform(-variation, variation)
+        new_angle = base_angle + random_variation
+        
+        # 物理制約の適用
+        min_angle = constraints.get(f'{joint_type}_min', new_angle - 1.0)
+        max_angle = constraints.get(f'{joint_type}_max', new_angle + 1.0)
+        new_angle = np.clip(new_angle, min_angle, max_angle)
+        
+        return new_angle
+    
+    def _get_stage_adapted_mode(self, base_mode: str, pose_config: dict) -> str:
+        """学習段階に応じた多様化モードを取得"""
+        stage_adaptation = pose_config.get('stage_adaptation', {})
+        if not stage_adaptation.get('enabled', False):
+            return base_mode
+        
+        stages = stage_adaptation.get('stages', {})
+        
+        # 学習段階に応じたモード選択
+        if self.learning_stage == 1:
+            return stages.get('stage1', base_mode)
+        elif self.learning_stage == 2:
+            return stages.get('stage2', base_mode)
+        elif self.learning_stage == 3:
+            return stages.get('stage3', base_mode)
+        elif self.learning_stage >= 4:
+            return stages.get('stage4', base_mode)
+        else:
+            return base_mode
+    
+    def update_learning_stage(self, stage: int):
+        """学習段階を更新"""
+        self.learning_stage = stage
+        print(f"Learning stage updated to: {stage}")
+    
+    def get_learning_stage(self) -> int:
+        """現在の学習段階を取得"""
+        return self.learning_stage
     
     def _set_target_position(self):
         """目標位置の設定"""
-        # 通路の終端を目標位置に設定
+        # 通路の終端を目標位置に設定（安全マージンを考慮）
         corridor_length = self.config['environment']['corridor']['length']
-        self.target_position = np.array([corridor_length, 0, 0])
+        safety_margin = 0.10  # 10cmの安全マージン（手のひらサイズロボット用、2倍に拡大）
+        self.target_position = np.array([corridor_length - safety_margin, 0, 0])
     
     def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, Dict[str, Any]]:
         """環境のステップ実行"""

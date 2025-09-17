@@ -4,7 +4,7 @@ environment:
   
   # Corridor environment
   corridor:
-    width: 0.3       # m (30cm) - ロボット幅(10cm) + 安全マージン(20cm)
+    width: 0.3       # m (30cm) - より広い通路
     length: 1.0      # m  
     wall_height: 0.05 # m
   

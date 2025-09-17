@@ -39,6 +39,38 @@ robot:
       frequency: 50  # Hz
       max_torque: 1.0  # Nm
       damping: 0.1
+    
+    # Initial pose diversity settings
+    initial_pose:
+      # Diversity mode: "fixed", "light", "medium", "heavy", "random"
+      diversity_mode: "medium"
+      
+      # Random variation ranges (radians)
+      variation_ranges:
+        shoulder:
+          light: 0.17    # ±10度
+          medium: 0.35   # ±20度
+          heavy: 0.52    # ±30度
+        knee:
+          light: 0.09    # ±5度
+          medium: 0.17   # ±10度
+          heavy: 0.26    # ±15度
+      
+      # Physical constraints
+      constraints:
+        shoulder_min: 0.52   # 30度（最小角度）
+        shoulder_max: 2.62   # 150度（最大角度）
+        knee_min: -0.52      # -30度（最小角度）
+        knee_max: 1.57       # 90度（最大角度）
+      
+      # Learning stage adaptation
+      stage_adaptation:
+        enabled: false
+        stages:
+          stage1: "fixed"    # 基本姿勢で安定化
+          stage2: "light"    # 軽微な変動
+          stage3: "medium"   # 中程度の変動
+          stage4: "heavy"    # 大幅な変動
 
 # Environment specifications
 environment:
