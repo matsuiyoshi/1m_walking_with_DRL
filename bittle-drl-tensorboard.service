@@ -1,0 +1,33 @@
+[Unit]
+Description=Bittle DRL TensorBoard Service
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+User=matsui
+Group=matsui
+WorkingDirectory=/home/matsui/ドキュメント/1m_walk/1m_walking_with_DRL
+ExecStart=/usr/bin/docker compose exec bittle-drl tensorboard --logdir data/experiments/parallel_training/ --port 6006 --host 0.0.0.0 --reload_interval 5
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+# 環境変数
+Environment=PATH=/usr/local/bin:/usr/bin:/bin
+
+# リソース制限
+LimitNOFILE=65536
+LimitNPROC=32768
+
+# セキュリティ設定
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/home/matsui/ドキュメント/1m_walk/1m_walking_with_DRL
+
+[Install]
+WantedBy=multi-user.target
+

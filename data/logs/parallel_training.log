@@ -6019,3 +6019,425 @@
 2025-09-17 19:51:30,425 - src.training.trainer - INFO - Timesteps: 85248/36000000, Episodes: 81576, Avg Reward: 0.41, Avg Length: 0.0, Steps/sec: 977.8, Policy Loss: 8.9570, Value Loss: 0.6402
 2025-09-17 19:51:34,004 - src.training.trainer - INFO - Timesteps: 87552/36000000, Episodes: 83818, Avg Reward: 0.33, Avg Length: 0.0, Steps/sec: 991.3, Policy Loss: 5.3278, Value Loss: 0.8360
 2025-09-17 19:51:37,678 - src.training.trainer - INFO - Timesteps: 89856/36000000, Episodes: 86059, Avg Reward: 0.39, Avg Length: 0.0, Steps/sec: 977.6, Policy Loss: 5.4668, Value Loss: 0.7834
+2025-09-17 19:51:41,270 - src.training.trainer - INFO - Timesteps: 92160/36000000, Episodes: 88176, Avg Reward: 0.25, Avg Length: 0.0, Steps/sec: 980.2, Policy Loss: 14.8508, Value Loss: 0.7949
+2025-09-17 19:51:44,863 - src.training.trainer - INFO - Timesteps: 94464/36000000, Episodes: 90412, Avg Reward: 0.40, Avg Length: 0.0, Steps/sec: 989.8, Policy Loss: 13.0011, Value Loss: 0.8486
+2025-09-17 19:51:48,497 - src.training.trainer - INFO - Timesteps: 96768/36000000, Episodes: 92637, Avg Reward: 0.40, Avg Length: 0.0, Steps/sec: 967.1, Policy Loss: 7.2016, Value Loss: 0.8514
+2025-09-17 19:51:52,071 - src.training.trainer - INFO - Timesteps: 99072/36000000, Episodes: 94893, Avg Reward: 0.42, Avg Length: 0.0, Steps/sec: 997.1, Policy Loss: 8.0493, Value Loss: 0.9069
+2025-09-17 19:51:55,659 - src.training.trainer - INFO - Timesteps: 101376/36000000, Episodes: 97060, Avg Reward: 0.37, Avg Length: 0.0, Steps/sec: 995.4, Policy Loss: 5.9327, Value Loss: 0.9087
+2025-09-17 19:51:59,270 - src.training.trainer - INFO - Timesteps: 103680/36000000, Episodes: 99164, Avg Reward: 0.42, Avg Length: 0.0, Steps/sec: 976.5, Policy Loss: 7.2112, Value Loss: 1.0526
+2025-09-17 19:52:02,881 - src.training.trainer - INFO - Timesteps: 105984/36000000, Episodes: 101170, Avg Reward: 0.49, Avg Length: 0.0, Steps/sec: 986.2, Policy Loss: 8.1594, Value Loss: 1.2679
+2025-09-17 19:52:06,448 - src.training.trainer - INFO - Timesteps: 108288/36000000, Episodes: 103344, Avg Reward: 0.41, Avg Length: 0.0, Steps/sec: 995.6, Policy Loss: 9.4197, Value Loss: 1.3263
+2025-09-17 19:52:10,001 - src.training.trainer - INFO - Timesteps: 110592/36000000, Episodes: 105600, Avg Reward: 0.39, Avg Length: 0.0, Steps/sec: 998.0, Policy Loss: 148.2622, Value Loss: 1.4515
+2025-09-17 19:52:13,633 - src.training.trainer - INFO - Timesteps: 112896/36000000, Episodes: 107742, Avg Reward: 0.42, Avg Length: 0.0, Steps/sec: 971.8, Policy Loss: 111.6458, Value Loss: 1.4652
+2025-09-17 19:52:17,226 - src.training.trainer - INFO - Timesteps: 115200/36000000, Episodes: 109908, Avg Reward: 0.18, Avg Length: 0.0, Steps/sec: 990.7, Policy Loss: 44.2529, Value Loss: 1.2496
+2025-09-17 19:52:20,941 - src.training.trainer - INFO - Timesteps: 117504/36000000, Episodes: 112147, Avg Reward: 0.37, Avg Length: 0.0, Steps/sec: 976.0, Policy Loss: 35.0679, Value Loss: 1.2250
+2025-09-17 19:52:24,613 - src.training.trainer - INFO - Timesteps: 119808/36000000, Episodes: 114389, Avg Reward: 0.13, Avg Length: 0.0, Steps/sec: 976.4, Policy Loss: 6.8125, Value Loss: 1.2724
+2025-09-17 19:52:28,286 - src.training.trainer - INFO - Timesteps: 122112/36000000, Episodes: 116644, Avg Reward: 0.40, Avg Length: 0.0, Steps/sec: 980.1, Policy Loss: 7.2257, Value Loss: 1.3588
+2025-09-17 19:52:31,870 - src.training.trainer - INFO - Timesteps: 124416/36000000, Episodes: 118874, Avg Reward: 0.43, Avg Length: 0.0, Steps/sec: 986.2, Policy Loss: 14.9016, Value Loss: 1.4102
+2025-09-17 19:52:35,441 - src.training.trainer - INFO - Timesteps: 126720/36000000, Episodes: 121119, Avg Reward: 0.41, Avg Length: 0.0, Steps/sec: 991.1, Policy Loss: 10.7364, Value Loss: 1.2089
+2025-09-17 19:52:39,067 - src.training.trainer - INFO - Timesteps: 129024/36000000, Episodes: 123315, Avg Reward: 0.39, Avg Length: 0.0, Steps/sec: 983.6, Policy Loss: 6.4527, Value Loss: 1.2338
+2025-09-17 19:52:42,642 - src.training.trainer - INFO - Timesteps: 131328/36000000, Episodes: 125561, Avg Reward: 0.37, Avg Length: 0.0, Steps/sec: 997.8, Policy Loss: 18.0960, Value Loss: 1.3217
+2025-09-17 19:52:46,224 - src.training.trainer - INFO - Timesteps: 133632/36000000, Episodes: 127751, Avg Reward: 0.30, Avg Length: 0.0, Steps/sec: 990.9, Policy Loss: 6.9694, Value Loss: 1.2817
+2025-09-17 19:52:49,867 - src.training.trainer - INFO - Timesteps: 135936/36000000, Episodes: 129845, Avg Reward: 0.31, Avg Length: 0.0, Steps/sec: 982.4, Policy Loss: 6.6374, Value Loss: 1.4139
+2025-09-17 19:52:53,456 - src.training.trainer - INFO - Timesteps: 138240/36000000, Episodes: 131996, Avg Reward: 0.44, Avg Length: 0.0, Steps/sec: 989.0, Policy Loss: 7.1438, Value Loss: 1.4840
+2025-09-17 19:52:57,120 - src.training.trainer - INFO - Timesteps: 140544/36000000, Episodes: 134237, Avg Reward: 0.39, Avg Length: 0.0, Steps/sec: 994.6, Policy Loss: 5.2134, Value Loss: 1.4485
+2025-09-17 19:53:00,736 - src.training.trainer - INFO - Timesteps: 142848/36000000, Episodes: 136325, Avg Reward: 0.28, Avg Length: 0.0, Steps/sec: 979.5, Policy Loss: 6.4104, Value Loss: 1.5606
+2025-09-17 19:53:04,333 - src.training.trainer - INFO - Timesteps: 145152/36000000, Episodes: 138583, Avg Reward: 0.43, Avg Length: 0.0, Steps/sec: 991.4, Policy Loss: 7.6020, Value Loss: 1.5281
+2025-09-17 19:53:07,945 - src.training.trainer - INFO - Timesteps: 147456/36000000, Episodes: 140678, Avg Reward: 0.52, Avg Length: 0.0, Steps/sec: 981.3, Policy Loss: 19.5192, Value Loss: 1.5787
+2025-09-17 19:53:11,578 - src.training.trainer - INFO - Timesteps: 149760/36000000, Episodes: 142942, Avg Reward: 0.32, Avg Length: 0.0, Steps/sec: 993.9, Policy Loss: 9.8388, Value Loss: 1.4620
+2025-09-17 19:53:15,181 - src.training.trainer - INFO - Timesteps: 152064/36000000, Episodes: 145161, Avg Reward: 0.44, Avg Length: 0.0, Steps/sec: 989.2, Policy Loss: 11.1796, Value Loss: 1.3201
+2025-09-17 19:53:18,776 - src.training.trainer - INFO - Timesteps: 154368/36000000, Episodes: 147366, Avg Reward: 0.39, Avg Length: 0.0, Steps/sec: 985.1, Policy Loss: 7.0880, Value Loss: 1.4244
+2025-09-17 19:53:22,448 - src.training.trainer - INFO - Timesteps: 156672/36000000, Episodes: 149443, Avg Reward: 0.32, Avg Length: 0.0, Steps/sec: 963.6, Policy Loss: 7.0962, Value Loss: 1.4511
+2025-09-17 19:53:26,078 - src.training.trainer - INFO - Timesteps: 158976/36000000, Episodes: 151637, Avg Reward: 0.37, Avg Length: 0.0, Steps/sec: 977.2, Policy Loss: 5.2807, Value Loss: 1.2999
+2025-09-17 19:53:29,687 - src.training.trainer - INFO - Timesteps: 161280/36000000, Episodes: 153882, Avg Reward: 0.33, Avg Length: 0.0, Steps/sec: 982.2, Policy Loss: 16.0496, Value Loss: 1.2449
+2025-09-17 19:53:33,264 - src.training.trainer - INFO - Timesteps: 163584/36000000, Episodes: 156069, Avg Reward: 0.35, Avg Length: 0.0, Steps/sec: 992.9, Policy Loss: 20.1093, Value Loss: 1.2305
+2025-09-17 19:53:37,029 - src.training.trainer - INFO - Timesteps: 165888/36000000, Episodes: 158145, Avg Reward: 0.48, Avg Length: 0.0, Steps/sec: 957.1, Policy Loss: 13.7765, Value Loss: 1.2070
+2025-09-17 19:53:40,651 - src.training.trainer - INFO - Timesteps: 168192/36000000, Episodes: 160402, Avg Reward: 0.40, Avg Length: 0.0, Steps/sec: 975.9, Policy Loss: 6.9094, Value Loss: 1.2953
+2025-09-17 19:53:44,245 - src.training.trainer - INFO - Timesteps: 170496/36000000, Episodes: 162566, Avg Reward: 0.29, Avg Length: 0.0, Steps/sec: 985.9, Policy Loss: 15.7570, Value Loss: 1.3487
+2025-09-17 19:53:47,843 - src.training.trainer - INFO - Timesteps: 172800/36000000, Episodes: 164793, Avg Reward: 0.44, Avg Length: 0.0, Steps/sec: 978.3, Policy Loss: 14.9192, Value Loss: 1.3562
+2025-09-17 19:53:51,418 - src.training.trainer - INFO - Timesteps: 175104/36000000, Episodes: 167017, Avg Reward: 0.40, Avg Length: 0.0, Steps/sec: 996.5, Policy Loss: 26.3551, Value Loss: 1.6102
+2025-09-17 19:53:54,995 - src.training.trainer - INFO - Timesteps: 177408/36000000, Episodes: 169267, Avg Reward: 0.34, Avg Length: 0.0, Steps/sec: 990.8, Policy Loss: 16.1481, Value Loss: 1.5747
+2025-09-17 19:53:58,622 - src.training.trainer - INFO - Timesteps: 179712/36000000, Episodes: 171464, Avg Reward: 0.32, Avg Length: 0.0, Steps/sec: 976.5, Policy Loss: 10.6597, Value Loss: 1.5705
+2025-09-17 19:54:02,234 - src.training.trainer - INFO - Timesteps: 182016/36000000, Episodes: 173624, Avg Reward: 0.09, Avg Length: 0.0, Steps/sec: 983.2, Policy Loss: 10.7639, Value Loss: 1.4054
+2025-09-17 19:54:05,829 - src.training.trainer - INFO - Timesteps: 184320/36000000, Episodes: 175874, Avg Reward: 0.39, Avg Length: 0.0, Steps/sec: 993.9, Policy Loss: 7.3016, Value Loss: 1.4573
+2025-09-17 19:54:09,421 - src.training.trainer - INFO - Timesteps: 186624/36000000, Episodes: 178134, Avg Reward: 0.42, Avg Length: 0.0, Steps/sec: 992.7, Policy Loss: 6.9596, Value Loss: 1.4542
+2025-09-17 19:54:12,988 - src.training.trainer - INFO - Timesteps: 188928/36000000, Episodes: 180360, Avg Reward: 0.35, Avg Length: 0.0, Steps/sec: 999.1, Policy Loss: 4.9969, Value Loss: 1.3949
+2025-09-17 19:54:16,566 - src.training.trainer - INFO - Timesteps: 191232/36000000, Episodes: 182575, Avg Reward: 0.32, Avg Length: 0.0, Steps/sec: 992.8, Policy Loss: 3.1959, Value Loss: 1.4501
+2025-09-17 19:54:20,166 - src.training.trainer - INFO - Timesteps: 193536/36000000, Episodes: 184837, Avg Reward: 0.41, Avg Length: 0.0, Steps/sec: 987.6, Policy Loss: 20.1340, Value Loss: 1.7141
+2025-09-17 19:54:23,756 - src.training.trainer - INFO - Timesteps: 195840/36000000, Episodes: 187033, Avg Reward: 0.38, Avg Length: 0.0, Steps/sec: 989.0, Policy Loss: 16.2108, Value Loss: 1.5825
+2025-09-17 19:54:27,422 - src.training.trainer - INFO - Timesteps: 198144/36000000, Episodes: 189274, Avg Reward: 0.30, Avg Length: 0.0, Steps/sec: 984.4, Policy Loss: 17.3400, Value Loss: 1.6601
+2025-09-17 19:54:31,028 - src.training.trainer - INFO - Timesteps: 200448/36000000, Episodes: 191461, Avg Reward: 0.34, Avg Length: 0.0, Steps/sec: 985.5, Policy Loss: 16.3289, Value Loss: 1.6733
+2025-09-17 19:54:34,616 - src.training.trainer - INFO - Timesteps: 202752/36000000, Episodes: 193734, Avg Reward: 0.45, Avg Length: 0.0, Steps/sec: 994.8, Policy Loss: 48.6698, Value Loss: 1.5921
+2025-09-17 19:54:38,209 - src.training.trainer - INFO - Timesteps: 205056/36000000, Episodes: 195972, Avg Reward: 0.41, Avg Length: 0.0, Steps/sec: 978.8, Policy Loss: 35.7962, Value Loss: 1.4638
+2025-09-17 19:54:41,800 - src.training.trainer - INFO - Timesteps: 207360/36000000, Episodes: 198224, Avg Reward: 0.35, Avg Length: 0.0, Steps/sec: 988.3, Policy Loss: 11.4646, Value Loss: 1.4605
+2025-09-17 19:54:45,400 - src.training.trainer - INFO - Timesteps: 209664/36000000, Episodes: 200487, Avg Reward: 0.36, Avg Length: 0.0, Steps/sec: 988.5, Policy Loss: 16.6629, Value Loss: 2.1923
+2025-09-17 19:54:48,985 - src.training.trainer - INFO - Timesteps: 211968/36000000, Episodes: 202729, Avg Reward: 0.45, Avg Length: 0.0, Steps/sec: 992.3, Policy Loss: 10.8636, Value Loss: 2.0373
+2025-09-17 19:54:52,595 - src.training.trainer - INFO - Timesteps: 214272/36000000, Episodes: 204866, Avg Reward: 0.44, Avg Length: 0.0, Steps/sec: 986.6, Policy Loss: 7.1288, Value Loss: 2.0680
+2025-09-17 19:54:56,187 - src.training.trainer - INFO - Timesteps: 216576/36000000, Episodes: 207105, Avg Reward: 0.41, Avg Length: 0.0, Steps/sec: 988.7, Policy Loss: 7.4539, Value Loss: 2.0985
+2025-09-17 19:54:59,780 - src.training.trainer - INFO - Timesteps: 218880/36000000, Episodes: 209326, Avg Reward: 0.38, Avg Length: 0.0, Steps/sec: 982.3, Policy Loss: 45.6851, Value Loss: 2.1189
+2025-09-17 19:55:03,374 - src.training.trainer - INFO - Timesteps: 221184/36000000, Episodes: 211581, Avg Reward: 0.40, Avg Length: 0.0, Steps/sec: 988.0, Policy Loss: 11.9974, Value Loss: 2.0224
+2025-09-17 19:55:06,968 - src.training.trainer - INFO - Timesteps: 223488/36000000, Episodes: 213735, Avg Reward: 0.45, Avg Length: 0.0, Steps/sec: 983.6, Policy Loss: 15.2972, Value Loss: 2.1330
+2025-09-17 19:55:10,575 - src.training.trainer - INFO - Timesteps: 225792/36000000, Episodes: 215945, Avg Reward: 0.39, Avg Length: 0.0, Steps/sec: 985.6, Policy Loss: 15.7101, Value Loss: 2.1794
+2025-09-17 19:55:14,196 - src.training.trainer - INFO - Timesteps: 228096/36000000, Episodes: 218148, Avg Reward: 0.31, Avg Length: 0.0, Steps/sec: 979.2, Policy Loss: 11.9410, Value Loss: 2.2252
+2025-09-17 19:55:17,810 - src.training.trainer - INFO - Timesteps: 230400/36000000, Episodes: 220404, Avg Reward: 0.37, Avg Length: 0.0, Steps/sec: 986.2, Policy Loss: 14.9618, Value Loss: 2.6872
+2025-09-17 19:55:21,405 - src.training.trainer - INFO - Timesteps: 232704/36000000, Episodes: 222610, Avg Reward: 0.34, Avg Length: 0.0, Steps/sec: 986.8, Policy Loss: 8.6021, Value Loss: 2.5998
+2025-09-17 19:55:25,010 - src.training.trainer - INFO - Timesteps: 235008/36000000, Episodes: 224804, Avg Reward: 0.40, Avg Length: 0.0, Steps/sec: 983.9, Policy Loss: 6.1533, Value Loss: 2.6297
+2025-09-17 19:55:28,637 - src.training.trainer - INFO - Timesteps: 237312/36000000, Episodes: 226995, Avg Reward: 0.17, Avg Length: 0.0, Steps/sec: 977.3, Policy Loss: 6.6205, Value Loss: 1.9237
+2025-09-17 19:55:32,238 - src.training.trainer - INFO - Timesteps: 239616/36000000, Episodes: 229179, Avg Reward: 0.10, Avg Length: 0.0, Steps/sec: 986.7, Policy Loss: 8.2409, Value Loss: 1.8636
+2025-09-17 19:55:35,882 - src.training.trainer - INFO - Timesteps: 241920/36000000, Episodes: 231241, Avg Reward: 0.29, Avg Length: 0.0, Steps/sec: 969.9, Policy Loss: 6.9525, Value Loss: 1.9396
+2025-09-17 19:55:39,544 - src.training.trainer - INFO - Timesteps: 244224/36000000, Episodes: 233480, Avg Reward: 0.42, Avg Length: 0.0, Steps/sec: 963.9, Policy Loss: 5.5451, Value Loss: 1.8753
+2025-09-17 19:55:43,173 - src.training.trainer - INFO - Timesteps: 246528/36000000, Episodes: 235729, Avg Reward: 0.31, Avg Length: 0.0, Steps/sec: 978.4, Policy Loss: 7.8588, Value Loss: 1.8882
+2025-09-17 19:55:46,789 - src.training.trainer - INFO - Timesteps: 248832/36000000, Episodes: 237921, Avg Reward: 0.39, Avg Length: 0.0, Steps/sec: 976.1, Policy Loss: 7.2516, Value Loss: 2.0970
+2025-09-17 19:55:50,386 - src.training.trainer - INFO - Timesteps: 251136/36000000, Episodes: 240152, Avg Reward: 0.35, Avg Length: 0.0, Steps/sec: 989.6, Policy Loss: 8.6339, Value Loss: 2.1487
+2025-09-17 19:55:54,001 - src.training.trainer - INFO - Timesteps: 253440/36000000, Episodes: 242318, Avg Reward: 0.40, Avg Length: 0.0, Steps/sec: 984.8, Policy Loss: 48.0098, Value Loss: 2.2564
+2025-09-17 19:55:57,696 - src.training.trainer - INFO - Timesteps: 255744/36000000, Episodes: 244571, Avg Reward: 0.46, Avg Length: 0.0, Steps/sec: 986.6, Policy Loss: 54.7706, Value Loss: 2.1484
+2025-09-17 19:56:01,308 - src.training.trainer - INFO - Timesteps: 258048/36000000, Episodes: 246644, Avg Reward: 0.48, Avg Length: 0.0, Steps/sec: 982.7, Policy Loss: 21.0298, Value Loss: 1.8538
+2025-09-17 19:56:04,903 - src.training.trainer - INFO - Timesteps: 260352/36000000, Episodes: 248853, Avg Reward: 0.45, Avg Length: 0.0, Steps/sec: 989.6, Policy Loss: 16.5050, Value Loss: 1.7406
+2025-09-17 19:56:08,482 - src.training.trainer - INFO - Timesteps: 262656/36000000, Episodes: 251070, Avg Reward: 0.33, Avg Length: 0.0, Steps/sec: 992.4, Policy Loss: 10.7219, Value Loss: 1.7653
+2025-09-17 19:56:12,088 - src.training.trainer - INFO - Timesteps: 264960/36000000, Episodes: 253323, Avg Reward: 0.35, Avg Length: 0.0, Steps/sec: 991.9, Policy Loss: 22.9586, Value Loss: 2.0056
+2025-09-17 19:56:15,673 - src.training.trainer - INFO - Timesteps: 267264/36000000, Episodes: 255475, Avg Reward: 0.44, Avg Length: 0.0, Steps/sec: 989.7, Policy Loss: 31.2301, Value Loss: 1.8900
+2025-09-17 19:56:19,276 - src.training.trainer - INFO - Timesteps: 269568/36000000, Episodes: 257752, Avg Reward: 0.34, Avg Length: 0.0, Steps/sec: 989.5, Policy Loss: 53.3358, Value Loss: 2.7433
+2025-09-17 19:56:22,888 - src.training.trainer - INFO - Timesteps: 271872/36000000, Episodes: 259910, Avg Reward: 0.38, Avg Length: 0.0, Steps/sec: 981.3, Policy Loss: 81.9628, Value Loss: 2.5194
+2025-09-17 19:56:26,483 - src.training.trainer - INFO - Timesteps: 274176/36000000, Episodes: 261994, Avg Reward: 0.29, Avg Length: 0.0, Steps/sec: 985.7, Policy Loss: 50.7205, Value Loss: 2.4568
+2025-09-17 19:56:30,098 - src.training.trainer - INFO - Timesteps: 276480/36000000, Episodes: 264155, Avg Reward: 0.28, Avg Length: 0.0, Steps/sec: 976.6, Policy Loss: 42.5977, Value Loss: 2.1436
+2025-09-17 19:56:33,716 - src.training.trainer - INFO - Timesteps: 278784/36000000, Episodes: 266317, Avg Reward: 0.30, Avg Length: 0.0, Steps/sec: 983.3, Policy Loss: 25.7934, Value Loss: 2.0245
+2025-09-17 19:56:37,312 - src.training.trainer - INFO - Timesteps: 281088/36000000, Episodes: 268538, Avg Reward: 0.06, Avg Length: 0.0, Steps/sec: 990.2, Policy Loss: 12.7703, Value Loss: 2.0938
+2025-09-17 19:56:40,945 - src.training.trainer - INFO - Timesteps: 283392/36000000, Episodes: 270706, Avg Reward: 0.08, Avg Length: 0.0, Steps/sec: 977.4, Policy Loss: 13.8160, Value Loss: 2.0513
+2025-09-17 19:56:44,542 - src.training.trainer - INFO - Timesteps: 285696/36000000, Episodes: 272951, Avg Reward: 0.40, Avg Length: 0.0, Steps/sec: 986.9, Policy Loss: 10.3921, Value Loss: 2.4237
+2025-09-17 19:56:48,178 - src.training.trainer - INFO - Timesteps: 288000/36000000, Episodes: 275164, Avg Reward: 0.37, Avg Length: 0.0, Steps/sec: 973.0, Policy Loss: 9.8942, Value Loss: 2.2847
+2025-09-17 19:56:51,743 - src.training.trainer - INFO - Timesteps: 290304/36000000, Episodes: 277411, Avg Reward: 0.39, Avg Length: 0.0, Steps/sec: 991.6, Policy Loss: 5.1505, Value Loss: 2.3965
+2025-09-17 19:56:55,346 - src.training.trainer - INFO - Timesteps: 292608/36000000, Episodes: 279475, Avg Reward: 0.48, Avg Length: 0.0, Steps/sec: 983.6, Policy Loss: 6.5660, Value Loss: 2.4755
+2025-09-17 19:56:58,998 - src.training.trainer - INFO - Timesteps: 294912/36000000, Episodes: 281440, Avg Reward: 0.40, Avg Length: 0.0, Steps/sec: 964.0, Policy Loss: 6.0837, Value Loss: 2.6508
+2025-09-17 19:57:02,594 - src.training.trainer - INFO - Timesteps: 297216/36000000, Episodes: 283686, Avg Reward: 0.32, Avg Length: 0.0, Steps/sec: 995.8, Policy Loss: 5.7636, Value Loss: 2.6090
+2025-09-17 19:57:06,173 - src.training.trainer - INFO - Timesteps: 299520/36000000, Episodes: 285912, Avg Reward: 0.37, Avg Length: 0.0, Steps/sec: 989.9, Policy Loss: 11.3152, Value Loss: 2.4292
+2025-09-17 19:57:09,735 - src.training.trainer - INFO - Timesteps: 301824/36000000, Episodes: 288183, Avg Reward: 0.44, Avg Length: 0.0, Steps/sec: 995.9, Policy Loss: 19.3795, Value Loss: 2.7737
+2025-09-17 19:57:13,352 - src.training.trainer - INFO - Timesteps: 304128/36000000, Episodes: 290426, Avg Reward: 0.40, Avg Length: 0.0, Steps/sec: 982.6, Policy Loss: 26.3306, Value Loss: 2.7919
+2025-09-17 19:57:16,947 - src.training.trainer - INFO - Timesteps: 306432/36000000, Episodes: 292623, Avg Reward: 0.34, Avg Length: 0.0, Steps/sec: 988.1, Policy Loss: 24.0626, Value Loss: 2.7613
+2025-09-17 19:57:20,575 - src.training.trainer - INFO - Timesteps: 308736/36000000, Episodes: 294648, Avg Reward: -0.12, Avg Length: 0.0, Steps/sec: 972.5, Policy Loss: 23.1274, Value Loss: 2.9253
+2025-09-17 19:57:24,113 - src.training.trainer - INFO - Timesteps: 311040/36000000, Episodes: 296883, Avg Reward: 0.36, Avg Length: 0.0, Steps/sec: 994.6, Policy Loss: 16.8613, Value Loss: 2.8460
+2025-09-17 19:57:27,744 - src.training.trainer - INFO - Timesteps: 313344/36000000, Episodes: 299085, Avg Reward: 0.32, Avg Length: 0.0, Steps/sec: 990.9, Policy Loss: 13.2811, Value Loss: 2.5997
+2025-09-17 19:57:31,320 - src.training.trainer - INFO - Timesteps: 315648/36000000, Episodes: 301328, Avg Reward: 0.43, Avg Length: 0.0, Steps/sec: 1000.2, Policy Loss: 20.2700, Value Loss: 2.5932
+2025-09-17 19:57:34,936 - src.training.trainer - INFO - Timesteps: 317952/36000000, Episodes: 303408, Avg Reward: 0.45, Avg Length: 0.0, Steps/sec: 979.9, Policy Loss: 15.3315, Value Loss: 2.4730
+2025-09-17 19:57:38,534 - src.training.trainer - INFO - Timesteps: 320256/36000000, Episodes: 305688, Avg Reward: 0.34, Avg Length: 0.0, Steps/sec: 1003.4, Policy Loss: 11.2900, Value Loss: 4.8698
+2025-09-17 19:57:42,166 - src.training.trainer - INFO - Timesteps: 322560/36000000, Episodes: 307822, Avg Reward: 0.42, Avg Length: 0.0, Steps/sec: 977.7, Policy Loss: 5.9932, Value Loss: 4.6812
+2025-09-17 19:57:45,790 - src.training.trainer - INFO - Timesteps: 324864/36000000, Episodes: 309945, Avg Reward: 0.37, Avg Length: 0.0, Steps/sec: 983.5, Policy Loss: 4.8664, Value Loss: 4.3223
+2025-09-17 19:57:49,415 - src.training.trainer - INFO - Timesteps: 327168/36000000, Episodes: 311986, Avg Reward: 0.08, Avg Length: 0.0, Steps/sec: 981.4, Policy Loss: 34.4704, Value Loss: 4.1340
+2025-09-17 19:57:52,989 - src.training.trainer - INFO - Timesteps: 329472/36000000, Episodes: 314245, Avg Reward: 0.43, Avg Length: 0.0, Steps/sec: 996.2, Policy Loss: 12.9544, Value Loss: 4.6673
+2025-09-17 19:57:56,571 - src.training.trainer - INFO - Timesteps: 331776/36000000, Episodes: 316450, Avg Reward: 0.40, Avg Length: 0.0, Steps/sec: 987.3, Policy Loss: 12.7409, Value Loss: 4.6088
+2025-09-17 19:58:00,156 - src.training.trainer - INFO - Timesteps: 334080/36000000, Episodes: 318707, Avg Reward: 0.40, Avg Length: 0.0, Steps/sec: 989.0, Policy Loss: 6.9611, Value Loss: 4.3168
+2025-09-17 19:58:03,756 - src.training.trainer - INFO - Timesteps: 336384/36000000, Episodes: 320744, Avg Reward: 0.54, Avg Length: 0.0, Steps/sec: 986.4, Policy Loss: 9.6662, Value Loss: 4.4575
+2025-09-17 19:58:03,756 - src.training.trainer - INFO - Early Stopping: 新しい最良値 avg_reward=0.5412
+2025-09-17 19:58:07,337 - src.training.trainer - INFO - Timesteps: 338688/36000000, Episodes: 322983, Avg Reward: 0.37, Avg Length: 0.0, Steps/sec: 994.3, Policy Loss: 6.1597, Value Loss: 4.3509
+2025-09-17 19:58:10,896 - src.training.trainer - INFO - Timesteps: 340992/36000000, Episodes: 325218, Avg Reward: 0.37, Avg Length: 0.0, Steps/sec: 997.3, Policy Loss: 6.7108, Value Loss: 4.5296
+2025-09-17 19:58:14,484 - src.training.trainer - INFO - Timesteps: 343296/36000000, Episodes: 327462, Avg Reward: 0.32, Avg Length: 0.0, Steps/sec: 991.2, Policy Loss: 6.4613, Value Loss: 4.9165
+2025-09-17 19:58:18,098 - src.training.trainer - INFO - Timesteps: 345600/36000000, Episodes: 329681, Avg Reward: 0.40, Avg Length: 0.0, Steps/sec: 988.8, Policy Loss: 13.3295, Value Loss: 5.1362
+2025-09-17 19:58:21,706 - src.training.trainer - INFO - Timesteps: 347904/36000000, Episodes: 331935, Avg Reward: 0.37, Avg Length: 0.0, Steps/sec: 991.8, Policy Loss: 6.3493, Value Loss: 3.3151
+2025-09-17 19:58:25,302 - src.training.trainer - INFO - Timesteps: 350208/36000000, Episodes: 334071, Avg Reward: 0.37, Avg Length: 0.0, Steps/sec: 985.3, Policy Loss: 10.7033, Value Loss: 3.2162
+2025-09-17 19:58:28,947 - src.training.trainer - INFO - Timesteps: 352512/36000000, Episodes: 336111, Avg Reward: 0.45, Avg Length: 0.0, Steps/sec: 969.4, Policy Loss: 6.8948, Value Loss: 3.5624
+2025-09-17 19:58:32,667 - src.training.trainer - INFO - Timesteps: 354816/36000000, Episodes: 338342, Avg Reward: 0.40, Avg Length: 0.0, Steps/sec: 968.8, Policy Loss: 32.4091, Value Loss: 3.6371
+2025-09-17 19:58:36,187 - src.training.trainer - INFO - Timesteps: 357120/36000000, Episodes: 340599, Avg Reward: 0.43, Avg Length: 0.0, Steps/sec: 1005.5, Policy Loss: 13.9857, Value Loss: 3.4668
+2025-09-17 19:58:39,733 - src.training.trainer - INFO - Timesteps: 359424/36000000, Episodes: 342852, Avg Reward: 0.35, Avg Length: 0.0, Steps/sec: 995.9, Policy Loss: 28.3392, Value Loss: 3.9280
+2025-09-17 19:58:43,257 - src.training.trainer - INFO - Timesteps: 361728/36000000, Episodes: 345021, Avg Reward: 0.30, Avg Length: 0.0, Steps/sec: 1013.5, Policy Loss: 27.7932, Value Loss: 3.9413
+2025-09-17 19:58:46,722 - src.training.trainer - INFO - Timesteps: 364032/36000000, Episodes: 347198, Avg Reward: 0.39, Avg Length: 0.0, Steps/sec: 1020.0, Policy Loss: 12.7033, Value Loss: 3.8002
+2025-09-17 19:58:50,214 - src.training.trainer - INFO - Timesteps: 366336/36000000, Episodes: 349260, Avg Reward: 0.32, Avg Length: 0.0, Steps/sec: 1006.7, Policy Loss: 12.5360, Value Loss: 3.8280
+2025-09-17 19:58:53,710 - src.training.trainer - INFO - Timesteps: 368640/36000000, Episodes: 351533, Avg Reward: 0.41, Avg Length: 0.0, Steps/sec: 1015.8, Policy Loss: 14.3079, Value Loss: 3.7389
+2025-09-17 19:58:57,340 - src.training.trainer - INFO - Timesteps: 370944/36000000, Episodes: 353561, Avg Reward: 0.09, Avg Length: 0.0, Steps/sec: 992.2, Policy Loss: 7.9928, Value Loss: 3.4094
+2025-09-17 19:59:00,837 - src.training.trainer - INFO - Timesteps: 373248/36000000, Episodes: 355760, Avg Reward: 0.39, Avg Length: 0.0, Steps/sec: 1026.5, Policy Loss: 6.8383, Value Loss: 3.3477
+2025-09-17 19:59:04,334 - src.training.trainer - INFO - Timesteps: 375552/36000000, Episodes: 357989, Avg Reward: 0.40, Avg Length: 0.0, Steps/sec: 1019.0, Policy Loss: 7.1804, Value Loss: 3.0891
+2025-09-17 19:59:07,792 - src.training.trainer - INFO - Timesteps: 377856/36000000, Episodes: 360231, Avg Reward: 0.45, Avg Length: 0.0, Steps/sec: 1029.4, Policy Loss: 7.0194, Value Loss: 3.0897
+2025-09-17 19:59:11,226 - src.training.trainer - INFO - Timesteps: 380160/36000000, Episodes: 362455, Avg Reward: 0.41, Avg Length: 0.0, Steps/sec: 1026.9, Policy Loss: 4.0774, Value Loss: 2.8761
+2025-09-17 19:59:14,720 - src.training.trainer - INFO - Timesteps: 382464/36000000, Episodes: 364429, Avg Reward: 0.20, Avg Length: 0.0, Steps/sec: 1005.3, Policy Loss: 5.0585, Value Loss: 2.8560
+2025-09-17 19:59:18,194 - src.training.trainer - INFO - Timesteps: 384768/36000000, Episodes: 366649, Avg Reward: 0.47, Avg Length: 0.0, Steps/sec: 1017.3, Policy Loss: 55.7836, Value Loss: 2.6152
+2025-09-17 19:59:21,722 - src.training.trainer - INFO - Timesteps: 387072/36000000, Episodes: 368901, Avg Reward: 0.37, Avg Length: 0.0, Steps/sec: 1022.1, Policy Loss: 14.3910, Value Loss: 2.5264
+2025-09-17 19:59:25,316 - src.training.trainer - INFO - Timesteps: 389376/36000000, Episodes: 371092, Avg Reward: 0.33, Avg Length: 0.0, Steps/sec: 982.9, Policy Loss: 17.3278, Value Loss: 2.7986
+2025-09-17 19:59:28,796 - src.training.trainer - INFO - Timesteps: 391680/36000000, Episodes: 373328, Avg Reward: 0.42, Avg Length: 0.0, Steps/sec: 1018.2, Policy Loss: 17.4942, Value Loss: 2.9810
+2025-09-17 19:59:32,264 - src.training.trainer - INFO - Timesteps: 393984/36000000, Episodes: 375581, Avg Reward: 0.43, Avg Length: 0.0, Steps/sec: 1022.9, Policy Loss: 13.9079, Value Loss: 2.9143
+2025-09-17 19:59:35,729 - src.training.trainer - INFO - Timesteps: 396288/36000000, Episodes: 377834, Avg Reward: 0.30, Avg Length: 0.0, Steps/sec: 1020.4, Policy Loss: 13.0133, Value Loss: 3.0341
+2025-09-17 19:59:39,243 - src.training.trainer - INFO - Timesteps: 398592/36000000, Episodes: 380042, Avg Reward: 0.36, Avg Length: 0.0, Steps/sec: 1014.4, Policy Loss: 9.5303, Value Loss: 2.8275
+2025-09-17 19:59:42,784 - src.training.trainer - INFO - Timesteps: 400896/36000000, Episodes: 382118, Avg Reward: 0.36, Avg Length: 0.0, Steps/sec: 1006.5, Policy Loss: 12.2840, Value Loss: 3.1206
+2025-09-17 19:59:46,259 - src.training.trainer - INFO - Timesteps: 403200/36000000, Episodes: 384341, Avg Reward: 0.35, Avg Length: 0.0, Steps/sec: 1020.9, Policy Loss: 8.4349, Value Loss: 3.2314
+2025-09-17 19:59:49,686 - src.training.trainer - INFO - Timesteps: 405504/36000000, Episodes: 386536, Avg Reward: 0.40, Avg Length: 0.0, Steps/sec: 1031.7, Policy Loss: 5.7969, Value Loss: 3.2650
+2025-09-17 19:59:53,129 - src.training.trainer - INFO - Timesteps: 407808/36000000, Episodes: 388801, Avg Reward: 0.35, Avg Length: 0.0, Steps/sec: 1028.7, Policy Loss: 6.2295, Value Loss: 3.4676
+2025-09-17 19:59:56,659 - src.training.trainer - INFO - Timesteps: 410112/36000000, Episodes: 390943, Avg Reward: 0.31, Avg Length: 0.0, Steps/sec: 1002.4, Policy Loss: 5.0885, Value Loss: 3.4366
+2025-09-17 20:00:00,110 - src.training.trainer - INFO - Timesteps: 412416/36000000, Episodes: 393200, Avg Reward: 0.38, Avg Length: 0.0, Steps/sec: 1029.5, Policy Loss: 4.8481, Value Loss: 3.8426
+2025-09-17 20:00:03,587 - src.training.trainer - INFO - Timesteps: 414720/36000000, Episodes: 395383, Avg Reward: 0.37, Avg Length: 0.0, Steps/sec: 1021.5, Policy Loss: 4.4236, Value Loss: 3.4346
+2025-09-17 20:00:07,032 - src.training.trainer - INFO - Timesteps: 417024/36000000, Episodes: 397571, Avg Reward: 0.40, Avg Length: 0.0, Steps/sec: 1024.8, Policy Loss: 5.1115, Value Loss: 3.9852
+2025-09-17 20:00:10,489 - src.training.trainer - INFO - Timesteps: 419328/36000000, Episodes: 399832, Avg Reward: 0.43, Avg Length: 0.0, Steps/sec: 1031.1, Policy Loss: 5.4640, Value Loss: 3.9428
+2025-09-17 20:00:13,971 - src.training.trainer - INFO - Timesteps: 421632/36000000, Episodes: 402079, Avg Reward: 0.36, Avg Length: 0.0, Steps/sec: 1015.2, Policy Loss: 7.1640, Value Loss: 4.3027
+2025-09-17 20:00:17,471 - src.training.trainer - INFO - Timesteps: 423936/36000000, Episodes: 404328, Avg Reward: 0.39, Avg Length: 0.0, Steps/sec: 1025.9, Policy Loss: 25.9575, Value Loss: 4.5517
+2025-09-17 20:00:20,967 - src.training.trainer - INFO - Timesteps: 426240/36000000, Episodes: 406480, Avg Reward: 0.38, Avg Length: 0.0, Steps/sec: 1024.4, Policy Loss: 20.9197, Value Loss: 4.3922
+2025-09-17 20:00:24,515 - src.training.trainer - INFO - Timesteps: 428544/36000000, Episodes: 408484, Avg Reward: 0.52, Avg Length: 0.0, Steps/sec: 1015.5, Policy Loss: 19.1818, Value Loss: 4.5302
+2025-09-17 20:00:27,971 - src.training.trainer - INFO - Timesteps: 430848/36000000, Episodes: 410664, Avg Reward: 0.41, Avg Length: 0.0, Steps/sec: 1021.7, Policy Loss: 46.9782, Value Loss: 4.4325
+2025-09-17 20:00:31,423 - src.training.trainer - INFO - Timesteps: 433152/36000000, Episodes: 412886, Avg Reward: 0.39, Avg Length: 0.0, Steps/sec: 1027.0, Policy Loss: 15.7945, Value Loss: 4.3484
+2025-09-17 20:00:34,861 - src.training.trainer - INFO - Timesteps: 435456/36000000, Episodes: 415123, Avg Reward: 0.39, Avg Length: 0.0, Steps/sec: 1026.0, Policy Loss: 25.5596, Value Loss: 3.9562
+2025-09-17 20:00:38,310 - src.training.trainer - INFO - Timesteps: 437760/36000000, Episodes: 417235, Avg Reward: 0.19, Avg Length: 0.0, Steps/sec: 1023.4, Policy Loss: 13.6771, Value Loss: 3.9538
+2025-09-17 20:00:41,818 - src.training.trainer - INFO - Timesteps: 440064/36000000, Episodes: 419475, Avg Reward: 0.42, Avg Length: 0.0, Steps/sec: 1013.4, Policy Loss: 10.2773, Value Loss: 3.6864
+2025-09-17 20:00:45,347 - src.training.trainer - INFO - Timesteps: 442368/36000000, Episodes: 421395, Avg Reward: 0.42, Avg Length: 0.0, Steps/sec: 1012.5, Policy Loss: 10.9319, Value Loss: 3.8396
+2025-09-17 20:00:48,774 - src.training.trainer - INFO - Timesteps: 444672/36000000, Episodes: 423631, Avg Reward: 0.37, Avg Length: 0.0, Steps/sec: 1032.2, Policy Loss: 14.0009, Value Loss: 3.3763
+2025-09-17 20:00:52,271 - src.training.trainer - INFO - Timesteps: 446976/36000000, Episodes: 425877, Avg Reward: 0.44, Avg Length: 0.0, Steps/sec: 1026.4, Policy Loss: 8.9548, Value Loss: 3.2663
+2025-09-17 20:00:55,787 - src.training.trainer - INFO - Timesteps: 449280/36000000, Episodes: 428127, Avg Reward: 0.43, Avg Length: 0.0, Steps/sec: 1013.1, Policy Loss: 15.4744, Value Loss: 3.1666
+2025-09-17 20:00:59,252 - src.training.trainer - INFO - Timesteps: 451584/36000000, Episodes: 430363, Avg Reward: 0.36, Avg Length: 0.0, Steps/sec: 1028.8, Policy Loss: 8.5842, Value Loss: 2.8284
+2025-09-17 20:01:02,699 - src.training.trainer - INFO - Timesteps: 453888/36000000, Episodes: 432577, Avg Reward: 0.42, Avg Length: 0.0, Steps/sec: 1026.8, Policy Loss: 7.7193, Value Loss: 2.9520
+2025-09-17 20:01:06,176 - src.training.trainer - INFO - Timesteps: 456192/36000000, Episodes: 434698, Avg Reward: 0.49, Avg Length: 0.0, Steps/sec: 1025.1, Policy Loss: 14.3056, Value Loss: 2.9638
+2025-09-17 20:01:09,714 - src.training.trainer - INFO - Timesteps: 458496/36000000, Episodes: 436509, Avg Reward: 0.50, Avg Length: 0.0, Steps/sec: 1002.7, Policy Loss: 7.8204, Value Loss: 3.2859
+2025-09-17 20:01:13,132 - src.training.trainer - INFO - Timesteps: 460800/36000000, Episodes: 438756, Avg Reward: 0.40, Avg Length: 0.0, Steps/sec: 1043.8, Policy Loss: 11.4299, Value Loss: 3.5423
+2025-09-17 20:01:16,615 - src.training.trainer - INFO - Timesteps: 463104/36000000, Episodes: 440854, Avg Reward: 0.27, Avg Length: 0.0, Steps/sec: 1028.1, Policy Loss: 156.6034, Value Loss: 3.4267
+2025-09-17 20:01:20,047 - src.training.trainer - INFO - Timesteps: 465408/36000000, Episodes: 443090, Avg Reward: 0.43, Avg Length: 0.0, Steps/sec: 1037.0, Policy Loss: 191.6937, Value Loss: 3.5355
+2025-09-17 20:01:23,465 - src.training.trainer - INFO - Timesteps: 467712/36000000, Episodes: 445343, Avg Reward: 0.36, Avg Length: 0.0, Steps/sec: 1038.8, Policy Loss: 105.2300, Value Loss: 5.9345
+2025-09-17 20:01:26,985 - src.training.trainer - INFO - Timesteps: 470016/36000000, Episodes: 447447, Avg Reward: 0.34, Avg Length: 0.0, Steps/sec: 1016.3, Policy Loss: 33.0453, Value Loss: 5.3314
+2025-09-17 20:01:30,406 - src.training.trainer - INFO - Timesteps: 472320/36000000, Episodes: 449649, Avg Reward: 0.26, Avg Length: 0.0, Steps/sec: 1036.5, Policy Loss: 29.1293, Value Loss: 5.2914
+2025-09-17 20:01:33,817 - src.training.trainer - INFO - Timesteps: 474624/36000000, Episodes: 451884, Avg Reward: 0.15, Avg Length: 0.0, Steps/sec: 1042.2, Policy Loss: 41.1330, Value Loss: 5.2664
+2025-09-17 20:01:37,267 - src.training.trainer - INFO - Timesteps: 476928/36000000, Episodes: 454152, Avg Reward: 0.37, Avg Length: 0.0, Steps/sec: 1043.8, Policy Loss: 65.0327, Value Loss: 6.3978
+2025-09-17 20:01:40,717 - src.training.trainer - INFO - Timesteps: 479232/36000000, Episodes: 456380, Avg Reward: 0.31, Avg Length: 0.0, Steps/sec: 1023.3, Policy Loss: 27.3918, Value Loss: 6.0085
+2025-09-17 20:01:44,180 - src.training.trainer - INFO - Timesteps: 481536/36000000, Episodes: 458540, Avg Reward: 0.29, Avg Length: 0.0, Steps/sec: 1028.0, Policy Loss: 24.5518, Value Loss: 5.8513
+2025-09-17 20:01:44,180 - src.training.trainer - WARNING - 過学習検出: Value Lossが異常に高い (5.06 > 5.0)
+2025-09-17 20:01:44,180 - src.training.trainer - WARNING - 過学習が検出されました。学習を停止します。
+2025-09-17 20:01:44,180 - src.training.trainer - INFO - 学習完了。最終評価を実行します
+2025-09-17 20:01:44,180 - src.training.trainer - INFO - Episode 458540: 評価を実行中...
+2025-09-17 20:01:44,180 - src.training.evaluator - INFO - 評価を開始します（エピソード数: 5）
+2025-09-17 20:01:44,390 - src.training.evaluator - INFO - Episode 1/5: Reward=7460.58, Success=False, Distance=0.575m, Time=0.03s
+2025-09-17 20:01:45,040 - src.training.evaluator - INFO - Episode 2/5: Reward=107107.79, Success=False, Distance=0.411m, Time=0.48s
+2025-09-17 20:01:45,785 - src.training.evaluator - INFO - Episode 3/5: Reward=130481.88, Success=False, Distance=0.356m, Time=0.57s
+2025-09-17 20:01:46,000 - src.training.evaluator - INFO - Episode 4/5: Reward=9089.77, Success=False, Distance=0.533m, Time=0.04s
+2025-09-17 20:01:46,794 - src.training.evaluator - INFO - Episode 5/5: Reward=141849.41, Success=False, Distance=0.323m, Time=0.62s
+2025-09-17 20:01:46,797 - src.training.evaluator - INFO - 評価結果を保存しました: data/experiments/parallel_training/bittle_walking_1758106150/evaluation_results.yaml
+2025-09-17 20:01:47,264 - src.training.evaluator - INFO - 評価結果の可視化を保存しました
+2025-09-17 20:01:47,265 - src.training.evaluator - INFO - 評価完了
+2025-09-17 20:01:47,265 - src.training.trainer - INFO - 評価結果 - Success Rate: 0.00 | Avg Reward: 79197.89 | Avg Time: 0.35s | Avg Distance: 0.44m
+2025-09-17 20:01:47,272 - src.training.trainer - INFO - 最終モデルを保存しました: data/experiments/parallel_training/bittle_walking_1758106150/final_model.pth
+2025-09-17 20:01:47,272 - src.training.trainer - INFO - 学習結果を保存しました: data/experiments/parallel_training/bittle_walking_1758106150/training_results.yaml
+2025-09-17 20:01:47,273 - src.training.trainer - INFO - 並列学習完了。総時間: 750.6秒
+2025-09-17 20:01:47,273 - src.training.trainer - INFO - TensorBoardログ: data/experiments/parallel_training/bittle_walking_1758106150/tensorboard
+2025-09-17 20:01:47,273 - __main__ - INFO - 並列学習完了!
+2025-09-17 20:01:47,273 - __main__ - INFO - ==================================================
+2025-09-17 20:01:47,273 - __main__ - INFO - 学習結果:
+2025-09-17 20:01:47,273 - __main__ - INFO -   num_episodes: 5
+2025-09-17 20:01:47,273 - __main__ - INFO -   success_rate: 0.0
+2025-09-17 20:01:47,273 - __main__ - INFO -   avg_reward: 79197.88727833354
+2025-09-17 20:01:47,273 - __main__ - INFO -   std_reward: 58984.08859025943
+2025-09-17 20:01:47,273 - __main__ - INFO -   min_reward: 7460.582554546277
+2025-09-17 20:01:47,273 - __main__ - INFO -   max_reward: 141849.4130701734
+2025-09-17 20:01:47,273 - __main__ - INFO -   avg_length: 567.0
+2025-09-17 20:01:47,273 - __main__ - INFO -   std_length: 418.9677791907153
+2025-09-17 20:01:47,273 - __main__ - INFO -   avg_time: 0.3493654727935791
+2025-09-17 20:01:47,273 - __main__ - INFO -   std_time: 0.25803809024558294
+2025-09-17 20:01:47,273 - __main__ - INFO -   avg_distance: 0.43962282580847595
+2025-09-17 20:01:47,273 - __main__ - INFO -   std_distance: 0.0983167620428736
+2025-09-17 20:01:47,273 - __main__ - INFO -   min_distance: 0.32342922139581853
+2025-09-17 20:01:47,273 - __main__ - INFO -   max_distance: 0.5751100080449509
+2025-09-17 20:01:47,273 - __main__ - INFO -   success_count: 0
+2025-09-17 20:01:47,273 - __main__ - INFO -   failure_count: 5
+2025-09-17 20:01:47,273 - __main__ - INFO -   avg_forward_rewards: 55.08189676844311
+2025-09-17 20:01:47,273 - __main__ - INFO -   std_forward_rewards: 1.1570229860679297
+2025-09-17 20:01:47,273 - __main__ - INFO -   avg_stability_rewards: 41.31142257633233
+2025-09-17 20:01:47,273 - __main__ - INFO -   std_stability_rewards: 0.8677672395509421
+2025-09-17 20:01:47,273 - __main__ - INFO -   avg_efficiency_rewards: 27.540948384221554
+2025-09-17 20:01:47,273 - __main__ - INFO -   std_efficiency_rewards: 0.5785114930339649
+2025-09-17 20:01:47,273 - __main__ - INFO -   avg_penalties: 13.770474192110777
+2025-09-17 20:01:47,273 - __main__ - INFO -   std_penalties: 0.28925574651698244
+2025-09-17 20:01:47,273 - __main__ - INFO -   avg_positions: 0.23594037007988247
+2025-09-17 20:01:47,273 - __main__ - INFO -   std_positions: 0.03381303031094472
+2025-09-17 20:01:47,273 - __main__ - INFO -   avg_orientations: 0.297751697651663
+2025-09-17 20:01:47,273 - __main__ - INFO -   std_orientations: 0.01155406466514774
+2025-09-17 20:01:47,273 - __main__ - INFO -   avg_joint_angles: nan
+2025-09-17 20:01:47,273 - __main__ - INFO -   std_joint_angles: nan
+2025-09-17 20:01:47,273 - __main__ - INFO -   avg_joint_velocities: nan
+2025-09-17 20:01:47,273 - __main__ - INFO -   std_joint_velocities: nan
+2025-09-17 20:01:47,273 - __main__ - INFO -   avg_actions: 0.4583268165588379
+2025-09-17 20:01:47,273 - __main__ - INFO -   std_actions: 0.0005991201614961028
+2025-09-17 20:01:47,273 - __main__ - INFO -   efficiency: 0.0
+2025-09-17 20:01:47,273 - __main__ - INFO -   energy_efficiency: 5.550941330839582e-06
+2025-09-17 20:01:47,273 - __main__ - INFO - ==================================================
+2025-09-18 12:03:40,631 - __main__ - INFO - 並列学習を開始します...
+2025-09-18 12:03:40,631 - __main__ - INFO - 設定ファイル: config/training_config_12h.yaml
+2025-09-18 12:03:40,631 - __main__ - INFO - 出力ディレクトリ: data/experiments/parallel_training
+2025-09-18 12:03:46,168 - src.training.trainer - INFO - 並列トレーナーを初期化しました（環境数: 12）
+2025-09-18 12:03:46,168 - src.training.trainer - INFO - TensorBoardログディレクトリ: data/experiments/parallel_training/bittle_walking_1758164620/tensorboard
+2025-09-18 12:03:46,168 - src.training.trainer - INFO - TensorBoard起動コマンド: tensorboard --logdir=data/experiments/parallel_training/bittle_walking_1758164620/tensorboard
+2025-09-18 12:03:46,168 - src.training.trainer - INFO - 過学習検出有効: policy_loss_threshold=200.0, value_loss_threshold=5.0, reward_std_threshold=1.0
+2025-09-18 12:03:46,168 - __main__ - INFO - 並列環境数: 12
+2025-09-18 12:03:46,168 - __main__ - INFO - バッチサイズ: 256
+2025-09-18 12:03:46,168 - __main__ - INFO - 総タイムステップ数: 36000000
+2025-09-18 12:03:46,169 - src.training.trainer - INFO - 並列学習を開始します...
+2025-09-18 12:03:49,383 - src.training.trainer - INFO - Timesteps: 1536/36000000, Episodes: 1403, Avg Reward: 0.50, Avg Length: 0.0, Steps/sec: 664.6, Policy Loss: 9.8012, Value Loss: 0.9785
+2025-09-18 12:03:52,411 - src.training.trainer - INFO - Timesteps: 3072/36000000, Episodes: 2814, Avg Reward: 0.56, Avg Length: 0.0, Steps/sec: 694.0, Policy Loss: 8.4863, Value Loss: 0.8780
+2025-09-18 12:03:55,437 - src.training.trainer - INFO - Timesteps: 4608/36000000, Episodes: 4291, Avg Reward: 0.55, Avg Length: 0.0, Steps/sec: 696.5, Policy Loss: 9.8471, Value Loss: 0.7620
+2025-09-18 12:03:58,462 - src.training.trainer - INFO - Timesteps: 6144/36000000, Episodes: 5734, Avg Reward: 0.60, Avg Length: 0.0, Steps/sec: 687.0, Policy Loss: 6.4255, Value Loss: 0.7046
+2025-09-18 12:04:01,489 - src.training.trainer - INFO - Timesteps: 7680/36000000, Episodes: 7122, Avg Reward: 0.57, Avg Length: 0.0, Steps/sec: 690.9, Policy Loss: 4.1670, Value Loss: 0.6902
+2025-09-18 12:04:04,537 - src.training.trainer - INFO - Timesteps: 9216/36000000, Episodes: 8569, Avg Reward: 0.57, Avg Length: 0.0, Steps/sec: 691.0, Policy Loss: 2.8027, Value Loss: 0.5364
+2025-09-18 12:04:07,592 - src.training.trainer - INFO - Timesteps: 10752/36000000, Episodes: 10027, Avg Reward: 0.58, Avg Length: 0.0, Steps/sec: 691.0, Policy Loss: 1.1922, Value Loss: 0.5983
+2025-09-18 12:04:10,714 - src.training.trainer - INFO - Timesteps: 12288/36000000, Episodes: 11413, Avg Reward: 0.64, Avg Length: 0.0, Steps/sec: 679.2, Policy Loss: 1.3138, Value Loss: 0.4708
+2025-09-18 12:04:13,765 - src.training.trainer - INFO - Timesteps: 13824/36000000, Episodes: 12854, Avg Reward: 0.67, Avg Length: 0.0, Steps/sec: 687.0, Policy Loss: 2.0185, Value Loss: 0.4859
+2025-09-18 12:04:16,861 - src.training.trainer - INFO - Timesteps: 15360/36000000, Episodes: 14354, Avg Reward: 0.69, Avg Length: 0.0, Steps/sec: 690.4, Policy Loss: 4.1319, Value Loss: 0.5481
+2025-09-18 12:04:19,939 - src.training.trainer - INFO - Timesteps: 16896/36000000, Episodes: 15833, Avg Reward: 0.50, Avg Length: 0.0, Steps/sec: 685.5, Policy Loss: 9.6265, Value Loss: 0.5695
+2025-09-18 12:04:23,066 - src.training.trainer - INFO - Timesteps: 18432/36000000, Episodes: 17310, Avg Reward: 0.69, Avg Length: 0.0, Steps/sec: 686.3, Policy Loss: 5.3209, Value Loss: 0.5527
+2025-09-18 12:04:26,122 - src.training.trainer - INFO - Timesteps: 19968/36000000, Episodes: 18767, Avg Reward: 0.47, Avg Length: 0.0, Steps/sec: 690.8, Policy Loss: 3.9719, Value Loss: 0.5831
+2025-09-18 12:04:29,243 - src.training.trainer - INFO - Timesteps: 21504/36000000, Episodes: 20140, Avg Reward: 0.25, Avg Length: 0.0, Steps/sec: 681.7, Policy Loss: 4.5447, Value Loss: 0.7380
+2025-09-18 12:04:32,298 - src.training.trainer - INFO - Timesteps: 23040/36000000, Episodes: 21627, Avg Reward: 0.53, Avg Length: 0.0, Steps/sec: 692.5, Policy Loss: 8.5463, Value Loss: 0.6699
+2025-09-18 12:04:35,414 - src.training.trainer - INFO - Timesteps: 24576/36000000, Episodes: 23121, Avg Reward: 0.61, Avg Length: 0.0, Steps/sec: 686.2, Policy Loss: 7.6419, Value Loss: 0.6621
+2025-09-18 12:04:38,514 - src.training.trainer - INFO - Timesteps: 26112/36000000, Episodes: 24625, Avg Reward: 0.72, Avg Length: 0.0, Steps/sec: 687.6, Policy Loss: 2.5992, Value Loss: 0.6903
+2025-09-18 12:04:41,599 - src.training.trainer - INFO - Timesteps: 27648/36000000, Episodes: 26096, Avg Reward: 0.52, Avg Length: 0.0, Steps/sec: 690.6, Policy Loss: 2.9238, Value Loss: 0.7056
+2025-09-18 12:04:44,658 - src.training.trainer - INFO - Timesteps: 29184/36000000, Episodes: 27581, Avg Reward: 0.64, Avg Length: 0.0, Steps/sec: 685.2, Policy Loss: 4.3469, Value Loss: 0.6996
+2025-09-18 12:04:47,649 - src.training.trainer - INFO - Timesteps: 30720/36000000, Episodes: 29029, Avg Reward: 0.48, Avg Length: 0.0, Steps/sec: 703.2, Policy Loss: 2.9213, Value Loss: 0.8113
+2025-09-18 12:04:50,648 - src.training.trainer - INFO - Timesteps: 32256/36000000, Episodes: 30516, Avg Reward: 0.62, Avg Length: 0.0, Steps/sec: 697.3, Policy Loss: 6.7557, Value Loss: 0.8419
+2025-09-18 12:04:53,669 - src.training.trainer - INFO - Timesteps: 33792/36000000, Episodes: 31983, Avg Reward: 0.60, Avg Length: 0.0, Steps/sec: 695.5, Policy Loss: 3.0714, Value Loss: 0.8647
+2025-09-18 12:04:56,729 - src.training.trainer - INFO - Timesteps: 35328/36000000, Episodes: 33402, Avg Reward: 0.33, Avg Length: 0.0, Steps/sec: 693.3, Policy Loss: 3.5533, Value Loss: 0.9192
+2025-09-18 12:04:59,786 - src.training.trainer - INFO - Timesteps: 36864/36000000, Episodes: 34850, Avg Reward: 0.61, Avg Length: 0.0, Steps/sec: 689.0, Policy Loss: 3.6745, Value Loss: 0.8968
+2025-09-18 12:05:02,896 - src.training.trainer - INFO - Timesteps: 38400/36000000, Episodes: 36295, Avg Reward: 0.16, Avg Length: 0.0, Steps/sec: 677.1, Policy Loss: 2.5994, Value Loss: 0.8825
+2025-09-18 12:05:05,928 - src.training.trainer - INFO - Timesteps: 39936/36000000, Episodes: 37763, Avg Reward: 0.56, Avg Length: 0.0, Steps/sec: 687.2, Policy Loss: 3.1375, Value Loss: 0.9682
+2025-09-18 12:05:08,987 - src.training.trainer - INFO - Timesteps: 41472/36000000, Episodes: 39238, Avg Reward: 0.68, Avg Length: 0.0, Steps/sec: 690.2, Policy Loss: 5.0928, Value Loss: 0.8615
+2025-09-18 12:05:12,009 - src.training.trainer - INFO - Timesteps: 43008/36000000, Episodes: 40721, Avg Reward: 0.58, Avg Length: 0.0, Steps/sec: 698.8, Policy Loss: 145.6987, Value Loss: 0.9704
+2025-09-18 12:05:15,109 - src.training.trainer - INFO - Timesteps: 44544/36000000, Episodes: 42164, Avg Reward: 0.56, Avg Length: 0.0, Steps/sec: 689.1, Policy Loss: 73.2801, Value Loss: 0.7585
+2025-09-18 12:05:18,206 - src.training.trainer - INFO - Timesteps: 46080/36000000, Episodes: 43597, Avg Reward: 0.50, Avg Length: 0.0, Steps/sec: 684.5, Policy Loss: 9.3181, Value Loss: 0.7979
+2025-09-18 12:05:21,335 - src.training.trainer - INFO - Timesteps: 47616/36000000, Episodes: 45065, Avg Reward: 0.56, Avg Length: 0.0, Steps/sec: 681.8, Policy Loss: 10.4787, Value Loss: 0.7448
+2025-09-18 12:05:24,436 - src.training.trainer - INFO - Timesteps: 49152/36000000, Episodes: 46486, Avg Reward: 0.44, Avg Length: 0.0, Steps/sec: 680.9, Policy Loss: 6.1280, Value Loss: 0.7908
+2025-09-18 12:05:27,567 - src.training.trainer - INFO - Timesteps: 50688/36000000, Episodes: 47768, Avg Reward: 0.73, Avg Length: 0.0, Steps/sec: 677.1, Policy Loss: 4.3373, Value Loss: 1.1567
+2025-09-18 12:05:30,674 - src.training.trainer - INFO - Timesteps: 52224/36000000, Episodes: 49242, Avg Reward: 0.64, Avg Length: 0.0, Steps/sec: 686.3, Policy Loss: 2.6532, Value Loss: 1.1110
+2025-09-18 12:05:33,870 - src.training.trainer - INFO - Timesteps: 53760/36000000, Episodes: 50150, Avg Reward: -0.25, Avg Length: 0.0, Steps/sec: 653.9, Policy Loss: 4.5914, Value Loss: 1.2538
+2025-09-18 12:05:36,983 - src.training.trainer - INFO - Timesteps: 55296/36000000, Episodes: 51616, Avg Reward: 0.53, Avg Length: 0.0, Steps/sec: 675.1, Policy Loss: 10.5156, Value Loss: 1.2417
+2025-09-18 12:05:40,121 - src.training.trainer - INFO - Timesteps: 56832/36000000, Episodes: 53089, Avg Reward: 0.65, Avg Length: 0.0, Steps/sec: 677.2, Policy Loss: 13.2661, Value Loss: 1.1662
+2025-09-18 12:05:43,186 - src.training.trainer - INFO - Timesteps: 58368/36000000, Episodes: 54590, Avg Reward: 0.49, Avg Length: 0.0, Steps/sec: 694.3, Policy Loss: 6.9970, Value Loss: 1.2346
+2025-09-18 12:05:46,248 - src.training.trainer - INFO - Timesteps: 59904/36000000, Episodes: 56069, Avg Reward: 0.59, Avg Length: 0.0, Steps/sec: 691.9, Policy Loss: 4.3754, Value Loss: 1.2695
+2025-09-18 12:05:49,324 - src.training.trainer - INFO - Timesteps: 61440/36000000, Episodes: 57530, Avg Reward: 0.59, Avg Length: 0.0, Steps/sec: 681.0, Policy Loss: 8.3657, Value Loss: 1.1792
+2025-09-18 12:05:52,474 - src.training.trainer - INFO - Timesteps: 62976/36000000, Episodes: 58850, Avg Reward: 0.28, Avg Length: 0.0, Steps/sec: 676.3, Policy Loss: 12.2181, Value Loss: 1.2122
+2025-09-18 12:05:55,608 - src.training.trainer - INFO - Timesteps: 64512/36000000, Episodes: 60317, Avg Reward: 0.63, Avg Length: 0.0, Steps/sec: 683.2, Policy Loss: 5.4116, Value Loss: 1.4304
+2025-09-18 12:05:58,776 - src.training.trainer - INFO - Timesteps: 66048/36000000, Episodes: 61788, Avg Reward: 0.64, Avg Length: 0.0, Steps/sec: 676.2, Policy Loss: 5.0305, Value Loss: 1.3152
+2025-09-18 12:06:01,868 - src.training.trainer - INFO - Timesteps: 67584/36000000, Episodes: 63267, Avg Reward: 0.51, Avg Length: 0.0, Steps/sec: 687.7, Policy Loss: 7.8150, Value Loss: 1.5795
+2025-09-18 12:06:05,019 - src.training.trainer - INFO - Timesteps: 69120/36000000, Episodes: 64672, Avg Reward: 0.63, Avg Length: 0.0, Steps/sec: 685.8, Policy Loss: 4.7208, Value Loss: 1.4511
+2025-09-18 12:06:08,059 - src.training.trainer - INFO - Timesteps: 70656/36000000, Episodes: 66104, Avg Reward: 0.47, Avg Length: 0.0, Steps/sec: 696.0, Policy Loss: 2.8692, Value Loss: 1.4060
+2025-09-18 12:06:11,162 - src.training.trainer - INFO - Timesteps: 72192/36000000, Episodes: 67471, Avg Reward: 0.64, Avg Length: 0.0, Steps/sec: 688.0, Policy Loss: 3.6612, Value Loss: 1.6480
+2025-09-18 12:06:14,329 - src.training.trainer - INFO - Timesteps: 73728/36000000, Episodes: 68838, Avg Reward: 0.35, Avg Length: 0.0, Steps/sec: 669.9, Policy Loss: 2.3063, Value Loss: 1.6363
+2025-09-18 12:06:17,383 - src.training.trainer - INFO - Timesteps: 75264/36000000, Episodes: 70337, Avg Reward: 0.50, Avg Length: 0.0, Steps/sec: 698.3, Policy Loss: 2.0984, Value Loss: 1.8101
+2025-09-18 12:06:20,474 - src.training.trainer - INFO - Timesteps: 76800/36000000, Episodes: 71801, Avg Reward: 0.59, Avg Length: 0.0, Steps/sec: 693.3, Policy Loss: 10.3943, Value Loss: 1.5487
+2025-09-18 12:06:23,557 - src.training.trainer - INFO - Timesteps: 78336/36000000, Episodes: 73196, Avg Reward: 0.37, Avg Length: 0.0, Steps/sec: 694.0, Policy Loss: 10.5319, Value Loss: 1.5039
+2025-09-18 12:06:26,624 - src.training.trainer - INFO - Timesteps: 79872/36000000, Episodes: 74525, Avg Reward: 0.43, Avg Length: 0.0, Steps/sec: 694.9, Policy Loss: 3.8666, Value Loss: 1.5791
+2025-09-18 12:06:29,742 - src.training.trainer - INFO - Timesteps: 81408/36000000, Episodes: 75967, Avg Reward: 0.70, Avg Length: 0.0, Steps/sec: 684.7, Policy Loss: 3.0263, Value Loss: 1.5331
+2025-09-18 12:06:32,849 - src.training.trainer - INFO - Timesteps: 82944/36000000, Episodes: 77395, Avg Reward: 0.54, Avg Length: 0.0, Steps/sec: 680.1, Policy Loss: 3.9616, Value Loss: 1.3097
+2025-09-18 12:06:35,932 - src.training.trainer - INFO - Timesteps: 84480/36000000, Episodes: 78827, Avg Reward: 0.42, Avg Length: 0.0, Steps/sec: 683.0, Policy Loss: 3.3100, Value Loss: 1.4169
+2025-09-18 12:06:39,064 - src.training.trainer - INFO - Timesteps: 86016/36000000, Episodes: 80234, Avg Reward: 0.62, Avg Length: 0.0, Steps/sec: 678.0, Policy Loss: 19.5919, Value Loss: 1.1922
+2025-09-18 12:06:42,200 - src.training.trainer - INFO - Timesteps: 87552/36000000, Episodes: 81639, Avg Reward: -0.12, Avg Length: 0.0, Steps/sec: 679.9, Policy Loss: 21.1923, Value Loss: 1.0878
+2025-09-18 12:06:45,293 - src.training.trainer - INFO - Timesteps: 89088/36000000, Episodes: 83071, Avg Reward: 0.48, Avg Length: 0.0, Steps/sec: 682.8, Policy Loss: 4.9357, Value Loss: 1.0628
+2025-09-18 12:06:48,311 - src.training.trainer - INFO - Timesteps: 90624/36000000, Episodes: 84445, Avg Reward: 0.45, Avg Length: 0.0, Steps/sec: 692.6, Policy Loss: 5.8280, Value Loss: 1.2026
+2025-09-18 12:06:51,324 - src.training.trainer - INFO - Timesteps: 92160/36000000, Episodes: 85825, Avg Reward: 0.75, Avg Length: 0.0, Steps/sec: 696.4, Policy Loss: 4.9141, Value Loss: 1.3423
+2025-09-18 12:06:54,347 - src.training.trainer - INFO - Timesteps: 93696/36000000, Episodes: 87312, Avg Reward: 0.55, Avg Length: 0.0, Steps/sec: 690.1, Policy Loss: 10.2836, Value Loss: 1.3409
+2025-09-18 12:06:57,387 - src.training.trainer - INFO - Timesteps: 95232/36000000, Episodes: 88691, Avg Reward: 0.64, Avg Length: 0.0, Steps/sec: 689.1, Policy Loss: 6.9796, Value Loss: 1.2134
+2025-09-18 12:07:00,384 - src.training.trainer - INFO - Timesteps: 96768/36000000, Episodes: 90120, Avg Reward: -0.02, Avg Length: 0.0, Steps/sec: 695.6, Policy Loss: 3.0436, Value Loss: 1.2487
+2025-09-18 12:07:03,446 - src.training.trainer - INFO - Timesteps: 98304/36000000, Episodes: 91591, Avg Reward: 0.60, Avg Length: 0.0, Steps/sec: 689.7, Policy Loss: 6.8581, Value Loss: 1.2688
+2025-09-18 12:07:06,496 - src.training.trainer - INFO - Timesteps: 99840/36000000, Episodes: 93053, Avg Reward: 0.60, Avg Length: 0.0, Steps/sec: 682.6, Policy Loss: 7.4269, Value Loss: 1.3420
+2025-09-18 12:07:09,517 - src.training.trainer - INFO - Timesteps: 101376/36000000, Episodes: 94532, Avg Reward: 0.41, Avg Length: 0.0, Steps/sec: 700.2, Policy Loss: 4.4979, Value Loss: 1.2638
+2025-09-18 12:07:12,544 - src.training.trainer - INFO - Timesteps: 102912/36000000, Episodes: 95882, Avg Reward: 0.47, Avg Length: 0.0, Steps/sec: 687.7, Policy Loss: 5.4794, Value Loss: 1.2823
+2025-09-18 12:07:15,550 - src.training.trainer - INFO - Timesteps: 104448/36000000, Episodes: 97270, Avg Reward: 0.61, Avg Length: 0.0, Steps/sec: 693.0, Policy Loss: 9.9124, Value Loss: 1.2701
+2025-09-18 12:07:18,581 - src.training.trainer - INFO - Timesteps: 105984/36000000, Episodes: 98696, Avg Reward: 0.52, Avg Length: 0.0, Steps/sec: 695.5, Policy Loss: 4.3291, Value Loss: 1.2550
+2025-09-18 12:07:21,595 - src.training.trainer - INFO - Timesteps: 107520/36000000, Episodes: 100178, Avg Reward: 0.57, Avg Length: 0.0, Steps/sec: 699.8, Policy Loss: 4.9376, Value Loss: 1.3429
+2025-09-18 12:07:24,582 - src.training.trainer - INFO - Timesteps: 109056/36000000, Episodes: 101655, Avg Reward: 0.51, Avg Length: 0.0, Steps/sec: 697.4, Policy Loss: 6.2605, Value Loss: 1.6313
+2025-09-18 12:07:27,596 - src.training.trainer - INFO - Timesteps: 110592/36000000, Episodes: 103030, Avg Reward: 0.61, Avg Length: 0.0, Steps/sec: 690.9, Policy Loss: 4.5884, Value Loss: 1.8163
+2025-09-18 12:07:30,675 - src.training.trainer - INFO - Timesteps: 112128/36000000, Episodes: 104311, Avg Reward: 0.64, Avg Length: 0.0, Steps/sec: 684.4, Policy Loss: 3.5162, Value Loss: 1.7070
+2025-09-18 12:07:33,736 - src.training.trainer - INFO - Timesteps: 113664/36000000, Episodes: 105799, Avg Reward: 0.53, Avg Length: 0.0, Steps/sec: 695.0, Policy Loss: 2.6584, Value Loss: 2.5844
+2025-09-18 12:07:36,805 - src.training.trainer - INFO - Timesteps: 115200/36000000, Episodes: 107175, Avg Reward: 0.78, Avg Length: 0.0, Steps/sec: 681.6, Policy Loss: 4.8750, Value Loss: 2.3568
+2025-09-18 12:07:39,792 - src.training.trainer - INFO - Timesteps: 116736/36000000, Episodes: 108604, Avg Reward: 0.54, Avg Length: 0.0, Steps/sec: 694.2, Policy Loss: 4.2624, Value Loss: 2.1703
+2025-09-18 12:07:42,789 - src.training.trainer - INFO - Timesteps: 118272/36000000, Episodes: 110059, Avg Reward: 0.61, Avg Length: 0.0, Steps/sec: 696.8, Policy Loss: 3.5106, Value Loss: 2.8858
+2025-09-18 12:07:45,798 - src.training.trainer - INFO - Timesteps: 119808/36000000, Episodes: 111538, Avg Reward: 0.57, Avg Length: 0.0, Steps/sec: 689.2, Policy Loss: 5.1383, Value Loss: 2.4458
+2025-09-18 12:07:48,829 - src.training.trainer - INFO - Timesteps: 121344/36000000, Episodes: 113042, Avg Reward: 0.70, Avg Length: 0.0, Steps/sec: 685.6, Policy Loss: 4.8742, Value Loss: 2.8471
+2025-09-18 12:07:51,914 - src.training.trainer - INFO - Timesteps: 122880/36000000, Episodes: 114504, Avg Reward: 0.66, Avg Length: 0.0, Steps/sec: 691.1, Policy Loss: 2.8439, Value Loss: 2.7425
+2025-09-18 12:07:54,946 - src.training.trainer - INFO - Timesteps: 124416/36000000, Episodes: 115856, Avg Reward: 0.49, Avg Length: 0.0, Steps/sec: 694.8, Policy Loss: 2.6330, Value Loss: 2.7015
+2025-09-18 12:07:57,977 - src.training.trainer - INFO - Timesteps: 125952/36000000, Episodes: 117203, Avg Reward: 0.03, Avg Length: 0.0, Steps/sec: 695.3, Policy Loss: 3.5871, Value Loss: 2.6655
+2025-09-18 12:08:01,024 - src.training.trainer - INFO - Timesteps: 127488/36000000, Episodes: 118583, Avg Reward: 0.60, Avg Length: 0.0, Steps/sec: 691.3, Policy Loss: 6.3920, Value Loss: 2.4754
+2025-09-18 12:08:04,018 - src.training.trainer - INFO - Timesteps: 129024/36000000, Episodes: 120048, Avg Reward: 0.55, Avg Length: 0.0, Steps/sec: 698.2, Policy Loss: 4.2630, Value Loss: 2.4641
+2025-09-18 12:08:07,054 - src.training.trainer - INFO - Timesteps: 130560/36000000, Episodes: 121424, Avg Reward: 0.66, Avg Length: 0.0, Steps/sec: 682.1, Policy Loss: 3.6765, Value Loss: 2.5864
+2025-09-18 12:08:10,124 - src.training.trainer - INFO - Timesteps: 132096/36000000, Episodes: 122886, Avg Reward: 0.61, Avg Length: 0.0, Steps/sec: 675.7, Policy Loss: 6.3128, Value Loss: 2.2860
+2025-09-18 12:08:13,198 - src.training.trainer - INFO - Timesteps: 133632/36000000, Episodes: 124371, Avg Reward: 0.66, Avg Length: 0.0, Steps/sec: 683.2, Policy Loss: 3.5916, Value Loss: 2.7092
+2025-09-18 12:08:16,270 - src.training.trainer - INFO - Timesteps: 135168/36000000, Episodes: 125229, Avg Reward: 0.77, Avg Length: 0.0, Steps/sec: 672.5, Policy Loss: 5.1179, Value Loss: 2.9275
+2025-09-18 12:08:19,223 - src.training.trainer - INFO - Timesteps: 136704/36000000, Episodes: 126675, Avg Reward: 0.25, Avg Length: 0.0, Steps/sec: 709.0, Policy Loss: 3.9583, Value Loss: 3.0762
+2025-09-18 12:08:22,209 - src.training.trainer - INFO - Timesteps: 138240/36000000, Episodes: 128165, Avg Reward: 0.52, Avg Length: 0.0, Steps/sec: 699.7, Policy Loss: 5.7286, Value Loss: 2.8836
+2025-09-18 12:08:25,301 - src.training.trainer - INFO - Timesteps: 139776/36000000, Episodes: 129623, Avg Reward: 0.66, Avg Length: 0.0, Steps/sec: 679.3, Policy Loss: 4.6578, Value Loss: 2.5000
+2025-09-18 12:08:28,286 - src.training.trainer - INFO - Timesteps: 141312/36000000, Episodes: 131071, Avg Reward: 0.66, Avg Length: 0.0, Steps/sec: 710.3, Policy Loss: 4.0000, Value Loss: 2.4661
+2025-09-18 12:08:31,312 - src.training.trainer - INFO - Timesteps: 142848/36000000, Episodes: 132567, Avg Reward: 0.56, Avg Length: 0.0, Steps/sec: 712.0, Policy Loss: 4.8611, Value Loss: 2.7536
+2025-09-18 12:08:34,662 - src.training.trainer - INFO - Timesteps: 144384/36000000, Episodes: 134048, Avg Reward: 0.61, Avg Length: 0.0, Steps/sec: 633.6, Policy Loss: 24.0607, Value Loss: 2.7952
+2025-09-18 12:08:37,805 - src.training.trainer - INFO - Timesteps: 145920/36000000, Episodes: 135422, Avg Reward: 0.59, Avg Length: 0.0, Steps/sec: 667.8, Policy Loss: 6.1255, Value Loss: 2.7227
+2025-09-18 12:08:40,830 - src.training.trainer - INFO - Timesteps: 147456/36000000, Episodes: 136798, Avg Reward: 0.73, Avg Length: 0.0, Steps/sec: 695.8, Policy Loss: 7.0438, Value Loss: 2.8471
+2025-09-18 12:08:43,848 - src.training.trainer - INFO - Timesteps: 148992/36000000, Episodes: 138297, Avg Reward: 0.71, Avg Length: 0.0, Steps/sec: 699.6, Policy Loss: 4.7976, Value Loss: 2.9596
+2025-09-18 12:08:46,881 - src.training.trainer - INFO - Timesteps: 150528/36000000, Episodes: 139738, Avg Reward: 0.60, Avg Length: 0.0, Steps/sec: 696.7, Policy Loss: 5.3952, Value Loss: 2.6452
+2025-09-18 12:08:49,986 - src.training.trainer - INFO - Timesteps: 152064/36000000, Episodes: 141203, Avg Reward: 0.54, Avg Length: 0.0, Steps/sec: 698.2, Policy Loss: 4.1391, Value Loss: 2.1733
+2025-09-18 12:08:53,002 - src.training.trainer - INFO - Timesteps: 153600/36000000, Episodes: 142701, Avg Reward: 0.49, Avg Length: 0.0, Steps/sec: 694.7, Policy Loss: 21.6483, Value Loss: 2.8586
+2025-09-18 12:08:56,002 - src.training.trainer - INFO - Timesteps: 155136/36000000, Episodes: 144196, Avg Reward: 0.62, Avg Length: 0.0, Steps/sec: 708.2, Policy Loss: 35.7746, Value Loss: 2.6978
+2025-09-18 12:08:59,068 - src.training.trainer - INFO - Timesteps: 156672/36000000, Episodes: 145695, Avg Reward: 0.56, Avg Length: 0.0, Steps/sec: 686.8, Policy Loss: 19.1375, Value Loss: 2.8425
+2025-09-18 12:09:02,070 - src.training.trainer - INFO - Timesteps: 158208/36000000, Episodes: 147193, Avg Reward: 0.67, Avg Length: 0.0, Steps/sec: 703.8, Policy Loss: 11.1143, Value Loss: 2.5927
+2025-09-18 12:09:05,073 - src.training.trainer - INFO - Timesteps: 159744/36000000, Episodes: 148638, Avg Reward: 0.63, Avg Length: 0.0, Steps/sec: 697.3, Policy Loss: 9.2324, Value Loss: 2.7563
+2025-09-18 12:09:08,063 - src.training.trainer - INFO - Timesteps: 161280/36000000, Episodes: 150055, Avg Reward: 0.55, Avg Length: 0.0, Steps/sec: 698.8, Policy Loss: 8.4751, Value Loss: 2.5889
+2025-09-18 12:09:11,216 - src.training.trainer - INFO - Timesteps: 162816/36000000, Episodes: 151545, Avg Reward: 0.49, Avg Length: 0.0, Steps/sec: 676.0, Policy Loss: 8.0380, Value Loss: 2.5577
+2025-09-18 12:09:14,282 - src.training.trainer - INFO - Timesteps: 164352/36000000, Episodes: 152907, Avg Reward: 0.57, Avg Length: 0.0, Steps/sec: 685.7, Policy Loss: 4.5905, Value Loss: 2.9105
+2025-09-18 12:09:17,262 - src.training.trainer - INFO - Timesteps: 165888/36000000, Episodes: 154384, Avg Reward: 0.56, Avg Length: 0.0, Steps/sec: 698.5, Policy Loss: 4.0954, Value Loss: 3.1322
+2025-09-18 12:09:20,244 - src.training.trainer - INFO - Timesteps: 167424/36000000, Episodes: 155789, Avg Reward: 0.56, Avg Length: 0.0, Steps/sec: 695.7, Policy Loss: 2.9502, Value Loss: 2.9715
+2025-09-18 12:09:23,268 - src.training.trainer - INFO - Timesteps: 168960/36000000, Episodes: 157203, Avg Reward: 0.56, Avg Length: 0.0, Steps/sec: 699.7, Policy Loss: 1.9610, Value Loss: 3.1582
+2025-09-18 12:09:26,261 - src.training.trainer - INFO - Timesteps: 170496/36000000, Episodes: 158653, Avg Reward: 0.48, Avg Length: 0.0, Steps/sec: 699.5, Policy Loss: 2.0256, Value Loss: 3.0743
+2025-09-18 12:09:29,251 - src.training.trainer - INFO - Timesteps: 172032/36000000, Episodes: 159982, Avg Reward: -0.06, Avg Length: 0.0, Steps/sec: 693.2, Policy Loss: 2.8612, Value Loss: 2.9947
+2025-09-18 12:09:32,283 - src.training.trainer - INFO - Timesteps: 173568/36000000, Episodes: 161270, Avg Reward: 0.72, Avg Length: 0.0, Steps/sec: 691.6, Policy Loss: 2.5035, Value Loss: 2.9551
+2025-09-18 12:09:35,304 - src.training.trainer - INFO - Timesteps: 175104/36000000, Episodes: 162707, Avg Reward: 0.71, Avg Length: 0.0, Steps/sec: 704.2, Policy Loss: 6.2562, Value Loss: 2.4825
+2025-09-18 12:09:38,270 - src.training.trainer - INFO - Timesteps: 176640/36000000, Episodes: 164207, Avg Reward: 0.56, Avg Length: 0.0, Steps/sec: 708.3, Policy Loss: 6.1195, Value Loss: 4.3256
+2025-09-18 12:09:41,290 - src.training.trainer - INFO - Timesteps: 178176/36000000, Episodes: 165633, Avg Reward: 0.44, Avg Length: 0.0, Steps/sec: 700.5, Policy Loss: 7.1430, Value Loss: 4.0496
+2025-09-18 12:09:44,285 - src.training.trainer - INFO - Timesteps: 179712/36000000, Episodes: 167067, Avg Reward: 0.18, Avg Length: 0.0, Steps/sec: 701.7, Policy Loss: 3.2501, Value Loss: 4.0851
+2025-09-18 12:09:47,283 - src.training.trainer - INFO - Timesteps: 181248/36000000, Episodes: 168547, Avg Reward: 0.52, Avg Length: 0.0, Steps/sec: 705.4, Policy Loss: 4.3891, Value Loss: 4.0706
+2025-09-18 12:09:50,261 - src.training.trainer - INFO - Timesteps: 182784/36000000, Episodes: 169994, Avg Reward: 0.52, Avg Length: 0.0, Steps/sec: 697.6, Policy Loss: 13.9280, Value Loss: 4.2530
+2025-09-18 12:09:53,227 - src.training.trainer - INFO - Timesteps: 184320/36000000, Episodes: 171495, Avg Reward: 0.65, Avg Length: 0.0, Steps/sec: 700.4, Policy Loss: 8.5327, Value Loss: 5.1843
+2025-09-18 12:09:56,252 - src.training.trainer - INFO - Timesteps: 185856/36000000, Episodes: 172887, Avg Reward: 0.79, Avg Length: 0.0, Steps/sec: 699.1, Policy Loss: 39.0932, Value Loss: 6.0245
+2025-09-18 12:09:59,213 - src.training.trainer - INFO - Timesteps: 187392/36000000, Episodes: 174375, Avg Reward: 0.53, Avg Length: 0.0, Steps/sec: 707.6, Policy Loss: 13.7913, Value Loss: 6.1220
+2025-09-18 12:10:02,164 - src.training.trainer - INFO - Timesteps: 188928/36000000, Episodes: 175838, Avg Reward: 0.58, Avg Length: 0.0, Steps/sec: 707.6, Policy Loss: 22.1549, Value Loss: 5.6682
+2025-09-18 12:10:05,106 - src.training.trainer - INFO - Timesteps: 190464/36000000, Episodes: 177331, Avg Reward: 0.52, Avg Length: 0.0, Steps/sec: 709.1, Policy Loss: 15.7801, Value Loss: 6.2475
+2025-09-18 12:10:05,106 - src.training.trainer - WARNING - 過学習検出: Value Lossが異常に高い (5.00 > 5.0)
+2025-09-18 12:10:05,106 - src.training.trainer - WARNING - 過学習が検出されました。学習を停止します。
+2025-09-18 12:10:05,106 - src.training.trainer - INFO - 学習完了。最終評価を実行します
+2025-09-18 12:10:05,106 - src.training.trainer - INFO - Episode 177331: 評価を実行中...
+2025-09-18 12:10:05,106 - src.training.evaluator - INFO - 評価を開始します（エピソード数: 5）
+2025-09-18 12:10:05,380 - src.training.evaluator - INFO - Episode 1/5: Reward=20578.20, Success=False, Distance=0.435m, Time=0.10s
+2025-09-18 12:10:05,699 - src.training.evaluator - INFO - Episode 2/5: Reward=31929.36, Success=False, Distance=0.519m, Time=0.15s
+2025-09-18 12:10:06,264 - src.training.evaluator - INFO - Episode 3/5: Reward=87385.19, Success=False, Distance=0.468m, Time=0.39s
+2025-09-18 12:10:06,901 - src.training.evaluator - INFO - Episode 4/5: Reward=104454.42, Success=False, Distance=0.394m, Time=0.46s
+2025-09-18 12:10:07,121 - src.training.evaluator - INFO - Episode 5/5: Reward=9512.15, Success=False, Distance=0.594m, Time=0.04s
+2025-09-18 12:10:07,124 - src.training.evaluator - INFO - 評価結果を保存しました: data/experiments/parallel_training/bittle_walking_1758164620/evaluation_results.yaml
+2025-09-18 12:10:07,581 - src.training.evaluator - INFO - 評価結果の可視化を保存しました
+2025-09-18 12:10:07,581 - src.training.evaluator - INFO - 評価完了
+2025-09-18 12:10:07,582 - src.training.trainer - INFO - 評価結果 - Success Rate: 0.00 | Avg Reward: 50771.87 | Avg Time: 0.23s | Avg Distance: 0.48m
+2025-09-18 12:10:07,589 - src.training.trainer - INFO - 最終モデルを保存しました: data/experiments/parallel_training/bittle_walking_1758164620/final_model.pth
+2025-09-18 12:10:07,589 - src.training.trainer - INFO - 学習結果を保存しました: data/experiments/parallel_training/bittle_walking_1758164620/training_results.yaml
+2025-09-18 12:10:07,590 - src.training.trainer - INFO - 並列学習完了。総時間: 381.4秒
+2025-09-18 12:10:07,590 - src.training.trainer - INFO - TensorBoardログ: data/experiments/parallel_training/bittle_walking_1758164620/tensorboard
+2025-09-18 12:10:07,590 - __main__ - INFO - 並列学習完了!
+2025-09-18 12:10:07,590 - __main__ - INFO - ==================================================
+2025-09-18 12:10:07,590 - __main__ - INFO - 学習結果:
+2025-09-18 12:10:07,590 - __main__ - INFO -   num_episodes: 5
+2025-09-18 12:10:07,590 - __main__ - INFO -   success_rate: 0.0
+2025-09-18 12:10:07,590 - __main__ - INFO -   avg_reward: 50771.86520857426
+2025-09-18 12:10:07,590 - __main__ - INFO -   std_reward: 37924.697430535794
+2025-09-18 12:10:07,590 - __main__ - INFO -   min_reward: 9512.15389682812
+2025-09-18 12:10:07,590 - __main__ - INFO -   max_reward: 104454.417449234
+2025-09-18 12:10:07,590 - __main__ - INFO -   avg_length: 369.2
+2025-09-18 12:10:07,590 - __main__ - INFO -   std_length: 268.1099774346341
+2025-09-18 12:10:07,590 - __main__ - INFO -   avg_time: 0.22974920272827148
+2025-09-18 12:10:07,590 - __main__ - INFO -   std_time: 0.16679511279556566
+2025-09-18 12:10:07,590 - __main__ - INFO -   avg_distance: 0.48175149423065056
+2025-09-18 12:10:07,590 - __main__ - INFO -   std_distance: 0.06944711037376838
+2025-09-18 12:10:07,590 - __main__ - INFO -   min_distance: 0.3936200845256152
+2025-09-18 12:10:07,590 - __main__ - INFO -   max_distance: 0.5937471589061731
+2025-09-18 12:10:07,590 - __main__ - INFO -   success_count: 0
+2025-09-18 12:10:07,590 - __main__ - INFO -   failure_count: 5
+2025-09-18 12:10:07,590 - __main__ - INFO -   avg_forward_rewards: 53.862810018725156
+2025-09-18 12:10:07,590 - __main__ - INFO -   std_forward_rewards: 1.9940954893640446
+2025-09-18 12:10:07,590 - __main__ - INFO -   avg_stability_rewards: 40.39710751404386
+2025-09-18 12:10:07,590 - __main__ - INFO -   std_stability_rewards: 1.4955716170230309
+2025-09-18 12:10:07,590 - __main__ - INFO -   avg_efficiency_rewards: 26.931405009362578
+2025-09-18 12:10:07,590 - __main__ - INFO -   std_efficiency_rewards: 0.9970477446820223
+2025-09-18 12:10:07,590 - __main__ - INFO -   avg_penalties: 13.465702504681289
+2025-09-18 12:10:07,590 - __main__ - INFO -   std_penalties: 0.49852387234101114
+2025-09-18 12:10:07,590 - __main__ - INFO -   avg_positions: 0.21677101255509118
+2025-09-18 12:10:07,590 - __main__ - INFO -   std_positions: 0.03191277677545984
+2025-09-18 12:10:07,590 - __main__ - INFO -   avg_orientations: 0.297070435084798
+2025-09-18 12:10:07,590 - __main__ - INFO -   std_orientations: 0.008874164667010019
+2025-09-18 12:10:07,590 - __main__ - INFO -   avg_joint_angles: nan
+2025-09-18 12:10:07,590 - __main__ - INFO -   std_joint_angles: nan
+2025-09-18 12:10:07,590 - __main__ - INFO -   avg_joint_velocities: nan
+2025-09-18 12:10:07,590 - __main__ - INFO -   std_joint_velocities: nan
+2025-09-18 12:10:07,590 - __main__ - INFO -   avg_actions: 0.0763961523771286
+2025-09-18 12:10:07,590 - __main__ - INFO -   std_actions: 0.0009813260985538363
+2025-09-18 12:10:07,590 - __main__ - INFO -   efficiency: 0.0
+2025-09-18 12:10:07,590 - __main__ - INFO -   energy_efficiency: 9.488552217878598e-06
+2025-09-18 12:10:07,590 - __main__ - INFO - ==================================================

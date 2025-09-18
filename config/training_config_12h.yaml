@@ -24,7 +24,7 @@ algorithm:
   
   # 12時間学習最適化ハイパーパラメータ
   hyperparameters:
-    learning_rate: 0.0002           # 1m歩行用学習率（より安定した学習）
+    learning_rate: 0.0005           # 段階的学習用学習率（より高い学習率）
     batch_size: 256                 # バランス型バッチサイズ
     n_epochs: 6                     # 1m歩行用（より多くの学習エポック）
     clip_range: 0.2                 # 標準クリッピング範囲
@@ -33,7 +33,7 @@ algorithm:
     max_grad_norm: 0.5              # 勾配クリッピング
     gae_lambda: 0.95                # GAE
     gamma: 0.99                     # 割引率
-    buffer_size: 2304               # 12環境 × 192 = 2304（1m歩行用・長エピソード対応）
+    buffer_size: 1536               # 12環境 × 128 = 1536（段階的学習用）
     
     # オプティマイザー設定（最適化済み）
     optimizer:
@@ -55,10 +55,10 @@ training:
   save_freq: 1800000              # 約30分ごとに保存（12時間用）
   log_interval: 100               # 詳細ログ（リアルタイム監視）
   
-  # Episode settings（1m歩行用に最適化）
+  # Episode settings（段階的学習用）
   episode:
-    max_steps: 7200               # 30秒 × 240Hz = 7200ステップ（1m歩行用）
-    max_time: 30.0                # 1m歩行に十分な時間制限
+    max_steps: 2400               # 10秒 × 240Hz = 2400ステップ（段階的学習）
+    max_time: 10.0                # 段階的学習用時間制限
   
   # Environment settings（12時間学習用）
   env:
@@ -75,7 +75,7 @@ training:
 
 # 12時間学習用Early Stopping
 early_stopping:
-  enabled: true
+  enabled: false                  # Early Stoppingを無効化（1m歩行学習用）
   patience: 7200000               # 12時間学習用の超長patience（約2時間待機）
   min_delta: 0.005                # より小さな改善閾値
   monitor_metric: "avg_reward"
@@ -94,9 +94,9 @@ evaluation:
   deterministic: true
   render: false
   
-  # 成功基準（1m歩行目標）
+  # 成功基準（段階的学習用）
   success_criteria:
-    min_distance: 0.9             # 90cm以上で成功（1m歩行目標）
+    min_distance: 0.3             # 30cm以上で成功（段階的学習）
     max_time: 30.0                # 30秒以内
     max_fall_angle: 0.8           # 転倒判定
 
