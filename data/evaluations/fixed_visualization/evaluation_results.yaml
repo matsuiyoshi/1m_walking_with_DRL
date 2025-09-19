@@ -1,0 +1,40 @@
+average_steps: !!python/object/apply:numpy._core.multiarray.scalar
+- !!python/object/apply:numpy.dtype
+  args:
+  - f8
+  - false
+  - true
+  state: !!python/tuple
+  - 3
+  - <
+  - null
+  - null
+  - null
+  - -1
+  - -1
+  - 0
+- !!binary |
+  AAAAAAAAKkA=
+episodes:
+- episode: 0
+  final_position:
+  - -0.030553308741598242
+  - -0.025075127231415265
+  - 0.5113276695209084
+  steps: 13
+  success: true
+  total_reward: 1.3
+  video_path: data/evaluations/fixed_visualization/episode_0_video_20250919_171433.mp4
+- episode: 1
+  final_position:
+  - -0.040724042218501504
+  - -0.021765594863216282
+  - 0.5159514407366337
+  steps: 13
+  success: true
+  total_reward: 1.3
+  video_path: data/evaluations/fixed_visualization/episode_1_video_20250919_171434.mp4
+model_path: data/final_model.pth
+successful_episodes: 2
+timestamp: '2025-09-19T17:14:34.594814'
+total_episodes: 2

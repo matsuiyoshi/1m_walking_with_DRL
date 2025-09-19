@@ -1,0 +1,215 @@
+# Curriculum Learning Configuration - 段階的学習設定
+curriculum:
+  enabled: true
+  stages:
+    # 第1段階: 基本姿勢維持（0-30分）
+    stage_1_balance:
+      name: "基本姿勢維持"
+      duration_minutes: 30
+      max_timesteps: 2160000  # 30分 × 1200steps/sec
+      
+      # 環境設定
+      environment:
+        corridor:
+          width: 0.8          # 広い通路（安定性重視）
+          length: 2.0          # 短い通路
+        episode:
+          max_steps: 2400      # 10秒（短時間）
+          max_time: 10.0
+      
+      # 報酬設定（姿勢維持重視）
+      reward:
+        stability_reward: 50.0      # 姿勢安定性を最重要
+        forward_reward: 1.0         # 前進は軽微
+        fall_penalty: -5.0          # 転倒ペナルティ軽減
+        corridor_penalty: -1.0      # 通路外ペナルティ軽減
+        energy_penalty: -0.01       # エネルギー効率軽視
+        
+      # 学習設定（安定重視）
+      hyperparameters:
+        learning_rate: 0.0001
+        batch_size: 128
+        n_epochs: 2
+        clip_range: 0.05
+        ent_coef: 0.1              # 高い探索
+        vf_coef: 0.1               # 低い価値関数重み
+        
+      # 動画保存設定（段階1: 頻繁に保存）
+      video_recording:
+        frequency: 300000           # 5分ごと（段階1は短いので頻繁に）
+        episodes_per_video: 5       # 5エピソード分
+        
+    # 第2段階: 短距離歩行（30-60分）
+    stage_2_short_walk:
+      name: "短距離歩行"
+      duration_minutes: 30
+      max_timesteps: 2160000
+      
+      # 環境設定
+      environment:
+        corridor:
+          width: 0.6          # やや狭い通路
+          length: 3.0          # 中距離
+        episode:
+          max_steps: 4800      # 20秒
+          max_time: 20.0
+      
+      # 報酬設定（歩行重視）
+      reward:
+        forward_reward: 20.0       # 前進報酬増加
+        speed_reward: 10.0         # 速度報酬追加
+        stability_reward: 30.0     # 安定性維持
+        fall_penalty: -10.0         # 転倒ペナルティ増加
+        corridor_penalty: -2.0      # 通路外ペナルティ増加
+        
+      # 学習設定（バランス型）
+      hyperparameters:
+        learning_rate: 0.0002
+        batch_size: 256
+        n_epochs: 3
+        clip_range: 0.1
+        ent_coef: 0.05
+        vf_coef: 0.3
+        
+      # 動画保存設定（段階2: 標準頻度）
+      video_recording:
+        frequency: 600000           # 10分ごと
+        episodes_per_video: 3       # 3エピソード分
+        
+    # 第3段階: 中距離歩行（60-90分）
+    stage_3_medium_walk:
+      name: "中距離歩行"
+      duration_minutes: 30
+      max_timesteps: 2160000
+      
+      # 環境設定
+      environment:
+        corridor:
+          width: 0.5          # 標準的な通路
+          length: 5.0          # 長距離
+        episode:
+          max_steps: 7200      # 30秒
+          max_time: 30.0
+      
+      # 報酬設定（継続歩行重視）
+      reward:
+        forward_reward: 30.0       # 前進報酬さらに増加
+        speed_reward: 15.0         # 速度報酬増加
+        stability_reward: 20.0     # 安定性維持
+        fall_penalty: -15.0        # 転倒ペナルティ増加
+        corridor_penalty: -3.0     # 通路外ペナルティ増加
+        
+      # 学習設定（効率重視）
+      hyperparameters:
+        learning_rate: 0.0003
+        batch_size: 512
+        n_epochs: 4
+        clip_range: 0.15
+        ent_coef: 0.02
+        vf_coef: 0.5
+        
+      # 動画保存設定（段階3: 標準頻度）
+      video_recording:
+        frequency: 600000           # 10分ごと
+        episodes_per_video: 3       # 3エピソード分
+        
+    # 第4段階: 長距離歩行（90-180分）
+    stage_4_long_walk:
+      name: "長距離歩行"
+      duration_minutes: 90
+      max_timesteps: 6480000
+      
+      # 環境設定
+      environment:
+        corridor:
+          width: 0.4          # 狭い通路（挑戦的）
+          length: 10.0         # 長距離
+        episode:
+          max_steps: 12000     # 50秒
+          max_time: 50.0
+      
+      # 報酬設定（最適化）
+      reward:
+        forward_reward: 50.0       # 前進報酬最大化
+        speed_reward: 25.0         # 速度報酬最大化
+        stability_reward: 15.0     # 安定性維持
+        fall_penalty: -20.0        # 転倒ペナルティ最大化
+        corridor_penalty: -5.0     # 通路外ペナルティ最大化
+        
+      # 学習設定（最適化）
+      hyperparameters:
+        learning_rate: 0.0003
+        batch_size: 512
+        n_epochs: 4
+        clip_range: 0.2
+        ent_coef: 0.01
+        vf_coef: 0.5
+        
+      # 動画保存設定（段階4: 長期間なので少なめ）
+      video_recording:
+        frequency: 900000           # 15分ごと
+        episodes_per_video: 2       # 2エピソード分
+
+# 転移学習設定
+transfer_learning:
+  enabled: true
+  
+  # 段階間の転移設定
+  stage_transition:
+    # 前段階のモデルを読み込み
+    load_previous_model: true
+    
+    # 学習率の調整
+    lr_adjustment:
+      factor: 0.5              # 前段階の50%から開始
+      warmup_steps: 10000      # 1万ステップで段階的に増加
+      
+    # 重みの凍結（オプション）
+    freeze_layers:
+      enabled: false           # 全層を再学習
+      # 特定の層のみ凍結する場合
+      # freeze_layers: ["actor.0", "critic.0"]
+      
+  # 段階判定条件
+  stage_criteria:
+    # 第1段階完了条件
+    stage_1_complete:
+      min_episode_length: 8.0      # 8秒以上継続
+      min_stability_reward: 20.0   # 安定性報酬20以上
+      success_rate: 0.8            # 80%の成功率
+      
+    # 第2段階完了条件
+    stage_2_complete:
+      min_episode_length: 15.0     # 15秒以上継続
+      min_forward_distance: 0.5   # 0.5m以上前進
+      success_rate: 0.7           # 70%の成功率
+      
+    # 第3段階完了条件
+    stage_3_complete:
+      min_episode_length: 25.0     # 25秒以上継続
+      min_forward_distance: 2.0    # 2m以上前進
+      success_rate: 0.6            # 60%の成功率
+      
+    # 第4段階完了条件
+    stage_4_complete:
+      min_episode_length: 40.0     # 40秒以上継続
+      min_forward_distance: 5.0    # 5m以上前進
+      success_rate: 0.5            # 50%の成功率
+
+# モニタリング設定
+monitoring:
+  # 段階進行の監視
+  stage_progress:
+    check_interval: 300000        # 5分ごとにチェック
+    log_interval: 10000           # 1万ステップごとにログ
+    
+  # 成功判定の監視
+  success_monitoring:
+    window_size: 100              # 過去100エピソードで判定
+    min_episodes: 50              # 最低50エピソード必要
+    
+  # 自動段階移行
+  auto_transition:
+    enabled: true                 # 自動段階移行を有効
+    check_frequency: 600000       # 10分ごとにチェック
+    min_improvement: 0.1           # 10%以上の改善が必要

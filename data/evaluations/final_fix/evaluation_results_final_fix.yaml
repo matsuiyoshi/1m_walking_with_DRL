@@ -1,0 +1,27 @@
+- episode: 0
+  reward: !!python/object/apply:numpy._core.multiarray.scalar
+  - &id001 !!python/object/apply:numpy.dtype
+    args:
+    - f8
+    - false
+    - true
+    state: !!python/tuple
+    - 3
+    - <
+    - null
+    - null
+    - null
+    - -1
+    - -1
+    - 0
+  - !!binary |
+    I7UUWNz3JsA=
+  steps: 100
+  success: false
+- episode: 1
+  reward: !!python/object/apply:numpy._core.multiarray.scalar
+  - *id001
+  - !!binary |
+    ojGiRXAxK8A=
+  steps: 100
+  success: false

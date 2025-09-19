@@ -1,0 +1,117 @@
+algorithm:
+  hyperparameters:
+    batch_size: 128
+    buffer_size: 1024
+    clip_range: 0.05
+    ent_coef: 0.1
+    gae_lambda: 0.9
+    gamma: 0.95
+    learning_rate: 0.0001
+    lr_schedule:
+      final_lr: 1.0e-05
+      total_steps: 12960000
+      type: linear_decay
+    max_grad_norm: 0.3
+    n_epochs: 2
+    optimizer:
+      betas:
+      - 0.9
+      - 0.999
+      eps: 1.0e-08
+      type: AdamW
+      weight_decay: 0.005
+    vf_coef: 0.1
+  name: PPO
+  network:
+    actor:
+      activation: Swish
+      dropout_rate: 0.1
+      hidden_layers:
+      - 256
+      - 128
+      - 64
+      output_activation: Tanh
+      use_attention: false
+      use_layer_norm: true
+      use_residual: true
+    critic:
+      activation: Swish
+      dropout_rate: 0.1
+      hidden_layers:
+      - 256
+      - 128
+      - 64
+      use_layer_norm: true
+      use_residual: true
+    use_optimized: true
+checkpoints:
+  best_model_only: false
+  enabled: true
+  frequency: 450000
+  max_checkpoints: 30
+early_stopping:
+  enabled: true
+  min_delta: 0.001
+  monitor_metric: avg_reward
+  overfitting_detection:
+    enabled: false
+    policy_loss_threshold: 1000.0
+    reward_std_threshold: 10.0
+    value_loss_threshold: 100.0
+  patience: 10000000
+  restore_best_weights: true
+environment:
+  corridor:
+    length: 2.0
+    width: 0.8
+  reward:
+    corridor_penalty: -1.0
+    energy_penalty: -0.01
+    fall_penalty: -5.0
+    forward_reward: 1.0
+    stability_reward: 50.0
+evaluation:
+  deterministic: true
+  num_episodes: 10
+  render: false
+  success_criteria:
+    max_fall_angle: 0.8
+    max_time: 30.0
+    min_distance: 0.3
+logging:
+  log_dir: data/logs
+  metrics:
+  - episode_reward
+  - episode_length
+  - success_rate
+  - policy_loss
+  - value_loss
+  - gradient_norm
+  - learning_rate
+  - exploration_rate
+  - action_diversity
+  - stability_metrics
+  tensorboard: true
+  wandb: false
+training:
+  domain_randomization:
+    enabled: true
+    friction_range:
+    - 0.5
+    - 0.9
+    mass_variation: 0.05
+    noise_std: 0.005
+  env:
+    num_envs: 12
+    render: false
+    render_mode: human
+  episode:
+    max_steps: 2400
+    max_time: 10.0
+  eval_freq: 900000
+  log_interval: 50
+  save_freq: 900000
+  total_timesteps: 12960000
+video_recording:
+  episodes_per_video: 5
+  frequency: 300000

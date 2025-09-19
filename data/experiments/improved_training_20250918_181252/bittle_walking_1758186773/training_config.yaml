@@ -1,0 +1,124 @@
+algorithm:
+  hyperparameters:
+    batch_size: 256
+    buffer_size: 1536
+    clip_range: 0.15
+    ent_coef: 0.02
+    gae_lambda: 0.95
+    gamma: 0.99
+    learning_rate: 0.0003
+    lr_schedule:
+      T_max: 18000000
+      eta_min: 1.0e-06
+      type: cosine_annealing
+    max_grad_norm: 0.3
+    n_epochs: 8
+    optimizer:
+      betas:
+      - 0.9
+      - 0.999
+      eps: 1.0e-08
+      type: AdamW
+      weight_decay: 0.005
+    vf_coef: 0.3
+  name: PPO
+  network:
+    actor:
+      activation: Swish
+      dropout_rate: 0.1
+      hidden_layers:
+      - 256
+      - 128
+      - 64
+      output_activation: Tanh
+      use_attention: false
+      use_layer_norm: true
+      use_residual: true
+    critic:
+      activation: Swish
+      dropout_rate: 0.1
+      hidden_layers:
+      - 256
+      - 128
+      - 64
+      use_layer_norm: true
+      use_residual: true
+    use_optimized: true
+checkpoints:
+  best_model_only: false
+  enabled: true
+  frequency: 450000
+  max_checkpoints: 30
+early_stopping:
+  enabled: true
+  min_delta: 0.001
+  monitor_metric: avg_reward
+  overfitting_detection:
+    enabled: false
+    policy_loss_threshold: 1000.0
+    reward_std_threshold: 10.0
+    value_loss_threshold: 100.0
+  patience: 10000000
+  restore_best_weights: true
+evaluation:
+  deterministic: true
+  num_episodes: 10
+  render: false
+  success_criteria:
+    max_fall_angle: 0.8
+    max_time: 30.0
+    min_distance: 0.3
+logging:
+  log_dir: data/logs
+  metrics:
+  - episode_reward
+  - episode_length
+  - success_rate
+  - policy_loss
+  - value_loss
+  - gradient_norm
+  - learning_rate
+  - exploration_rate
+  - action_diversity
+  - stability_metrics
+  tensorboard: true
+  wandb: false
+training:
+  domain_randomization:
+    enabled: true
+    friction_range:
+    - 0.5
+    - 0.9
+    mass_variation: 0.05
+    noise_std: 0.005
+  env:
+    num_envs: 12
+    render: false
+    render_mode: human
+  episode:
+    max_steps: 2400
+    max_time: 10.0
+  eval_freq: 900000
+  log_interval: 50
+  save_freq: 900000
+  total_timesteps: 36000000
+video_recording:
+  enabled: true
+  episodes_per_video: 3
+  frequency: 180000
+  info_color:
+  - 255
+  - 255
+  - 255
+  info_font_size: 16
+  info_position:
+  - 10
+  - 10
+  max_steps_per_episode: 1200
+  overlay_info: true
+  video_quality:
+    format: mp4
+    fps: 60
+    resolution:
+    - 640
+    - 480

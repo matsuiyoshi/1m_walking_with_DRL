@@ -12,7 +12,7 @@ from typing import Dict, Tuple, Any, Optional
 import os
 from pathlib import Path
 
-from .reward_functions import RewardFunction
+from .reward_functions_optimized import OptimizedRewardFunction
 
 
 class BittleWalkingEnv(gym.Env):
@@ -51,10 +51,8 @@ class BittleWalkingEnv(gym.Env):
         else:
             self.physics_client = p.connect(p.DIRECT)
         
-        # レンダリング設定の改善
+        # 基本的なデバッグビジュアライザー設定
         p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
-        p.configureDebugVisualizer(p.COV_ENABLE_TINY_RENDERER, 1)
-        p.configureDebugVisualizer(p.COV_ENABLE_RGB_BUFFER_PREVIEW, 1)
         
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
         
@@ -77,7 +75,7 @@ class BittleWalkingEnv(gym.Env):
         self.target_position = None
         
         # 報酬関数
-        self.reward_function = RewardFunction(self.config['environment']['reward'])
+        self.reward_function = OptimizedRewardFunction(self.config['environment']['reward'])
         
         # 学習段階の管理
         self.learning_stage = 1
@@ -203,8 +201,21 @@ class BittleWalkingEnv(gym.Env):
             useFixedBase=False
         )
         
+        # URDFファイルに色情報がないため、手動で色を設定
+        self._set_robot_colors()
+        
         # ロボットの物理パラメータ設定
         self._setup_robot_dynamics()
+    
+    def _set_robot_colors(self):
+        """ロボットの色を設定（URDFファイルに色情報がないため）"""
+        # ベースリンクを青色に設定
+        p.changeVisualShape(self.robot_id, -1, rgbaColor=[0.3, 0.3, 0.8, 1.0])
+        
+        # 全ての関節リンクを赤色に設定
+        num_joints = p.getNumJoints(self.robot_id)
+        for i in range(num_joints):
+            p.changeVisualShape(self.robot_id, i, rgbaColor=[0.8, 0.3, 0.3, 1.0])
     
     def _setup_robot_dynamics(self):
         """ロボットの動力学パラメータ設定"""
@@ -524,18 +535,22 @@ class BittleWalkingEnv(gym.Env):
         """終了条件のチェック"""
         # 最大ステップ数に達した場合
         if self.current_step >= self.max_episode_steps:
+            # print(f"エピソード終了: 最大ステップ数に到達 (step={self.current_step})")  # デバッグ無効化
             return True
         
         # 転倒のチェック
         if self._is_fallen():
+            # print(f"エピソード終了: 転倒 (step={self.current_step})")  # デバッグ無効化
             return True
         
-        # 目標到達のチェック
-        if self._is_target_reached():
-            return True
+        # 目標到達のチェック（前進歩行では無効化）
+        # if self._is_target_reached():
+        #     print(f"エピソード終了: 目標到達 (step={self.current_step})")
+        #     return True
         
         # 通路外に出た場合
         if self._is_out_of_corridor():
+            # print(f"エピソード終了: 通路外 (step={self.current_step})")  # デバッグ無効化
             return True
         
         return False
@@ -545,8 +560,8 @@ class BittleWalkingEnv(gym.Env):
         pos, orn = p.getBasePositionAndOrientation(self.robot_id)
         euler = p.getEulerFromQuaternion(orn)
         
-        # ピッチまたはロールが一定角度を超えた場合
-        max_angle = 1.0  # 約60度（より寛容な設定）
+        # ピッチまたはロールが一定角度を超えた場合（前進歩行用に非常に寛容）
+        max_angle = 1.5  # 約85度（非常に寛容な設定でバグ防止）
         return abs(euler[0]) > max_angle or abs(euler[1]) > max_angle
     
     def _is_target_reached(self) -> bool:
@@ -576,7 +591,8 @@ class BittleWalkingEnv(gym.Env):
             'orientation': orn,
             'distance_to_target': distance,
             'episode_reward': self.episode_reward,
-            'step': self.current_step
+            'step': self.current_step,
+            'episode_length': self.current_step  # エピソード長を追加
         }
     
     def render(self, mode: str = "human"):
@@ -604,15 +620,12 @@ class BittleWalkingEnv(gym.Env):
         elif mode == "rgb_array":
             # RGB画像配列を返す
             try:
-                # カメラパラメータの設定（ロボットの位置に追従）
-                camera_params = self.config.get('visualization', {}).get('camera', {})
-                distance = camera_params.get('distance', 2.0)
-                yaw = camera_params.get('yaw', 0.0)
-                pitch = camera_params.get('pitch', -30.0)
-                
-                # ロボットの現在位置を取得してカメラのターゲットに設定
+                # シンプルなカメラ設定
                 robot_pos, _ = p.getBasePositionAndOrientation(self.robot_id)
-                target_pos = [robot_pos[0], robot_pos[1], robot_pos[2] + 0.1]  # ロボットの少し上をターゲット
+                target_pos = [robot_pos[0], robot_pos[1], robot_pos[2]]
+                distance = 2.0
+                yaw = 0
+                pitch = -30
                 
                 # カメラ画像の取得
                 width, height = 640, 480
@@ -631,18 +644,21 @@ class BittleWalkingEnv(gym.Env):
                     farVal=100.0
                 )
                 
-                # 画像の取得（DIRECTモードでも動作するように修正）
+                # 画像の取得（最もシンプルな設定）
                 _, _, rgb_array, _, _ = p.getCameraImage(
                     width=width,
                     height=height,
                     viewMatrix=view_matrix,
-                    projectionMatrix=projection_matrix,
-                    renderer=p.ER_TINY_RENDERER  # DIRECTモードでも動作するレンダラー
+                    projectionMatrix=projection_matrix
                 )
                 
                 # RGB配列の整形
                 rgb_array = np.array(rgb_array, dtype=np.uint8)
                 rgb_array = rgb_array[:, :, :3]  # Alphaチャンネルを除去
+                
+                # OpenCV互換性のため連続メモリレイアウトを保証
+                if not rgb_array.flags['C_CONTIGUOUS']:
+                    rgb_array = np.ascontiguousarray(rgb_array)
                 
                 return rgb_array
                 

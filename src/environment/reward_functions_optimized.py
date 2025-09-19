@@ -127,8 +127,14 @@ class OptimizedRewardFunction:
         # 3. 通路中央維持報酬
         corridor_center_reward_scale = self.config.get('corridor_center_reward', 1.5)
         y_position = state['position'][1]
-        corridor_width = corridor_bounds['y_max'] - corridor_bounds['y_min']
-        corridor_center = (corridor_bounds['y_max'] + corridor_bounds['y_min']) / 2
+        # 互換性のためにキーを確認
+        if 'y_min' in corridor_bounds and 'y_max' in corridor_bounds:
+            corridor_width = corridor_bounds['y_max'] - corridor_bounds['y_min']
+            corridor_center = (corridor_bounds['y_max'] + corridor_bounds['y_min']) / 2
+        else:
+            # 従来のキー形式（left/right）
+            corridor_width = corridor_bounds['right'] - corridor_bounds['left']
+            corridor_center = (corridor_bounds['right'] + corridor_bounds['left']) / 2
         
         distance_from_center = abs(y_position - corridor_center)
         center_bonus = max(0.0, 1.0 - (distance_from_center / (corridor_width / 2)))
@@ -190,7 +196,14 @@ class OptimizedRewardFunction:
         
         # 1. 通路逸脱ペナルティ（軽減）
         y_position = state['position'][1]
-        if y_position < corridor_bounds['y_min'] or y_position > corridor_bounds['y_max']:
+        # 互換性のためにキーを確認
+        if 'y_min' in corridor_bounds and 'y_max' in corridor_bounds:
+            out_of_bounds = y_position < corridor_bounds['y_min'] or y_position > corridor_bounds['y_max']
+        else:
+            # 従来のキー形式（left/right）
+            out_of_bounds = y_position < corridor_bounds['left'] or y_position > corridor_bounds['right']
+            
+        if out_of_bounds:
             boundary_penalty = self.config.get('boundary_penalty', -0.5)  # 軽減済み
             penalty += boundary_penalty
         

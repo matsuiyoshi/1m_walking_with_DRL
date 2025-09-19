@@ -31,15 +31,15 @@ avg_distance: !!python/object/apply:numpy._core.multiarray.scalar
   - -1
   - 0
 - !!binary |
-  71r4gW2g4j8=
+  zFBOy+35IkA=
 avg_efficiency_rewards: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
-  2bWStjsSU8A=
+  jFWCetlcxD8=
 avg_forward_rewards: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
-  2bWStjsSY8A=
+  jFWCetlc1D8=
 avg_joint_angles: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
@@ -51,31 +51,31 @@ avg_joint_velocities: !!python/object/apply:numpy._core.multiarray.scalar
 avg_length: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
-  AAAAAAAASUA=
+  AAAAAABIj0A=
 avg_orientations: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
-  inVzpVFo0j8=
+  lq7SHU5lzz8=
 avg_penalties: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
-  2bWStjsSQ8A=
+  jFWCetlctD8=
 avg_positions: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
-  6arFtsMg1z8=
+  vfQZkN9dxT8=
 avg_reward: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
-  lkVLUM6f0sA=
+  KmICfrThiEA=
 avg_stability_rewards: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
-  xhDckVmbXMA=
+  UIDDN0aLzj8=
 avg_time: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
-  MzMzM0QFBEA=
+  AAAAWNVQQkA=
 efficiency: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
@@ -83,7 +83,7 @@ efficiency: !!python/object/apply:numpy._core.multiarray.scalar
 energy_efficiency: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
-  8GlLw4gAAL8=
+  B6eOHblniD8=
 failure_count: !!python/object/apply:numpy._core.multiarray.scalar
 - &id003 !!python/object/apply:numpy.dtype
   args:
@@ -100,28 +100,28 @@ failure_count: !!python/object/apply:numpy._core.multiarray.scalar
   - -1
   - 0
 - !!binary |
-  BQAAAAAAAAA=
+  AQAAAAAAAAA=
 max_distance: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
-  71r4gW2g4j8=
+  zFBOy+35IkA=
 max_reward: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
-  Z6rnIPmc0sA=
+  KmICfrThiEA=
 min_distance: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
-  71r4gW2g4j8=
+  zFBOy+35IkA=
 min_reward: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
-  YiwknIOg0sA=
-num_episodes: 5
+  KmICfrThiEA=
+num_episodes: 1
 std_actions: !!python/object/apply:numpy._core.multiarray.scalar
 - *id002
 - !!binary |
-  9t53Pw==
+  AAAAAA==
 std_distance: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
@@ -129,11 +129,11 @@ std_distance: !!python/object/apply:numpy._core.multiarray.scalar
 std_efficiency_rewards: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
-  bRjGSw+QWEA=
+  AAAAAAAAAAA=
 std_forward_rewards: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
-  bRjGSw+QaEA=
+  AAAAAAAAAAA=
 std_joint_angles: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
@@ -149,27 +149,27 @@ std_length: !!python/object/apply:numpy._core.multiarray.scalar
 std_orientations: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
-  rGr+s/Ys2j8=
+  AAAAAAAAAAA=
 std_penalties: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
-  bRjGSw+QSEA=
+  AAAAAAAAAAA=
 std_positions: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
-  PBc16hT61z8=
+  AAAAAAAAAAA=
 std_reward: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
-  mnnZHHupFkA=
+  AAAAAAAAAAA=
 std_stability_rewards: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
-  UpLUeAtsYkA=
+  AAAAAAAAAAA=
 std_time: !!python/object/apply:numpy._core.multiarray.scalar
 - *id001
 - !!binary |
-  hx/UyMl3hT8=
+  AAAAAAAAAAA=
 success_count: !!python/object/apply:numpy._core.multiarray.scalar
 - *id003
 - !!binary |

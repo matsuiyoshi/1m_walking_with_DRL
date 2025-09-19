@@ -448,3 +448,18 @@ class OptimizedPPONetwork(nn.Module):
         entropy = dist.entropy().sum(dim=-1)
         
         return log_prob, value, entropy
+    
+    def forward(self, obs: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+        """
+        前向き計算（互換性のため）
+        
+        Args:
+            obs: 観測データ
+            
+        Returns:
+            action_mean: 行動の平均値
+            value: 状態価値
+        """
+        action_mean = self.actor(obs)
+        value = self.critic(obs)
+        return action_mean, value

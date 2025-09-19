@@ -106,6 +106,22 @@ class ParallelBittleEnv:
             info_list
         )
     
+    def render(self, mode: str = 'rgb_array') -> np.ndarray:
+        """
+        並列環境のレンダリング（最初の環境のみ）
+        
+        Args:
+            mode: レンダリングモード
+            
+        Returns:
+            np.ndarray: レンダリングフレーム
+        """
+        if self.envs and hasattr(self.envs[0], 'render'):
+            return self.envs[0].render(mode=mode)
+        else:
+            # ダミーフレームを返す
+            return np.zeros((480, 640, 3), dtype=np.uint8)
+    
     def close(self):
         """全環境を閉じる"""
         for env in self.envs:
@@ -136,6 +152,15 @@ class GPUParallelBittleEnv(ParallelBittleEnv):
         if self.device.type == "cuda":
             torch.backends.cudnn.benchmark = True
             torch.backends.cudnn.deterministic = False
+            # GPU並列処理用のストリーム最適化
+            self.cuda_stream = torch.cuda.Stream()
+            # メモリプール設定
+            torch.cuda.empty_cache()
+            
+        # GPU tensor用のプリアロケーション
+        self.obs_buffer = None
+        self.rewards_buffer = None
+        self.dones_buffer = None
     
     def step(self, actions: np.ndarray) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, List[Dict]]:
         """
@@ -153,14 +178,47 @@ class GPUParallelBittleEnv(ParallelBittleEnv):
         # CPUで環境を実行
         obs, rewards, dones, infos = super().step(actions)
         
-        # GPU tensorに変換
-        obs_tensor = torch.from_numpy(obs).float().to(self.device)
-        rewards_tensor = torch.from_numpy(rewards).float().to(self.device)
-        dones_tensor = torch.from_numpy(dones).bool().to(self.device)
-        
-        return obs_tensor, rewards_tensor, dones_tensor, infos
+        # GPU tensorに変換（プリアロケーションされたバッファを使用）
+        if self.device.type == "cuda":
+            with torch.cuda.stream(self.cuda_stream):
+                # バッファの初期化（初回のみ）
+                if self.obs_buffer is None:
+                    self.obs_buffer = torch.zeros(obs.shape, dtype=torch.float32, device=self.device)
+                    self.rewards_buffer = torch.zeros(rewards.shape, dtype=torch.float32, device=self.device)
+                    self.dones_buffer = torch.zeros(dones.shape, dtype=torch.bool, device=self.device)
+                
+                # データをバッファにコピー
+                self.obs_buffer.copy_(torch.from_numpy(obs), non_blocking=True)
+                self.rewards_buffer.copy_(torch.from_numpy(rewards), non_blocking=True)
+                self.dones_buffer.copy_(torch.from_numpy(dones), non_blocking=True)
+                
+                # ストリームの同期
+                torch.cuda.current_stream().wait_stream(self.cuda_stream)
+                
+                return self.obs_buffer, self.rewards_buffer, self.dones_buffer, infos
+        else:
+            # CPU実行の場合
+            obs_tensor = torch.from_numpy(obs).float()
+            rewards_tensor = torch.from_numpy(rewards).float()
+            dones_tensor = torch.from_numpy(dones).bool()
+            
+            return obs_tensor, rewards_tensor, dones_tensor, infos
     
     def reset(self) -> torch.Tensor:
         """全環境をリセット（GPU tensorで返す）"""
         obs = super().reset()
-        return torch.from_numpy(obs).float().to(self.device)
+        
+        if self.device.type == "cuda":
+            # 非同期GPU転送
+            obs_tensor = torch.from_numpy(obs).float().to(self.device, non_blocking=True)
+        else:
+            obs_tensor = torch.from_numpy(obs).float()
+            
+        return obs_tensor
+    
+    def close(self):
+        """リソースのクリーンアップ"""
+        super().close()
+        if hasattr(self, 'cuda_stream') and self.device.type == "cuda":
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()

@@ -15,6 +15,7 @@ from torch.utils.tensorboard import SummaryWriter
 from ..models.ppo_agent import PPOAgent
 from ..environment.parallel_env import GPUParallelBittleEnv
 from .trainer import Trainer
+from .video_recorder import VideoRecorder
 
 
 class ParallelTrainer(Trainer):
@@ -24,7 +25,8 @@ class ParallelTrainer(Trainer):
                  config_path: str = "config/training_config.yaml",
                  env_config_path: str = "config/env_config.yaml",
                  bittle_config_path: str = "config/bittle_config.yaml",
-                 output_dir: str = "data/experiments"):
+                 output_dir: str = "data/experiments",
+                 experiment_name: str = None):
         """
         並列トレーナーの初期化
         
@@ -33,8 +35,9 @@ class ParallelTrainer(Trainer):
             env_config_path: 環境設定ファイルのパス
             bittle_config_path: Bittle設定ファイルのパス
             output_dir: 出力ディレクトリ
+            experiment_name: 実験名
         """
-        super().__init__(config_path, env_config_path, bittle_config_path, output_dir)
+        super().__init__(config_path, env_config_path, bittle_config_path, output_dir, experiment_name)
         
         # 並列環境の初期化
         self.num_envs = self.config['training']['env']['num_envs']
@@ -116,6 +119,15 @@ class ParallelTrainer(Trainer):
         self.recent_value_losses = []
         self.history_size = 100  # 直近100回の履歴を保持
         
+        # 動画記録器の初期化
+        video_config = self.config.get('video_recording', {})
+        self.video_recorder = VideoRecorder(video_config, self.output_dir)
+        
+        # 動画記録用の状態変数
+        self.recording_episode = False
+        self.recording_episode_data = []
+        self.recording_step_count = 0
+        
         self.logger.info(f"並列トレーナーを初期化しました（環境数: {self.num_envs}）")
         self.logger.info(f"TensorBoardログディレクトリ: {self.tensorboard_dir}")
         self.logger.info(f"TensorBoard起動コマンド: tensorboard --logdir={self.tensorboard_dir}")
@@ -125,6 +137,9 @@ class ParallelTrainer(Trainer):
         
         if self.overfitting_enabled:
             self.logger.info(f"過学習検出有効: policy_loss_threshold={self.policy_loss_threshold}, value_loss_threshold={self.value_loss_threshold}, reward_std_threshold={self.reward_std_threshold}")
+        
+        if self.video_recorder.enabled:
+            self.logger.info(f"動画記録有効: 頻度={self.video_recorder.frequency}ステップ, エピソード数={self.video_recorder.episodes_per_video}")
     
     def _detect_overfitting(self, metrics: Dict[str, float]) -> bool:
         """
@@ -248,6 +263,13 @@ class ParallelTrainer(Trainer):
         episode_lengths = []
         total_steps = 0
         
+        # 動画記録の開始判定
+        if self.video_recorder.should_record(self.total_timesteps):
+            self.recording_episode = True
+            self.recording_episode_data = []
+            self.recording_step_count = 0
+            self.video_recorder.start_recording(self.total_timesteps, self.episode_count)
+        
         while total_steps < self.buffer_size:
             # 行動を取得
             with torch.no_grad():
@@ -255,6 +277,10 @@ class ParallelTrainer(Trainer):
             
             # 環境でステップ実行
             next_obs, rewards, dones, infos = self.parallel_env.step(actions)
+            
+            # 動画記録の処理
+            if self.recording_episode:
+                self._record_training_step(obs, actions, rewards, dones, infos)
             
             # バッファに保存（テンソル形状を調整）
             self.obs_buffer[self.buffer_idx] = obs
@@ -274,11 +300,18 @@ class ParallelTrainer(Trainer):
             for i, (reward, done, info) in enumerate(zip(rewards, dones, infos)):
                 if done:
                     episode_rewards.append(reward.item())
-                    episode_lengths.append(info.get('episode_length', 0))
+                    episode_length = info.get('episode_length', 0)
+                    episode_lengths.append(episode_length)
+                    # print(f"エピソード完了: 環境{i}, 報酬={reward.item():.2f}, 長さ={episode_length}")  # デバッグ無効化
+                    
+                    # 動画記録のエピソード完了処理
+                    if self.recording_episode:
+                        self._finish_recording_episode(i, reward.item(), info)
             
             obs = next_obs
             self.buffer_idx = (self.buffer_idx + 1) % self.buffer_size
             total_steps += self.num_envs
+            self.recording_step_count += 1
             
             if self.buffer_idx == 0:
                 self.buffer_full = True
@@ -329,6 +362,99 @@ class ParallelTrainer(Trainer):
             'collection_time': collection_time,
             'steps_per_second': total_steps / collection_time
         }
+    
+    def _record_training_step(self, obs: torch.Tensor, actions: torch.Tensor, 
+                             rewards: torch.Tensor, dones: torch.Tensor, infos: List[Dict]):
+        """
+        学習ステップの動画記録
+        
+        Args:
+            obs: 観測
+            actions: 行動
+            rewards: 報酬
+            dones: 終了フラグ
+            infos: 情報
+        """
+        if not self.recording_episode:
+            return
+        
+        try:
+            # 最初の環境（env_id=0）のフレームを取得
+            frame = None
+            if hasattr(self.parallel_env, 'render'):
+                frame = self.parallel_env.render(mode='rgb_array')
+            elif hasattr(self.parallel_env, 'envs') and len(self.parallel_env.envs) > 0:
+                # 個別環境からレンダリング
+                frame = self.parallel_env.envs[0].render(mode='rgb_array')
+            
+            # フレームが取得できない場合はダミーフレームを作成
+            if frame is None or len(frame.shape) != 3:
+                frame = np.full((480, 640, 3), 128, dtype=np.uint8)
+                self.logger.debug("ダミーフレームを使用しています")
+            
+            # エピソード情報の作成
+            episode_info = {
+                'episode': self.episode_count,
+                'step': self.recording_step_count,
+                'reward': rewards[0].item() if len(rewards) > 0 else 0.0,
+                'distance': infos[0].get('distance', 0.0) if infos else 0.0,
+                'success': infos[0].get('success', False) if infos else False
+            }
+            
+            # フレームの記録
+            if self.video_recorder.record_frame(frame, episode_info):
+                self.recording_step_count += 1
+            
+        except Exception as e:
+            self.logger.warning(f"動画記録エラー: {e}")
+            # エラー時もダミーフレームで継続
+            try:
+                dummy_frame = np.full((480, 640, 3), 128, dtype=np.uint8)
+                episode_info = {
+                    'episode': self.episode_count,
+                    'step': self.recording_step_count,
+                    'reward': 0.0,
+                    'distance': 0.0,
+                    'success': False
+                }
+                self.video_recorder.record_frame(dummy_frame, episode_info)
+                self.recording_step_count += 1
+            except:
+                pass
+    
+    def _finish_recording_episode(self, env_id: int, reward: float, info: Dict):
+        """
+        エピソード完了時の動画記録処理
+        
+        Args:
+            env_id: 環境ID
+            reward: エピソード報酬
+            info: エピソード情報
+        """
+        if not self.recording_episode or env_id != 0:  # 最初の環境のみ記録
+            return
+        
+        try:
+            # エピソード情報の作成
+            episode_info = {
+                'episode': self.episode_count,
+                'step': self.recording_step_count,
+                'reward': reward,
+                'distance': info.get('distance', 0.0),
+                'success': info.get('success', False)
+            }
+            
+            # エピソード完了の記録
+            self.video_recorder.finish_episode(episode_info)
+            
+            # 記録が完了した場合
+            if self.video_recorder.episode_count >= self.video_recorder.episodes_per_video:
+                self.recording_episode = False
+                self.video_recorder.finish_recording()
+                self.logger.info("動画記録が完了しました")
+            
+        except Exception as e:
+            self.logger.warning(f"エピソード完了記録エラー: {e}")
     
     def _compute_advantages(self) -> torch.Tensor:
         """並列環境用のアドバンテージ計算"""
@@ -561,6 +687,10 @@ class ParallelTrainer(Trainer):
         
         # 学習結果の保存
         self._save_training_results()
+        
+        # 動画記録のクリーンアップ
+        if self.video_recorder.enabled:
+            self.video_recorder.cleanup()
         
         # 並列環境を閉じる
         self.parallel_env.close()

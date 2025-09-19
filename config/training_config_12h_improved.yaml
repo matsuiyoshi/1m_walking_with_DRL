@@ -1,0 +1,142 @@
+# Training Configuration for PPO - 12時間学習用（改善版）
+algorithm:
+  name: "PPO"
+  
+  # 最適化されたネットワーク構造
+  network:
+    use_optimized: true           # 最適化ネットワーク使用（実証済み）
+    
+    actor:
+      hidden_layers: [256, 128, 64]    # 軽量化ネットワーク（高速化）
+      activation: "Swish"               # 最適活性化関数
+      output_activation: "Tanh"
+      dropout_rate: 0.1                 # 適度な正則化
+      use_residual: true                # 残差接続（勾配流改善）
+      use_attention: false              # 軽量化のため無効
+      use_layer_norm: true              # レイヤー正規化（安定性）
+    
+    critic:
+      hidden_layers: [256, 128, 64]    # 軽量化ネットワーク
+      activation: "Swish"               # 最適活性化関数
+      dropout_rate: 0.1                 # 適度な正則化
+      use_residual: true                # 残差接続
+      use_layer_norm: true              # レイヤー正規化
+  
+  # 緊急修正ハイパーパラメータ（安定化重視）
+  hyperparameters:
+    learning_rate: 0.0001           # より低い学習率（安定化）
+    batch_size: 256                 # 小さなバッチサイズ（安定化）
+    n_epochs: 2                     # 少ないエポック数（過学習防止）
+    clip_range: 0.1                 # 厳しいクリッピング（安定化）
+    vf_coef: 0.25                   # 低い価値関数係数（安定化）
+    ent_coef: 0.05                  # 高いエントロピー係数（探索促進）
+    max_grad_norm: 0.3              # 厳しい勾配クリッピング（安定化）
+    gae_lambda: 0.9                 # 低いGAE（安定化）
+    gamma: 0.95                     # 低い割引率（安定化）
+    buffer_size: 1024               # 小さなバッファサイズ（安定化）
+    
+    # オプティマイザー設定（最適化済み）
+    optimizer:
+      type: "AdamW"
+      weight_decay: 0.005           # 重み減衰を下げる
+      betas: [0.9, 0.999]
+      eps: 0.00000001
+    
+    # 学習率スケジューリング（修正版）
+    lr_schedule:
+      type: "linear_decay"          # より単純な線形減衰
+      total_steps: 12960000         # 全ステップ数
+      final_lr: 0.00001             # 最終学習率（適度な値）
+
+# 12時間学習設定
+training:
+  total_timesteps: 12960000       # 3時間学習（1200steps/sec × 3h × 3600s）
+  eval_freq: 900000               # 約15分ごとに評価（より頻繁）
+  save_freq: 900000               # 約15分ごとに保存（より頻繁）
+  log_interval: 50                # より頻繁なログ（リアルタイム監視）
+  
+  # Episode settings（前進歩行用）
+  episode:
+    max_steps: 12000              # 50秒 × 240Hz = 12000ステップ（長時間歩行）
+    max_time: 50.0                # 十分な前進時間を確保
+  
+  # Environment settings（12時間学習用）
+  env:
+    num_envs: 12                  # 12環境並列（最適化済み・効率的）
+    render: false
+    render_mode: "human"
+  
+  # Domain randomization（強化）
+  domain_randomization:
+    enabled: true
+    friction_range: [0.5, 0.9]     # より広い範囲（汎化性向上）
+    mass_variation: 0.05          # より大きな変動
+    noise_std: 0.005              # より大きなノイズ
+
+# 緩和されたEarly Stopping設定（深層強化学習用）
+early_stopping:
+  enabled: true                   # Early Stoppingを有効化
+  patience: 10000000              # 約4時間待機（大幅に緩和）
+  min_delta: 0.001                # 非常に緩い改善閾値
+  monitor_metric: "avg_reward"
+  restore_best_weights: true
+  
+  # 過学習検出（大幅に緩和）
+  overfitting_detection:
+    enabled: false                # 過学習検出を無効化（初期学習では不要）
+    policy_loss_threshold: 1000.0 # 非常に高い閾値
+    value_loss_threshold: 100.0   # 非常に高い閾値
+    reward_std_threshold: 10.0    # 非常に高い閾値
+
+# 評価設定（12時間学習用）
+evaluation:
+  num_episodes: 10                # より多くの評価エピソード
+  deterministic: true
+  render: false
+  
+  # 成功基準（段階的学習用）
+  success_criteria:
+    min_distance: 0.3             # 30cm以上で成功（段階的学習）
+    max_time: 30.0                # 30秒以内
+    max_fall_angle: 0.8           # 転倒判定
+
+# ログ設定（12時間学習用）
+logging:
+  tensorboard: true
+  wandb: false
+  log_dir: "data/logs"
+  
+  # 重要指標
+  metrics:
+    - "episode_reward"
+    - "episode_length"
+    - "success_rate"
+    - "policy_loss"
+    - "value_loss"
+    - "gradient_norm"
+    - "learning_rate"
+    - "exploration_rate"
+    - "action_diversity"
+    - "stability_metrics"
+
+# 12時間学習用チェックポイント設定
+checkpoints:
+  enabled: true
+  frequency: 450000               # 約7.5分ごとにチェックポイント（より頻繁）
+  max_checkpoints: 30            # 最大30個保持（長期学習用）
+  best_model_only: false         # 全チェックポイント保存
+
+# 学習進捗動画保存設定
+video_recording:
+  enabled: true                   # 動画保存を有効化
+  frequency: 900000              # 15分ごとに動画保存（適切な頻度で学習進捗確認）
+  episodes_per_video: 3          # 1つの動画に含めるエピソード数
+  max_steps_per_episode: 1200    # エピソードあたりの最大ステップ数（5秒分）
+  video_quality:
+    fps: 60                      # フレームレート（滑らかな動画）
+    resolution: [640, 480]       # 解像度 [width, height]
+    format: "mp4"                # 動画形式
+  overlay_info: true             # 学習情報のオーバーレイ表示
+  info_font_size: 16             # フォントサイズ
+  info_color: [255, 255, 255]    # テキスト色 [R, G, B]
+  info_position: [10, 10]        # テキスト位置 [x, y]

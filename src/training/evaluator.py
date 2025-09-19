@@ -217,12 +217,18 @@ class Evaluator:
             # 環境のステップ実行
             next_obs, reward, done, info = self.eval_env.step(action)
             
-            # 動画フレームのキャプチャ（4ステップごとに1フレーム）
+            # 動画フレームのキャプチャ（改良されたPyBulletレンダリング）
             if save_video and step % 4 == 0:
                 try:
-                    # 環境のrenderメソッドを直接呼び出し
+                    # 高品質レンダリングで環境をキャプチャ
                     frame = self.eval_env.render(mode='rgb_array')
                     if frame is not None and len(frame.shape) == 3:
+                        # フレームの品質チェックと調整
+                        if frame.max() <= 1.0:  # 正規化されている場合
+                            frame = (frame * 255).astype(np.uint8)
+                        elif frame.dtype != np.uint8:
+                            frame = frame.astype(np.uint8)
+                        
                         video_frames.append(frame)
                     else:
                         # 無効なフレームの場合はダミーフレームを作成
@@ -555,12 +561,72 @@ class Evaluator:
                 self.logger.error("有効なフレームがありません")
                 return
             
-            # imageioを使用してMP4動画を保存
-            with imageio.get_writer(output_path, fps=60, codec='libx264') as writer:
-                for frame in processed_frames:
-                    writer.append_data(frame)
-            
-            self.logger.info(f"動画を保存しました: {output_path} ({len(processed_frames)}フレーム)")
+            # シンプルなimageioを使用（moviepyは不要）
+            try:
+                # imageioでMP4動画を作成（軽量、依存関係最小）
+                with imageio.get_writer(output_path, fps=60, codec='libx264', 
+                                      macro_block_size=1) as writer:
+                    for frame in processed_frames:
+                        # フレームが正しいRGB形式であることを確認
+                        if frame.dtype != np.uint8:
+                            frame = (frame * 255).astype(np.uint8)
+                        writer.append_data(frame)
+                
+                self.logger.info(f"動画を保存しました: {output_path} ({len(processed_frames)}フレーム)")
+                
+            except Exception as imageio_error:
+                # フォールバック: ffmpegを直接使用
+                self.logger.warning(f"imageio動画記録エラー: {imageio_error}")
+                
+                try:
+                    import subprocess
+                    import tempfile
+                    import os
+                    
+                    # 一時ディレクトリに個別フレームを保存
+                    with tempfile.TemporaryDirectory() as temp_dir:
+                        frame_paths = []
+                        
+                        for i, frame in enumerate(processed_frames):
+                            frame_path = os.path.join(temp_dir, f"frame_{i:06d}.png")
+                            # PILを使ってPNGとして保存
+                            from PIL import Image
+                            img = Image.fromarray(frame, 'RGB')
+                            img.save(frame_path, 'PNG')
+                            frame_paths.append(frame_path)
+                        
+                        # ffmpegで動画を作成
+                        cmd = [
+                            'ffmpeg', '-y',  # -y: 上書き許可
+                            '-framerate', '60',
+                            '-i', os.path.join(temp_dir, 'frame_%06d.png'),
+                            '-c:v', 'libx264',
+                            '-pix_fmt', 'yuv420p',
+                            '-preset', 'fast',  # 高速エンコード
+                            output_path
+                        ]
+                        
+                        result = subprocess.run(cmd, capture_output=True, text=True)
+                        if result.returncode == 0:
+                            self.logger.info(f"ffmpegで動画を作成しました: {output_path}")
+                        else:
+                            raise Exception(f"ffmpeg実行エラー: {result.stderr}")
+                            
+                except Exception as ffmpeg_error:
+                    # 最後の手段: フレームを個別画像として保存
+                    self.logger.warning(f"ffmpeg動画記録エラー: {ffmpeg_error}")
+                    output_dir = Path(output_path).parent
+                    frame_dir = output_dir / f"frames_{Path(output_path).stem}"
+                    frame_dir.mkdir(exist_ok=True)
+                    
+                    from PIL import Image
+                    for i, frame in enumerate(processed_frames):
+                        img = Image.fromarray(frame, 'RGB')
+                        frame_path = frame_dir / f"frame_{i:04d}.png"
+                        img.save(str(frame_path), 'PNG')
+                    
+                    self.logger.info(f"フレームを個別画像として保存しました: {frame_dir}")
+                    self.logger.info("動画を作成するには: ffmpeg -framerate 60 -i frame_%04d.png -c:v libx264 -pix_fmt yuv420p output.mp4")
             
         except Exception as e:
             self.logger.error(f"動画保存エラー: {e}")

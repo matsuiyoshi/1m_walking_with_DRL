@@ -1,0 +1,25 @@
+episodes:
+- distance: -1.216916079155872
+  episode: 1
+  reward: -12.16916079155872
+  success: false
+  time: 36.91748857498169
+- distance: -1.2172106134761338
+  episode: 2
+  reward: -12.17210613476137
+  success: false
+  time: 36.95612287521362
+evaluation_info:
+  model_path: data/experiments/quick_test_fixed/optimized_test_fixed/final_model.pth
+  num_episodes: 2
+  timestamp: '2025-09-19T17:00:11.365760'
+summary:
+  mean_distance: -1.217063346316003
+  mean_reward: -12.170633463160044
+  mean_time: 36.936805725097656
+  std_distance: 0.000147267160130915
+  std_reward: 0.0014726716013244712
+  std_time: 0.019317150115966797
+  success_count: 0
+  success_rate: 0.0
+  total_episodes: 2
